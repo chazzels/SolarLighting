@@ -1,0 +1,53 @@
+{
+	"assetID": "sampleCuelist",
+	"cueTimeline": [
+		{
+			"cueName": "cue01",
+			"cueMode": "HOLD",
+			"timing": 1024,
+			"timeMultipler": 1
+		},
+		{
+			"cueName": "cue02",
+			"cueMode": "FOLLOW",
+			"timing": 2000,
+			"timeMultipler": 1
+		}
+	],
+	"cueTrack": [
+		[
+			{
+				"red": 1024,
+				"green": 1024,
+				"blue": 1024
+			},
+			{
+				"red": 0,
+				"green": 0,
+				"blue": 0
+			}
+		],
+		[
+			{
+				"red": 0,
+				"green": 0,
+				"blue": 0
+			},
+			{
+				"red": 1024,
+				"green": 1024,
+				"blue": 1024
+			}
+		]
+	],
+	"cueTrackMeta": [
+		{
+			"trackName": "master",
+			"trackTarget": ".center-wash"
+		},
+		{
+			"trackName": "track01",
+			"trackTarget": ".wash"
+		}
+	]
+}
