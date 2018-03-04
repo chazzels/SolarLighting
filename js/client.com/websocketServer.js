@@ -6,6 +6,7 @@ class WebSocketServer {
         this.WebSocket = require("ws");
         this.Crypto = require("crypto");
         this.clients = new Map();
+        this.clientKeys = [];
         this.clientSyncStatus = true;
         this.connectionCounter = 0;
         this.domain = "";
@@ -17,13 +18,12 @@ class WebSocketServer {
         this.initWebSocketConnection();
         this.HTTPServerListen();
     }
-    send() {
+    send(shakey, data) {
+        let ws = this.clients.get(shakey);
+        ws.send(data);
     }
     syncStatus() {
         return this.clientSyncStatus;
-    }
-    updateClients() {
-        return;
     }
     initExpress() {
         this.app = this.express();
@@ -51,11 +51,18 @@ class WebSocketServer {
                 port: that.server.address().port,
                 count: that.connectionCounter
             });
-            that.clients.set(shakey, ws);
+            ws.key = shakey.hex;
+            that.clients.set(shakey.hex, ws);
+            that.clientKeys.push(shakey.hex);
             that.clientSyncStatus = false;
+            console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
             ws.on('message', function socketMessage(message) {
                 console.log(message);
                 ws.send(message);
+            });
+            ws.on('close', function socketClose(message) {
+                console.log(this.key);
+                console.log(message);
             });
             ws.send(shakey.hex.toString());
         });

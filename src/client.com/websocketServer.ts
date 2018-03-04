@@ -17,6 +17,7 @@ class WebSocketServer {
 	private server: any;
 	private wss: any;
 	private clients: any = new Map();
+	private clientKeys: any = [];
 	private clientSyncStatus: boolean = true;
 	private connectionCounter: number = 0;
 	
@@ -43,9 +44,11 @@ class WebSocketServer {
 	|	Client Functions
 	\----------------------------------------------*/
 	
-	send() {
+	send(shakey, data) {
 		
+		let ws = this.clients.get(shakey);
 		
+		ws.send(data);
 		
 	}
 	
@@ -58,14 +61,6 @@ class WebSocketServer {
 		return this.clientSyncStatus;
 		
 	}
-	
-	updateClients() {
-		
-		return 
-		
-	}
-	
-	private 
 	
 	/*----------------------------------------------\
 	|	WebSocket Server Initialization. 
@@ -126,15 +121,27 @@ class WebSocketServer {
 				count: that.connectionCounter
 			});
 			
-			that.clients.set(shakey, ws);
+			ws.key = shakey.hex;
+			
+			that.clients.set(shakey.hex, ws);
+			
+			that.clientKeys.push(shakey.hex);
 			
 			that.clientSyncStatus = false;
+			
+			console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
 			
 			ws.on('message', function socketMessage(message: any) {
 				
 				console.log(message);
 				
 				ws.send(message);
+				
+			});
+			
+			ws.on('close', function socketClose(message: any) {
+				
+				console.log(this.key);
 				
 			});
 			
