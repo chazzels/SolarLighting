@@ -98,6 +98,13 @@ class EngineCoreAlpha {
 		
 	}
 	
+	/* read cahced value from the render cahce. */
+	read(shakey: sha1) {
+		
+		return this._renderCache.read(shakey);
+		
+	}
+	
 	/* log the component and what version it is currently running on. */
 	version(): string {
 		

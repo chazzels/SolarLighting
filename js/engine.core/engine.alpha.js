@@ -40,6 +40,9 @@ class EngineCoreAlpha {
     pause(shakey) {
         this._assetManager.pause(shakey);
     }
+    read(shakey) {
+        return this._renderCache.read(shakey);
+    }
     version() {
         let version = "Engine v"
             + this._majorVersion.toString() + "."
