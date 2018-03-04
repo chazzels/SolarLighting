@@ -4,10 +4,13 @@ class SolarEngine {
 	
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
-	private ClientCom: any;
+	private ClientCom: any = require("./client.com/client.com");
+	private ControllerCom: any require("./controller.com/controller.com");
 	
 	/* module variables */
 	private _engine: any;
+	private _client: any;
+	private _controller: any;
 	
 	constructor() {
 		
