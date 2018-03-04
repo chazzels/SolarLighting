@@ -5,6 +5,8 @@ class SolarEngine {
         this.ClientCom = require("./client.com/client.com");
         this.ControllerCom = require("./controller.com/controller.com");
         this._engine = new this.EngineCore();
+        this._client = new this.ClientCom();
+        this._controller = new this.ControllerCom();
     }
     loadAsset(assetData) {
         return this._engine.loadAsset(assetData);

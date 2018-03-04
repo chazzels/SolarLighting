@@ -5,7 +5,7 @@ class SolarEngine {
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
 	private ClientCom: any = require("./client.com/client.com");
-	private ControllerCom: any require("./controller.com/controller.com");
+	private ControllerCom: any = require("./controller.com/controller.com");
 	
 	/* module variables */
 	private _engine: any;
@@ -16,7 +16,15 @@ class SolarEngine {
 		
 		this._engine = new this.EngineCore();
 		
+		this._client = new this.ClientCom();
+		
+		this._controller = new this.ControllerCom();
+		
 	}
+	
+	/*----------------------------------------------\
+	|	EngineCore Functionality.
+	\----------------------------------------------*/
 	
 	loadAsset(assetData: any) {
 		
@@ -41,6 +49,14 @@ class SolarEngine {
 		this._engine.pause(shakey);
 		
 	}
+	
+	/*----------------------------------------------\
+	|	ClientCom Functionality
+	\----------------------------------------------*/
+	
+	/*----------------------------------------------\
+	|	Controller Com Functionality
+	\----------------------------------------------*/
 	
 }
 

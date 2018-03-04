@@ -1,9 +1,16 @@
+/*
+*	websocket server to distrubute styling data. 
+*/
+
 class ClientCom {
-    
-    constructor() {
-        
-    }
-    
+	
+	private ClientTracker: any = require("./clientTracker");
+	private ClientMeta: any = require("./clientMeta");
+	
+	constructor() {
+		
+	}
+	
 }
 
 export = ClientCom;
