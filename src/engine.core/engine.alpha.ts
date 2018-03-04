@@ -8,7 +8,7 @@ import { sha1 } from "./interface/sha1";
 
 import {crystalObject } from "./interface/crystalObject";
 
-class EngineAlpha {
+class EngineCoreAlpha {
 	
 	/* module version info */
 	private readonly _majorVersion: number = 0;
@@ -159,4 +159,4 @@ class EngineAlpha {
 
 }
 
-export = EngineAlpha;
+export = EngineCoreAlpha;
