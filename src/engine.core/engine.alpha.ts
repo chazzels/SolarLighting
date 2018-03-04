@@ -1,5 +1,5 @@
 /*
-	module to link up all the other engine modules to create a cohesive system.
+*	module to link up all the other engine modules to create a cohesive system.
 *	TODO: build logging module.
 *	TODO: function to dump shakey name map for later debug
 */
