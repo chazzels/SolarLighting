@@ -1,9 +1,9 @@
 class ClientTracker {
-    
-    constructor() {
-        
-    }
-    
+	
+	constructor() {
+		
+	}
+	
 }
 
 export = ClientTracker;
