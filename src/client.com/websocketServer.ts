@@ -1,3 +1,9 @@
+/*
+*	module for starting a websocket server.
+*/
+
+import { sha1 } from "./interface/sha1";
+
 class WebSocketServer {
 	
 	/* node/npm modules */
@@ -10,8 +16,9 @@ class WebSocketServer {
 	private app: any;
 	private server: any;
 	private wss: any;
+	private clients: any = new Map();
+	private clientSyncStatus: boolean = true;
 	private connectionCounter: number = 0;
-	private _onNewConnection: any = [];
 	
 	public domain: string = "";
 	public port: number = -1;
@@ -32,15 +39,33 @@ class WebSocketServer {
 		
 	}
 	
-	onNewConnection(callback: any) {
+	/*----------------------------------------------\
+	|	Client Functions
+	\----------------------------------------------*/
+	
+	send() {
 		
-		if(typeof callback === "function") {
-			
-			this._onNewConnection.push(callback);
-			
-		}
+		
 		
 	}
+	
+	/*----------------------------------------------\
+	|	Server Functions
+	\----------------------------------------------*/
+	
+	syncStatus() : boolean {
+		
+		return this.clientSyncStatus;
+		
+	}
+	
+	updateClients() {
+		
+		return 
+		
+	}
+	
+	private 
 	
 	/*----------------------------------------------\
 	|	WebSocket Server Initialization. 
@@ -71,7 +96,9 @@ class WebSocketServer {
 		
 		this.server.listen(8420, '0.0.0.0', function httpServerListening() {
 			
-			console.log("SOCKET_SERVER::LISTENING:", this.address().address+":", this.address().port);
+			console.log("SOCKET_SERVER::LISTENING:", 
+				this.address().address+":", 
+				this.address().port);
 			
 		});
 		
@@ -89,7 +116,7 @@ class WebSocketServer {
 		
 		let that = this;
 		
-		this.wss.on('connection', function socketConnection(ws: any, req: any) {
+		this.wss.on('connection', function socketConnect(ws: any, req: any) {
 			
 			that.connectionCounter++;
 			
@@ -99,7 +126,13 @@ class WebSocketServer {
 				count: that.connectionCounter
 			});
 			
+			that.clients.set(shakey, ws);
+			
+			that.clientSyncStatus = false;
+			
 			ws.on('message', function socketMessage(message: any) {
+				
+				console.log(message);
 				
 				ws.send(message);
 				
@@ -110,6 +143,10 @@ class WebSocketServer {
 		});
 		
 	}
+	
+	/*----------------------------------------------\
+	|	Utility Functions. 
+	\----------------------------------------------*/
 	
 	/* generates a SHA1 hex string based on server settings. */
 	private generateAssetSHA1(data: any) {
