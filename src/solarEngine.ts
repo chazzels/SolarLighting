@@ -6,19 +6,27 @@ class SolarEngine {
 	private EngineCore: any = require("./engine.core/engine.alpha");
 	private ClientCom: any = require("./client.com/client.com");
 	private ControllerCom: any = require("./controller.com/controller.com");
+	private Crystal: any = require("./engine.core/crystalClock");
 	
 	/* module variables */
 	private _engine: any;
-	private _client: any;
+	private _clients: any;
 	private _controller: any;
+	private _assetKeys: any = [];
+	private _crystal: any;
 	
 	constructor() {
 		
 		this._engine = new this.EngineCore();
 		
-		this._client = new this.ClientCom();
+		this._clients = new this.ClientCom();
 		
 		this._controller = new this.ControllerCom();
+		
+		/* timer module initialization */
+		let that = this;
+		this._crystal = new this.Crystal(250);
+		this._crystal.onUpdate(that.tick, that);
 		
 	}
 	
@@ -28,7 +36,13 @@ class SolarEngine {
 	
 	loadAsset(assetData: any) {
 		
-		return this._engine.loadAsset(assetData);
+		let assetKey = null;
+		
+		assetKey = this._engine.loadAsset(assetData);
+		
+		this._assetKeys.push(assetKey)
+		
+		return assetKey
 		
 	}
 	
@@ -54,9 +68,19 @@ class SolarEngine {
 	|	ClientCom Functionality
 	\----------------------------------------------*/
 	
+	
+	
 	/*----------------------------------------------\
 	|	Controller Com Functionality
 	\----------------------------------------------*/
+	
+	/*----------------------------------------------\
+	|	Private Module Functions.
+	\----------------------------------------------*/
+	
+	private tick(that) {
+		
+	}
 	
 }
 
