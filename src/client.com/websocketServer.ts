@@ -1,5 +1,6 @@
 /*
 *	module for starting a websocket server.
+*	TODO return splash page for http hit.
 */
 
 import { sha1 } from "./interface/sha1";
@@ -40,6 +41,44 @@ class WebSocketServer {
 		
 	}
 	
+	/* code to execute when a client has connected. */
+	/* this is center logic to this module. */
+	private initWebSocketConnection() {
+		
+		let that = this;
+		
+		/* new websocket connection event */
+		this.wss.on('connection', function socketConnect(ws: any, req: any) {
+			
+			/* socket initialization. */
+			that.createKey(ws);
+			
+			ws.state = that.STATEMETA;
+			
+			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
+			
+			/* socket message handling. */
+			ws.on('message', function socketMessage(message: any) {
+				
+				
+				
+			});
+			
+			/* socket disconnection handling. */
+			ws.on('close', function socketClose(message: any) {
+				
+				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
+				
+				that.removeSocket(this.key);
+				
+			});
+			
+			ws.send(that.clientKeys.length);
+			
+		});
+		
+	}
+	
 	/*----------------------------------------------\
 	|	Client Functions
 	\----------------------------------------------*/
@@ -64,12 +103,60 @@ class WebSocketServer {
 		
 	}
 	
-	/*----------------------------------------------\
-	|	Server Functions
-	\----------------------------------------------*/
+	/* remoces socket reference and object from websocket server module. */
+	private removeSocket(shakey: sha1) {
+		
+		/* delete key from client map. return false if failed. */
+		let clientStatus = this.clients.delete(shakey);
+		
+		/* delete key from clientKeys array. returns -1 if failed. s*/
+		let keyIndex = this.clientKeys.indexOf(shakey);
+		
+		if(keyIndex !== -1 && keyIndex >= 0) {
+			
+			this.clientKeys.splice(keyIndex, 1);
+			
+		}
+		
+		let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
+		
+		/* return false if either removal operation failed.*/
+		if(clientStatus && clientKeysStatus) {
+			
+			return true;
+			
+		} else {
+			
+			return false;
+			
+		}
+		
+	}
+	
+	private createKey(ws: any) {
+		
+		/* advance connection counter */
+		this.connectionCounter++;
+		
+		/* generate and save key. */
+		let shakey = this.generateSocketSHA1({
+			ip: this.server.address().address,
+			port: this.server.address().port,
+			count: this.connectionCounter
+		});
+		
+		/* store key on the websocket. */
+		ws.key = shakey.hex;
+		
+		/* add new websocket to tracking system. */
+		this.clients.set(ws.key, ws);
+		
+		this.clientKeys.push(ws.key);
+		
+	}
 	
 	/*----------------------------------------------\
-	|	WebSocket Server Initialization. 
+	|	WebSocket Server Initialization Functions. 
 	\----------------------------------------------*/
 	
 	/* start the express app instance.  */
@@ -112,91 +199,12 @@ class WebSocketServer {
 		
 	}
 	
-	/* code to execute when a client has connected. */
-	private initWebSocketConnection() {
-		
-		let that = this;
-		
-		this.wss.on('connection', function socketConnect(ws: any, req: any) {
-			
-			/* advance connection counter */
-			that.connectionCounter++;
-			
-			/* generate and save key. */
-			let shakey = that.generateAssetSHA1({
-				ip: that.server.address().address,
-				port: that.server.address().port,
-				count: that.connectionCounter
-			});
-			
-			ws.key = shakey.hex;
-			
-			that.clients.set(shakey.hex, ws);
-			
-			that.clientKeys.push(shakey.hex);
-			
-			ws.state = that.STATEMETA;
-			
-			console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
-			
-			ws.on('message', function socketMessage(message: any) {
-				
-				
-				
-			});
-			
-			ws.on('close', function socketClose(message: any) {
-				
-				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
-				
-				that.removeSocket(this.key);
-				
-			});
-			
-			ws.send(JSON.stringify(that.clientKeys));
-			
-		});
-		
-	}
-	
-	/*----------------------------------------------\
-	|	Private Functions. 
-	\----------------------------------------------*/
-	
-	private removeSocket(shakey: sha1) {
-		
-		const key = shakey.hex;
-		
-		let clientStatus = this.clients.delete(shakey);
-		
-		let keyIndex = this.clientKeys.indexOf(shakey);
-		
-		if(keyIndex !== -1 && keyIndex >= 0) {
-			
-			this.clientKeys.splice(keyIndex, 1);
-			
-		}
-		
-		let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
-		
-		if(clientStatus && clientKeysStatus) {
-			
-			return true;
-			
-		} else {
-			
-			return false;
-			
-		}
-		
-	}
-	
 	/*----------------------------------------------\
 	|	Utility Functions. 
 	\----------------------------------------------*/
 	
 	/* generates a SHA1 hex string based on server settings. */
-	private generateAssetSHA1(data: any) {
+	private generateSocketSHA1(data: any) {
 		
 		let shaSum = this.Crypto.createHash("sha1");
 		

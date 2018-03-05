@@ -17,6 +17,21 @@ class WebSocketServer {
         this.initWebSocketConnection();
         this.HTTPServerListen();
     }
+    initWebSocketConnection() {
+        let that = this;
+        this.wss.on('connection', function socketConnect(ws, req) {
+            that.createKey(ws);
+            ws.state = that.STATEMETA;
+            console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
+            ws.on('message', function socketMessage(message) {
+            });
+            ws.on('close', function socketClose(message) {
+                console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
+                that.removeSocket(this.key);
+            });
+            ws.send(that.clientKeys.length);
+        });
+    }
     send(shakey, data) {
         let ws = this.clients.get(shakey);
         if (ws.state === this.STATEDATA) {
@@ -26,6 +41,31 @@ class WebSocketServer {
     getClientManifest() {
         const manifest = this.clientKeys;
         return manifest;
+    }
+    removeSocket(shakey) {
+        let clientStatus = this.clients.delete(shakey);
+        let keyIndex = this.clientKeys.indexOf(shakey);
+        if (keyIndex !== -1 && keyIndex >= 0) {
+            this.clientKeys.splice(keyIndex, 1);
+        }
+        let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
+        if (clientStatus && clientKeysStatus) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    createKey(ws) {
+        this.connectionCounter++;
+        let shakey = this.generateSocketSHA1({
+            ip: this.server.address().address,
+            port: this.server.address().port,
+            count: this.connectionCounter
+        });
+        ws.key = shakey.hex;
+        this.clients.set(ws.key, ws);
+        this.clientKeys.push(ws.key);
     }
     initExpress() {
         this.app = this.express();
@@ -44,45 +84,7 @@ class WebSocketServer {
     initWebSocketServer() {
         this.wss = new this.WebSocket.Server({ server: this.server });
     }
-    initWebSocketConnection() {
-        let that = this;
-        this.wss.on('connection', function socketConnect(ws, req) {
-            that.connectionCounter++;
-            let shakey = that.generateAssetSHA1({
-                ip: that.server.address().address,
-                port: that.server.address().port,
-                count: that.connectionCounter
-            });
-            ws.key = shakey.hex;
-            that.clients.set(shakey.hex, ws);
-            that.clientKeys.push(shakey.hex);
-            ws.state = that.STATEMETA;
-            console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
-            ws.on('message', function socketMessage(message) {
-            });
-            ws.on('close', function socketClose(message) {
-                console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
-                that.removeSocket(this.key);
-            });
-            ws.send(JSON.stringify(that.clientKeys));
-        });
-    }
-    removeSocket(shakey) {
-        const key = shakey.hex;
-        let clientStatus = this.clients.delete(shakey);
-        let keyIndex = this.clientKeys.indexOf(shakey);
-        if (keyIndex !== -1 && keyIndex >= 0) {
-            this.clientKeys.splice(keyIndex, 1);
-        }
-        let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
-        if (clientStatus && clientKeysStatus) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    generateAssetSHA1(data) {
+    generateSocketSHA1(data) {
         let shaSum = this.Crypto.createHash("sha1");
         let shaReturn = "0";
         let shaIn = data.ip.toString()
