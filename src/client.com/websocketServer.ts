@@ -83,6 +83,9 @@ class WebSocketServer {
 	|	Client Functions
 	\----------------------------------------------*/
 	
+	/* send a message to a sepecific websocket. */
+	/* @param {string} shakey - sha1 key used to reference a socket. */
+	/* @param {string|number|array} data - data to be send to socket */
 	send(shakey: sha1, data: any) {
 		
 		let ws = this.clients.get(shakey);
@@ -95,6 +98,7 @@ class WebSocketServer {
 		
 	}
 	
+	/* return array of the client keys. */
 	getClientManifest() {
 		
 		const manifest =  this.clientKeys;
@@ -104,6 +108,7 @@ class WebSocketServer {
 	}
 	
 	/* remoces socket reference and object from websocket server module. */
+	/* @param {string} shakey - sha1 key used to reference a socket*/
 	private removeSocket(shakey: sha1) {
 		
 		/* delete key from client map. return false if failed. */
@@ -133,6 +138,8 @@ class WebSocketServer {
 		
 	}
 	
+	/* creat an sha1 key for a socket. */
+	/* @param {any} ws - websocket to assign key too. */
 	private createKey(ws: any) {
 		
 		/* advance connection counter */
@@ -204,6 +211,7 @@ class WebSocketServer {
 	\----------------------------------------------*/
 	
 	/* generates a SHA1 hex string based on server settings. */
+	/* @param {object} data - data need to create a sha1 key.*/
 	private generateSocketSHA1(data: any) {
 		
 		let shaSum = this.Crypto.createHash("sha1");

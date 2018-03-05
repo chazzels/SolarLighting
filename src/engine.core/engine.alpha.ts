@@ -37,7 +37,7 @@ class EngineCoreAlpha {
 		
 		console.log(this.version());
 		
-		console.log("ENGINE::LOAD_START");
+		console.log("ENGINE::STARTING");
 		
 		console.group();
 		
@@ -65,8 +65,6 @@ class EngineCoreAlpha {
 		this._renderCache = new this.RenderCache(this._simplePerf);
 		
 		this._assetRender = new this.AssetRender(this._simplePerf);
-		
-		console.log("ENGINE::LOAD_END");
 		
 	}
 	

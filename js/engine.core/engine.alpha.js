@@ -12,7 +12,7 @@ class EngineCoreAlpha {
         this.RenderCache = require("./renderCache");
         this.ENGINELOOP = "EngineLoop";
         console.log(this.version());
-        console.log("ENGINE::LOAD_START");
+        console.log("ENGINE::STARTING");
         console.group();
         if (options === undefined || options === null) {
             options = {};
@@ -26,7 +26,6 @@ class EngineCoreAlpha {
         this._assetManager = new this.AssetManager(this._simplePerf);
         this._renderCache = new this.RenderCache(this._simplePerf);
         this._assetRender = new this.AssetRender(this._simplePerf);
-        console.log("ENGINE::LOAD_END");
     }
     loadAsset(assetData) {
         return this._assetManager.loadAsset(assetData);
