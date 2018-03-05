@@ -18,11 +18,14 @@ class WebSocketServer {
 	private wss: any;
 	private clients: any = new Map();
 	private clientKeys: any = [];
-	private clientSyncStatus: boolean = true;
 	private connectionCounter: number = 0;
 	
 	public domain: string = "";
 	public port: number = -1;
+	
+	/* module constants */
+	private readonly STATEMETA: string = "StateMeta";
+	private readonly STATEDATA: string = "StateMeta";
 	
 	constructor(wsOpt?: any) {
 		
@@ -48,19 +51,17 @@ class WebSocketServer {
 		
 		let ws = this.clients.get(shakey);
 		
-		ws.send(data);
+		if(ws.state === this.STATEDATA) {
+		
+			ws.send(data);
+		
+		}
 		
 	}
 	
 	/*----------------------------------------------\
 	|	Server Functions
 	\----------------------------------------------*/
-	
-	syncStatus() : boolean {
-		
-		return this.clientSyncStatus;
-		
-	}
 	
 	/*----------------------------------------------\
 	|	WebSocket Server Initialization. 
@@ -113,8 +114,10 @@ class WebSocketServer {
 		
 		this.wss.on('connection', function socketConnect(ws: any, req: any) {
 			
+			/* advance connection counter */
 			that.connectionCounter++;
 			
+			/* generate and save key. */
 			let shakey = that.generateAssetSHA1({
 				ip: that.server.address().address,
 				port: that.server.address().port,
@@ -127,25 +130,23 @@ class WebSocketServer {
 			
 			that.clientKeys.push(shakey.hex);
 			
-			that.clientSyncStatus = false;
+			ws.state = that.STATEMETA;
 			
 			console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
 			
 			ws.on('message', function socketMessage(message: any) {
 				
-				console.log(message);
 				
-				ws.send(message);
 				
 			});
 			
 			ws.on('close', function socketClose(message: any) {
 				
-				console.log(this.key);
+				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
 				
 			});
 			
-			ws.send(shakey.hex.toString());
+			ws.send(JSON.stringify(shakey));
 			
 		});
 		
@@ -164,7 +165,8 @@ class WebSocketServer {
 		
 		let shaIn = data.ip.toString()
 			+ data.port.toString()
-			+ data.count.toString();
+			+ data.count.toString()
+			+ Date.now();
 		
 		/* generate sha1 from input string */
 		shaSum.update(shaIn);

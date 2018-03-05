@@ -7,10 +7,11 @@ class WebSocketServer {
         this.Crypto = require("crypto");
         this.clients = new Map();
         this.clientKeys = [];
-        this.clientSyncStatus = true;
         this.connectionCounter = 0;
         this.domain = "";
         this.port = -1;
+        this.STATEMETA = "StateMeta";
+        this.STATEDATA = "StateMeta";
         console.log("SOCKET_SERVER::STARTING");
         this.initExpress();
         this.initHTTPServer();
@@ -20,10 +21,9 @@ class WebSocketServer {
     }
     send(shakey, data) {
         let ws = this.clients.get(shakey);
-        ws.send(data);
-    }
-    syncStatus() {
-        return this.clientSyncStatus;
+        if (ws.state === this.STATEDATA) {
+            ws.send(data);
+        }
     }
     initExpress() {
         this.app = this.express();
@@ -54,17 +54,14 @@ class WebSocketServer {
             ws.key = shakey.hex;
             that.clients.set(shakey.hex, ws);
             that.clientKeys.push(shakey.hex);
-            that.clientSyncStatus = false;
+            ws.state = that.STATEMETA;
             console.log("SOCKET_SERVER::NEW_CONNECTION:", shakey.hex);
             ws.on('message', function socketMessage(message) {
-                console.log(message);
-                ws.send(message);
             });
             ws.on('close', function socketClose(message) {
-                console.log(this.key);
-                console.log(message);
+                console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
             });
-            ws.send(shakey.hex.toString());
+            ws.send(JSON.stringify(shakey));
         });
     }
     generateAssetSHA1(data) {
@@ -72,7 +69,8 @@ class WebSocketServer {
         let shaReturn = "0";
         let shaIn = data.ip.toString()
             + data.port.toString()
-            + data.count.toString();
+            + data.count.toString()
+            + Date.now();
         shaSum.update(shaIn);
         shaReturn = shaSum.digest("hex");
         return {
