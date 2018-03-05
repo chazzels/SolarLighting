@@ -62,9 +62,25 @@ class WebSocketServer {
             });
             ws.on('close', function socketClose(message) {
                 console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
+                that.removeSocket(this.key);
             });
-            ws.send(JSON.stringify(shakey));
+            ws.send(JSON.stringify(that.clientKeys));
         });
+    }
+    removeSocket(shakey) {
+        const key = shakey.hex;
+        let clientStatus = this.clients.delete(shakey);
+        let keyIndex = this.clientKeys.indexOf(shakey);
+        if (keyIndex !== -1 && keyIndex >= 0) {
+            this.clientKeys.splice(keyIndex, 1);
+        }
+        let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
+        if (clientStatus && clientKeysStatus) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     generateAssetSHA1(data) {
         let shaSum = this.Crypto.createHash("sha1");

@@ -23,6 +23,8 @@ class ClientCom {
 	
 	constructor() {
 		
+		this.perf = new this.SimplePerf();
+		
 		/* timer module initialization. */
 		let that = this;
 		
@@ -41,7 +43,7 @@ class ClientCom {
 		
 		let manifest = that.server.getClientManifest();
 		
-		this.meta.updateKeys(manifest);
+		that.meta.updateKeys(manifest);
 		
 	}
 	
