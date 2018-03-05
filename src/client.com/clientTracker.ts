@@ -4,12 +4,6 @@ class ClientTracker {
 		
 	}
 	
-	newConnection(data: any) {
-		
-		console.log(data);
-		
-	}
-	
 }
 
 export = ClientTracker;

@@ -1,1 +1,1 @@
-{"version":3,"file":"clientTracker.js","sourceRoot":"","sources":["../../src/client.com/clientTracker.ts"],"names":[],"mappings":";AAAA;IAEC;IAEA,CAAC;IAED,aAAa,CAAC,IAAS;QAEtB,OAAO,CAAC,GAAG,CAAC,IAAI,CAAC,CAAC;IAEnB,CAAC;CAED;AAED,iBAAS,aAAa,CAAC"}
+{"version":3,"file":"clientTracker.js","sourceRoot":"","sources":["../../src/client.com/clientTracker.ts"],"names":[],"mappings":";AAAA;IAEC;IAEA,CAAC;CAED;AAED,iBAAS,aAAa,CAAC"}
