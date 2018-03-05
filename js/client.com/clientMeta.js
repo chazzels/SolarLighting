@@ -1,13 +1,13 @@
 "use strict";
 class ClientMeta {
     constructor(perf) {
-        this.clientKeys = [];
+        this.clientsKeys = [];
         this.clients = new Map();
         this.perf = perf;
         ;
     }
     updateKeys(manifest) {
-        this.clientKeys = manifest;
+        this.clientsKeys = manifest;
     }
 }
 module.exports = ClientMeta;

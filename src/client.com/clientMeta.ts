@@ -1,6 +1,6 @@
 class ClientMeta {
 	
-	private clientKeys: any = []; 
+	private clientsKeys: any = []; 
 	private clients: any = new Map();
 	
 	private perf: any;
@@ -11,9 +11,11 @@ class ClientMeta {
 		
 	}
 	
+	/* update the clientsKeys array with new active socket keys. */
+	/* @param {array} manifest - sha1 keys array that pair with live sockets*/
 	updateKeys(manifest: any) {
 		
-		this.clientKeys = manifest;
+		this.clientsKeys = manifest;
 	}
 	
 }
