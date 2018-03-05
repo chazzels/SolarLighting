@@ -1,5 +1,5 @@
 /*
-*	module too track current position in time each asset is at.
+*	module to track current position in time each asset is at.
 *	provide asset status to other modules in the engine enviroment.
 */
 
