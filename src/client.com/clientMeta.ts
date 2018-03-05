@@ -1,3 +1,7 @@
+/*
+*	module to track data about connected websockets.
+*/
+
 class ClientMeta {
 	
 	private clientsKeys: any = []; 
