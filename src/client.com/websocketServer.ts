@@ -20,9 +20,6 @@ class WebSocketServer {
 	private clientKeys: any = [];
 	private connectionCounter: number = 0;
 	
-	public domain: string = "";
-	public port: number = -1;
-	
 	/* module constants */
 	private readonly STATEMETA: string = "StateMeta";
 	private readonly STATEDATA: string = "StateMeta";
@@ -56,6 +53,14 @@ class WebSocketServer {
 			ws.send(data);
 		
 		}
+		
+	}
+	
+	getClientManifest() {
+		
+		const manifest =  this.clientKeys;
+		
+		return manifest;
 		
 	}
 	

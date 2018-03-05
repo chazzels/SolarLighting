@@ -6,22 +6,42 @@ import { sha1 } from "./interface/sha1";
 
 class ClientCom {
 	
+	/* imported modules */
+	private Crystal: any = require('../shared/crystalClock');
+	private SimplePerf: any = require('../shared/simplePerf');
 	private WebSocketServer: any = require("./websocketServer");
-	private ClientTracker: any = require("./clientTracker");
 	private ClientMeta: any = require("./clientMeta");
 	
-	
+	/* module variables */
+	private crystal: any;
+	private perf: any;
 	private server: any;
-	private tracker: any;
 	private meta: any;
+	
+	/* module constants */
+	private readonly REFRESH_RESOLUTION: number = 100;
 	
 	constructor() {
 		
-		var that = this;
+		/* timer module initialization. */
+		let that = this;
 		
+		this.crystal = new this.Crystal(this.REFRESH_RESOLUTION);
+		
+		this.crystal.onUpdate(that.tick, that);
+		
+		/* websocket server initialization. */
 		this.server = new this.WebSocketServer();
 		
-		this.tracker = new this.ClientTracker();
+		this.meta = new this.ClientMeta(this.perf);
+		
+	}
+	
+	private tick(that: any) {
+		
+		let manifest = that.server.getClientManifest();
+		
+		this.meta.updateKeys(manifest);
 		
 	}
 	

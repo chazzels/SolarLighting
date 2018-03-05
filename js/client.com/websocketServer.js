@@ -8,8 +8,6 @@ class WebSocketServer {
         this.clients = new Map();
         this.clientKeys = [];
         this.connectionCounter = 0;
-        this.domain = "";
-        this.port = -1;
         this.STATEMETA = "StateMeta";
         this.STATEDATA = "StateMeta";
         console.log("SOCKET_SERVER::STARTING");
@@ -24,6 +22,10 @@ class WebSocketServer {
         if (ws.state === this.STATEDATA) {
             ws.send(data);
         }
+    }
+    getClientManifest() {
+        const manifest = this.clientKeys;
+        return manifest;
     }
     initExpress() {
         this.app = this.express();
