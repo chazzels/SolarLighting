@@ -83,7 +83,7 @@ class WebSocketServer {
 	|	Client Functions
 	\----------------------------------------------*/
 	
-	send(shakey, data) {
+	send(shakey: sha1, data: any) {
 		
 		let ws = this.clients.get(shakey);
 		
