@@ -9,7 +9,6 @@ import { playheadObject } from "./interface/playheadObject"
 class AssetPlayhead {
 	
 	/* imported modules */
-	private Crystal: any = require("./crystalClock");
 	private PlayheadLogic: any = require("./playheadLogic");
 	
 	/* module varaibles */

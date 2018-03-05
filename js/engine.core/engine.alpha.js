@@ -5,11 +5,11 @@ class EngineCoreAlpha {
         this._minorversion = 0;
         this._revisionVersion = 1;
         this._releaseType = "a";
-        this.SimplePerf = require("./simplePerf");
+        this.SimplePerf = require("../shared/simplePerf");
+        this.Crystal = require("../shared/crystalClock");
         this.AssetManager = require("./assetManager");
         this.AssetRender = require("./assetRender");
         this.RenderCache = require("./renderCache");
-        this.Crystal = require("./crystalClock");
         this.ENGINELOOP = "EngineLoop";
         console.log(this.version());
         console.log("ENGINE::LOAD_START");

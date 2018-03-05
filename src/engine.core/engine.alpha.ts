@@ -17,11 +17,11 @@ class EngineCoreAlpha {
 	private readonly _releaseType: string = "a";
 	
 	/* imported modules */
-	private SimplePerf: any = require("./simplePerf");
+	private SimplePerf: any = require("../shared/simplePerf");
+	private Crystal: any = require("../shared/crystalClock");
 	private AssetManager: any = require("./assetManager");
 	private AssetRender: any = require("./assetRender");
 	private RenderCache: any = require("./renderCache"); 
-	private Crystal: any = require("./crystalClock");
 	
 	/* module variables */
 	private _simplePerf: any;
