@@ -43,7 +43,7 @@ class EngineCoreAlpha {
         return this._renderCache.read(shakey);
     }
     version() {
-        let version = "Engine v"
+        let version = "Engine Core v"
             + this._majorVersion.toString() + "."
             + this._majorVersion.toString() + "."
             + this._revisionVersion.toString()

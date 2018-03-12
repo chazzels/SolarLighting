@@ -173,7 +173,7 @@ class WebSocketServer {
 		
 		this.app.use(function(req, res) {
 			
-			res.send("ws server up!!!");
+			res.status(500).end();
 			
 		});
 		

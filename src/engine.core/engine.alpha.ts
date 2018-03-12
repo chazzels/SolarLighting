@@ -106,7 +106,7 @@ class EngineCoreAlpha {
 	/* log the component and what version it is currently running on. */
 	version(): string {
 		
-		let version = "Engine v" 
+		let version = "Engine Core v" 
 		+ this._majorVersion.toString() + "."
 		+ this._majorVersion.toString() + "."
 		+ this._revisionVersion.toString()
