@@ -1,5 +1,5 @@
 /*
-	module to link up all the other engine modules to create a cohesive system.
+*	module to link up all the other engine modules to create a cohesive system.
 *	TODO: build logging module.
 *	TODO: function to dump shakey name map for later debug
 */
@@ -8,7 +8,7 @@ import { sha1 } from "./interface/sha1";
 
 import {crystalObject } from "./interface/crystalObject";
 
-class EngineAlpha {
+class EngineCoreAlpha {
 	
 	/* module version info */
 	private readonly _majorVersion: number = 0;
@@ -17,11 +17,11 @@ class EngineAlpha {
 	private readonly _releaseType: string = "a";
 	
 	/* imported modules */
-	private SimplePerf: any = require("./simplePerf");
+	private SimplePerf: any = require("../shared/simplePerf");
+	private Crystal: any = require("../shared/crystalClock");
 	private AssetManager: any = require("./assetManager");
 	private AssetRender: any = require("./assetRender");
 	private RenderCache: any = require("./renderCache"); 
-	private Crystal: any = require("./crystalClock");
 	
 	/* module variables */
 	private _simplePerf: any;
@@ -37,7 +37,7 @@ class EngineAlpha {
 		
 		console.log(this.version());
 		
-		console.log("ENGINE::LOAD_START");
+		console.log("ENGINE::STARTING");
 		
 		console.group();
 		
@@ -65,8 +65,6 @@ class EngineAlpha {
 		this._renderCache = new this.RenderCache(this._simplePerf);
 		
 		this._assetRender = new this.AssetRender(this._simplePerf);
-		
-		console.log("ENGINE::LOAD_END");
 		
 	}
 	
@@ -98,10 +96,17 @@ class EngineAlpha {
 		
 	}
 	
+	/* read cahced value from the render cahce. */
+	read(shakey: sha1) {
+		
+		return this._renderCache.read(shakey);
+		
+	}
+	
 	/* log the component and what version it is currently running on. */
 	version(): string {
 		
-		let version = "Engine v" 
+		let version = "Engine Core v" 
 		+ this._majorVersion.toString() + "."
 		+ this._majorVersion.toString() + "."
 		+ this._revisionVersion.toString()
@@ -159,4 +164,4 @@ class EngineAlpha {
 
 }
 
-export = EngineAlpha;
+export = EngineCoreAlpha;

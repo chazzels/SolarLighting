@@ -1,0 +1,1 @@
+{"version":3,"file":"clientMeta.js","sourceRoot":"","sources":["../../src/client.com/clientMeta.ts"],"names":[],"mappings":";AAIA;IAOC,YAAY,IAAU;QALd,gBAAW,GAAQ,EAAE,CAAC;QACtB,YAAO,GAAQ,IAAI,GAAG,EAAE,CAAC;QAMhC,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QAAA,CAAC;IAEnB,CAAC;IAID,UAAU,CAAC,QAAa;QAEvB,IAAI,CAAC,WAAW,GAAG,QAAQ,CAAC;IAC7B,CAAC;CAED;AAED,iBAAS,UAAU,CAAC"}

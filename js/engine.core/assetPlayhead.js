@@ -1,7 +1,6 @@
 "use strict";
 class AssetPlayhead {
     constructor(perf) {
-        this.Crystal = require("./crystalClock");
         this.PlayheadLogic = require("./playheadLogic");
         this._playheads = new Map();
         this._playheadsMeta = new Map();

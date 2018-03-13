@@ -1,5 +1,5 @@
 /*
-*	module too track current position in time each asset is at.
+*	module to track current position in time each asset is at.
 *	provide asset status to other modules in the engine enviroment.
 */
 
@@ -9,7 +9,6 @@ import { playheadObject } from "./interface/playheadObject"
 class AssetPlayhead {
 	
 	/* imported modules */
-	private Crystal: any = require("./crystalClock");
 	private PlayheadLogic: any = require("./playheadLogic");
 	
 	/* module varaibles */

@@ -1,18 +1,18 @@
 "use strict";
-class EngineAlpha {
+class EngineCoreAlpha {
     constructor(options) {
         this._majorVersion = 0;
         this._minorversion = 0;
         this._revisionVersion = 1;
         this._releaseType = "a";
-        this.SimplePerf = require("./simplePerf");
+        this.SimplePerf = require("../shared/simplePerf");
+        this.Crystal = require("../shared/crystalClock");
         this.AssetManager = require("./assetManager");
         this.AssetRender = require("./assetRender");
         this.RenderCache = require("./renderCache");
-        this.Crystal = require("./crystalClock");
         this.ENGINELOOP = "EngineLoop";
         console.log(this.version());
-        console.log("ENGINE::LOAD_START");
+        console.log("ENGINE::STARTING");
         console.group();
         if (options === undefined || options === null) {
             options = {};
@@ -26,7 +26,6 @@ class EngineAlpha {
         this._assetManager = new this.AssetManager(this._simplePerf);
         this._renderCache = new this.RenderCache(this._simplePerf);
         this._assetRender = new this.AssetRender(this._simplePerf);
-        console.log("ENGINE::LOAD_END");
     }
     loadAsset(assetData) {
         return this._assetManager.loadAsset(assetData);
@@ -40,8 +39,11 @@ class EngineAlpha {
     pause(shakey) {
         this._assetManager.pause(shakey);
     }
+    read(shakey) {
+        return this._renderCache.read(shakey);
+    }
     version() {
-        let version = "Engine v"
+        let version = "Engine Core v"
             + this._majorVersion.toString() + "."
             + this._majorVersion.toString() + "."
             + this._revisionVersion.toString()
@@ -70,5 +72,5 @@ class EngineAlpha {
         tickDiff = Date.now() - tickStart;
     }
 }
-module.exports = EngineAlpha;
+module.exports = EngineCoreAlpha;
 //# sourceMappingURL=engine.alpha.js.map

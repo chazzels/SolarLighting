@@ -7,9 +7,6 @@ import { sha1 } from "./interface/sha1";
 
 class AssetRender {
 	
-	/* imported modules */
-	private Crystal: any = require("./crystalClock");
-	
 	/* module variables */
 	private _stateUpdate: any;
 	private _manifest: any = [];
@@ -137,7 +134,7 @@ class AssetRender {
 		
 		calcCue.red = this.calcParameter(prevCue.red, curCue.red, progress);
 		
-		calcCue.green = this.calcParameter(prevCue.green, curCue.green, progress);
+		calcCue.green = this.calcParameter(prevCue.green,curCue.green,progress);
 		
 		calcCue.blue = this.calcParameter(prevCue.blue, curCue.blue, progress);
 		

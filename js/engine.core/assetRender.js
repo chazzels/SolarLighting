@@ -1,7 +1,6 @@
 "use strict";
 class AssetRender {
     constructor(perf) {
-        this.Crystal = require("./crystalClock");
         this._manifest = [];
         this._manifestLength = 0;
         this._manifestIndex = -1;
