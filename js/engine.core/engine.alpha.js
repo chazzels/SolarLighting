@@ -1,18 +1,13 @@
 "use strict";
 class EngineCoreAlpha {
     constructor(options) {
-        this._majorVersion = 0;
-        this._minorversion = 0;
-        this._revisionVersion = 1;
-        this._releaseType = "a";
         this.SimplePerf = require("../shared/simplePerf");
         this.Crystal = require("../shared/crystalClock");
         this.AssetManager = require("./assetManager");
         this.AssetRender = require("./assetRender");
         this.RenderCache = require("./renderCache");
         this.ENGINELOOP = "EngineLoop";
-        console.log(this.version());
-        console.log("ENGINE::STARTING");
+        console.log("ENGINE.CORE::STARTING");
         console.group();
         if (options === undefined || options === null) {
             options = {};
@@ -22,10 +17,10 @@ class EngineCoreAlpha {
         let that = this;
         this._crystal = new this.Crystal(10);
         this._crystal.onUpdate(that.tick, that);
-        console.groupEnd();
         this._assetManager = new this.AssetManager(this._simplePerf);
         this._renderCache = new this.RenderCache(this._simplePerf);
         this._assetRender = new this.AssetRender(this._simplePerf);
+        console.groupEnd();
     }
     loadAsset(assetData) {
         return this._assetManager.loadAsset(assetData);
@@ -41,14 +36,6 @@ class EngineCoreAlpha {
     }
     read(shakey) {
         return this._renderCache.read(shakey);
-    }
-    version() {
-        let version = "Engine Core v"
-            + this._majorVersion.toString() + "."
-            + this._majorVersion.toString() + "."
-            + this._revisionVersion.toString()
-            + this._releaseType;
-        return version;
     }
     tick(that) {
         let tickStart = Date.now(), tickDiff;

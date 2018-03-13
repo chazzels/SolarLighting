@@ -2,6 +2,12 @@ import { sha1 } from "./engine.core/interface/sha1";
 
 class SolarEngine {
 	
+	/* module version info */
+	private readonly _majorVersion: number = 0;
+	private readonly _minorversion: number = 0;
+	private readonly _revisionVersion: number = 1;
+	private readonly _releaseType: string = "a";
+	
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
 	private ClientCom: any = require("./client.com/client.com");
@@ -17,6 +23,9 @@ class SolarEngine {
 	
 	constructor() {
 		
+		console.log(this.version());
+		console.group();
+		
 		this._engine = new this.EngineCore();
 		
 		this._clients = new this.ClientCom();
@@ -27,6 +36,22 @@ class SolarEngine {
 		let that = this;
 		this._crystal = new this.Crystal(250);
 		this._crystal.onUpdate(that.tick, that);
+		
+		console.groupEnd();
+		console.log("------------------------------");
+		
+	}
+	
+	/* log the component and what version it is currently running on. */
+	version(): string {
+		
+		let version = "Solar Engine" 
+		+ this._majorVersion.toString() + "."
+		+ this._majorVersion.toString() + "."
+		+ this._revisionVersion.toString()
+		+ this._releaseType;
+		
+		return version;
 		
 	}
 	

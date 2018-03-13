@@ -10,12 +10,6 @@ import {crystalObject } from "./interface/crystalObject";
 
 class EngineCoreAlpha {
 	
-	/* module version info */
-	private readonly _majorVersion: number = 0;
-	private readonly _minorversion: number = 0;
-	private readonly _revisionVersion: number = 1;
-	private readonly _releaseType: string = "a";
-	
 	/* imported modules */
 	private SimplePerf: any = require("../shared/simplePerf");
 	private Crystal: any = require("../shared/crystalClock");
@@ -35,9 +29,7 @@ class EngineCoreAlpha {
 	
 	constructor(options?: any) {
 		
-		console.log(this.version());
-		
-		console.log("ENGINE::STARTING");
+		console.log("ENGINE.CORE::STARTING");
 		
 		console.group();
 		
@@ -57,14 +49,14 @@ class EngineCoreAlpha {
 		this._crystal = new this.Crystal(10);
 		this._crystal.onUpdate(that.tick, that);
 		
-		console.groupEnd();
-		
 		/* internal modules */
 		this._assetManager = new this.AssetManager(this._simplePerf);
 		
 		this._renderCache = new this.RenderCache(this._simplePerf);
 		
 		this._assetRender = new this.AssetRender(this._simplePerf);
+		
+		console.groupEnd();
 		
 	}
 	
@@ -100,19 +92,6 @@ class EngineCoreAlpha {
 	read(shakey: sha1) {
 		
 		return this._renderCache.read(shakey);
-		
-	}
-	
-	/* log the component and what version it is currently running on. */
-	version(): string {
-		
-		let version = "Engine Core v" 
-		+ this._majorVersion.toString() + "."
-		+ this._majorVersion.toString() + "."
-		+ this._revisionVersion.toString()
-		+ this._releaseType;
-		
-		return version;
 		
 	}
 	
