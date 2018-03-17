@@ -11,7 +11,7 @@ There are 3 main components to this application.
 
 - Client Communications
 	- Websocket server to communicate with clients.
-	- Tracks Clients Sockets and Meta.
+	- Tracks clients sockets and configuration info.
 
 - Controller Communications
 	- Websocket client to communicate with the show controller.
