@@ -1,10 +1,10 @@
 "use strict";
 class SolarEngine {
     constructor() {
-        this._majorVersion = 0;
-        this._minorversion = 0;
-        this._revisionVersion = 1;
-        this._releaseType = "a";
+        this.majorVersion = 0;
+        this.minorversion = 0;
+        this.revisionVersion = 1;
+        this.releaseType = "a";
         this.EngineCore = require("./engine.core/engine.alpha");
         this.ClientCom = require("./client.com/client.com");
         this.ControllerCom = require("./controller.com/controller.com");
@@ -22,11 +22,11 @@ class SolarEngine {
         console.log("------------------------------");
     }
     version() {
-        let version = "Solar Engine"
-            + this._majorVersion.toString() + "."
-            + this._majorVersion.toString() + "."
-            + this._revisionVersion.toString()
-            + this._releaseType;
+        let version = "Solar Engine v"
+            + this.majorVersion.toString() + "."
+            + this.majorVersion.toString() + "."
+            + this.revisionVersion.toString()
+            + this.releaseType;
         return version;
     }
     loadAsset(assetData) {

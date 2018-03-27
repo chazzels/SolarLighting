@@ -3,10 +3,10 @@ import { sha1 } from "./engine.core/interface/sha1";
 class SolarEngine {
 	
 	/* module version info */
-	private readonly _majorVersion: number = 0;
-	private readonly _minorversion: number = 0;
-	private readonly _revisionVersion: number = 1;
-	private readonly _releaseType: string = "a";
+	readonly majorVersion: number = 0;
+	readonly minorversion: number = 0;
+	readonly revisionVersion: number = 1;
+	readonly releaseType: string = "a";
 	
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
@@ -42,14 +42,14 @@ class SolarEngine {
 		
 	}
 	
-	/* log the component and what version it is currently running on. */
+	/* log the application name and the current version */
 	version(): string {
 		
-		let version = "Solar Engine" 
-		+ this._majorVersion.toString() + "."
-		+ this._majorVersion.toString() + "."
-		+ this._revisionVersion.toString()
-		+ this._releaseType;
+		let version = "Solar Engine v" 
+			+ this.majorVersion.toString() + "."
+			+ this.majorVersion.toString() + "."
+			+ this.revisionVersion.toString()
+			+ this.releaseType;
 		
 		return version;
 		
@@ -92,8 +92,6 @@ class SolarEngine {
 	/*----------------------------------------------\
 	|	ClientCom Functionality
 	\----------------------------------------------*/
-	
-	
 	
 	/*----------------------------------------------\
 	|	Controller Com Functionality
