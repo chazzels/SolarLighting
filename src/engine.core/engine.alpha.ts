@@ -29,7 +29,7 @@ class EngineCoreAlpha {
 	
 	constructor(options?: any) {
 		
-		console.log("ENGINE.CORE::STARTING");
+		console.log("ENGINE_CORE::STARTING");
 		
 		console.group();
 		

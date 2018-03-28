@@ -10,32 +10,32 @@ class SolarEngine {
 	
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
-	private ClientCom: any = require("./engine.server/server");
-	private ControllerCom: any = require("./engine.client/client");
+	private EngineServer: any = require("./engine.server/server");
+	private EngineClient: any = require("./engine.client/client");
 	private Crystal: any = require("./engine.core/crystalClock");
 	
 	/* module variables */
-	private _engine: any;
-	private _clients: any;
-	private _controller: any;
-	private _assetKeys: any = [];
-	private _crystal: any;
+	private engine: any;
+	private server: any;
+	private client: any;
+	private assetKeys: any = [];
+	private crystal: any;
 	
 	constructor() {
 		
 		console.log(this.version());
 		console.group();
 		
-		this._engine = new this.EngineCore();
+		this.engine = new this.EngineCore();
 		
-		this._clients = new this.ClientCom();
+		this.server = new this.EngineServer();
 		
-		this._controller = new this.ControllerCom();
+		this.client = new this.EngineClient();
 		
 		/* timer module initialization */
 		let that = this;
-		this._crystal = new this.Crystal(250);
-		this._crystal.onUpdate(that.tick, that);
+		this.crystal = new this.Crystal(250);
+		this.crystal.onUpdate(that.tick, that);
 		
 		console.groupEnd();
 		console.log("------------------------------");
@@ -63,9 +63,9 @@ class SolarEngine {
 		
 		let assetKey = null;
 		
-		assetKey = this._engine.loadAsset(assetData);
+		assetKey = this.engine.loadAsset(assetData);
 		
-		this._assetKeys.push(assetKey)
+		this.assetKeys.push(assetKey)
 		
 		return assetKey
 		
@@ -73,19 +73,19 @@ class SolarEngine {
 	
 	dumpAsset(shakey: sha1) {
 		
-		this._engine.dumpAsset(shakey);
+		this.engine.dumpAsset(shakey);
 		
 	}
 	
 	play(shakey: sha1) {
 		
-		this._engine.play(shakey);
+		this.engine.play(shakey);
 		
 	}
 	
 	pause(shakey: sha1) {
 		
-		this._engine.pause(shakey);
+		this.engine.pause(shakey);
 		
 	}
 	

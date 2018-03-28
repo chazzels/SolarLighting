@@ -6,7 +6,7 @@ class ClientCom {
         this.WebSocketServer = require("./websocketServer");
         this.ClientMeta = require("./clientMeta");
         this.REFRESH_RESOLUTION = 100;
-        console.log("CLIENT.COM::STARTING");
+        console.log("ENGINE_SERVER::STARTING");
         console.group();
         this.perf = new this.SimplePerf();
         let that = this;

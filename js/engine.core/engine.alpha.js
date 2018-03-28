@@ -7,7 +7,7 @@ class EngineCoreAlpha {
         this.AssetRender = require("./assetRender");
         this.RenderCache = require("./renderCache");
         this.ENGINELOOP = "EngineLoop";
-        console.log("ENGINE.CORE::STARTING");
+        console.log("ENGINE_CORE::STARTING");
         console.group();
         if (options === undefined || options === null) {
             options = {};

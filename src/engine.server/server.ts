@@ -23,7 +23,7 @@ class ClientCom {
 	
 	constructor() {
 		
-		console.log("CLIENT.COM::STARTING");
+		console.log("ENGINE_SERVER::STARTING");
 		console.group();
 		
 		this.perf = new this.SimplePerf();
