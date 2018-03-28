@@ -22,4 +22,4 @@ class ClientCom {
     }
 }
 module.exports = ClientCom;
-//# sourceMappingURL=client.com.js.map
+//# sourceMappingURL=server.js.map

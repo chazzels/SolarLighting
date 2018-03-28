@@ -6,8 +6,8 @@ class SolarEngine {
         this.revisionVersion = 1;
         this.releaseType = "a";
         this.EngineCore = require("./engine.core/engine.alpha");
-        this.ClientCom = require("./client.com/client.com");
-        this.ControllerCom = require("./controller.com/controller.com");
+        this.ClientCom = require("./engine.server/server");
+        this.ControllerCom = require("./engine.client/client");
         this.Crystal = require("./engine.core/crystalClock");
         this._assetKeys = [];
         console.log(this.version());
