@@ -18,11 +18,11 @@ class EngineCoreAlpha {
 	private RenderCache: any = require("./renderCache"); 
 	
 	/* module variables */
-	private _simplePerf: any;
-	private _crystal: crystalObject;
-	private _assetManager: any;
-	private _assetRender: any;
-	private _renderCache: any;
+	private simplePerf: any;
+	private crystal: crystalObject;
+	private assetManger: any;
+	private assetRender: any;
+	private renderCache: any;
 	
 	/* performance variables */
 	private ENGINELOOP: string = "EngineLoop";
@@ -41,57 +41,58 @@ class EngineCoreAlpha {
 		
 		
 		/* performance module initialization.  */
-		this._simplePerf = new this.SimplePerf(options.perf);
-		this._simplePerf.registerParameter(this.ENGINELOOP);
+		this.simplePerf = new this.SimplePerf(options.perf);
+		this.simplePerf.registerParameter(this.ENGINELOOP);
 		
 		/* timer module initialization */
 		let that = this;
-		this._crystal = new this.Crystal(10);
-		this._crystal.onUpdate(that.tick, that);
+		this.crystal = new this.Crystal(10);
+		this.crystal.onUpdate(that.tick, that);
 		
 		/* internal modules */
-		this._assetManager = new this.AssetManager(this._simplePerf);
+		this.assetManger = new this.AssetManager(this.simplePerf);
 		
-		this._renderCache = new this.RenderCache(this._simplePerf);
+		this.renderCache = new this.RenderCache(this.simplePerf);
 		
-		this._assetRender = new this.AssetRender(this._simplePerf);
+		this.assetRender = new this.AssetRender(this.simplePerf);
 		
 		console.groupEnd();
 		
 	}
 	
 	/* load asset data into the engine. */
+	/* returns an sha1 key for referencing the asset later. */
 	loadAsset(assetData: any) {
 		
-		return this._assetManager.loadAsset(assetData);
+		return this.assetManger.loadAsset(assetData);
 		
 	}
 	
-	/* removes asset data* from the engine */
+	/* removes asset data from the engine */
 	dumpAsset(shakey: sha1) {
 		
-		this._assetManager.dumpAsset(shakey);
+		this.assetManger.dumpAsset(shakey);
 		
 	}
 	
-	/* play an asset. */
+	/* play an asset. set asset state to play and active. */
 	play(shakey: sha1) {
 		
-		this._assetManager.play(shakey);
+		this.assetManger.play(shakey);
 		
 	}
 	
 	/* pause an asset. */
 	pause(shakey: sha1) {
 		
-		this._assetManager.pause(shakey);
+		this.assetManger.pause(shakey);
 		
 	}
 	
 	/* read cahced value from the render cahce. */
 	read(shakey: sha1) {
 		
-		return this._renderCache.read(shakey);
+		return this.renderCache.read(shakey);
 		
 	}
 	
@@ -107,25 +108,27 @@ class EngineCoreAlpha {
 			assetObj,
 			updatedCueState;
 		
-		that._assetManager.update();
+		// update variables used for claculating the current styles. 
+		that.assetManger.update();
 		
-		that._assetRender.updateManifest(that._assetManager.getManifest());
+		that.assetRender.updateManifest(that.assetManger.getManifest());
 		
-		manifestLength = that._assetRender.getLoopCount();
+		manifestLength = that.assetRender.getLoopCount();
 		
+		// loop through each active asset and calculate its current styles.
 		for(let i = 0; i < manifestLength; i++) {
 			
-			that._assetRender.next();
+			that.assetRender.next();
 			
-			currentKey = that._assetRender.getCurrentKey();
+			currentKey = that.assetRender.getCurrentKey();
 			
-			assetObj = that._assetManager.getState(currentKey);
+			assetObj = that.assetManger.getState(currentKey);
 			
 			if(assetObj !== null) {
 			
-				updatedCueState = that._assetRender.update(assetObj);
+				updatedCueState = that.assetRender.update(assetObj);
 				
-				that._renderCache.write(currentKey.hex, updatedCueState);
+				that.renderCache.write(currentKey.hex, updatedCueState);
 			
 			} else {
 				
@@ -135,7 +138,7 @@ class EngineCoreAlpha {
 			
 		}
 		
-		that._simplePerf.hit(that.ENGINELOOP);
+		that.simplePerf.hit(that.ENGINELOOP);
 		
 		tickDiff = Date.now() - tickStart;
 		

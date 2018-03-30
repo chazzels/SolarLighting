@@ -67,7 +67,7 @@ class SolarEngine {
 		
 		this.assetKeys.push(assetKey)
 		
-		return assetKey
+		return assetKey;
 		
 	}
 	
@@ -90,11 +90,11 @@ class SolarEngine {
 	}
 	
 	/*----------------------------------------------\
-	|	ClientCom Functionality
+	|	Server Functionality
 	\----------------------------------------------*/
 	
 	/*----------------------------------------------\
-	|	Controller Com Functionality
+	|	Client Functionality
 	\----------------------------------------------*/
 	
 	/*----------------------------------------------\
