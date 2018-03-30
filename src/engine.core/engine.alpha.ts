@@ -39,7 +39,6 @@ class EngineCoreAlpha {
 		
 		}
 		
-		
 		/* performance module initialization.  */
 		this.simplePerf = new this.SimplePerf(options.perf);
 		this.simplePerf.registerParameter(this.ENGINELOOP);
