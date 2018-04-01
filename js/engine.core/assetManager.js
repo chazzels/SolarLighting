@@ -110,14 +110,10 @@ class AssetManager {
         let shaSum = this.Crypto.createHash("sha1");
         let shaReturn = "0";
         let shaIn = assetData.assetID.toString()
-            + "=="
-            + assetData.cueTimeline.length.toString()
-            + "x"
-            + assetData.cueTrack.length.toString()
-            + ":"
-            + assetData.cueTrackMeta.length.toString()
-            + "@"
-            + this._assetCount.toString();
+            + "==" + assetData.cueTimeline.length.toString()
+            + "x" + assetData.cueTrack.length.toString()
+            + ":" + assetData.cueTrackMeta.length.toString()
+            + "@" + this._assetCount.toString();
         shaSum.update(shaIn);
         shaReturn = shaSum.digest("hex");
         return {

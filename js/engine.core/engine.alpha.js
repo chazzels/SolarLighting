@@ -1,74 +1,61 @@
 "use strict";
 class EngineCoreAlpha {
     constructor(options) {
-        this._majorVersion = 0;
-        this._minorversion = 0;
-        this._revisionVersion = 1;
-        this._releaseType = "a";
         this.SimplePerf = require("../shared/simplePerf");
         this.Crystal = require("../shared/crystalClock");
         this.AssetManager = require("./assetManager");
         this.AssetRender = require("./assetRender");
         this.RenderCache = require("./renderCache");
         this.ENGINELOOP = "EngineLoop";
-        console.log(this.version());
-        console.log("ENGINE::STARTING");
+        console.log("ENGINE_CORE::STARTING");
         console.group();
         if (options === undefined || options === null) {
             options = {};
         }
-        this._simplePerf = new this.SimplePerf(options.perf);
-        this._simplePerf.registerParameter(this.ENGINELOOP);
+        this.simplePerf = new this.SimplePerf(options.perf);
+        this.simplePerf.registerParameter(this.ENGINELOOP);
         let that = this;
-        this._crystal = new this.Crystal(10);
-        this._crystal.onUpdate(that.tick, that);
+        this.crystal = new this.Crystal(10);
+        this.crystal.onUpdate(that.tick, that);
+        this.assetManger = new this.AssetManager(this.simplePerf);
+        this.renderCache = new this.RenderCache(this.simplePerf);
+        this.assetRender = new this.AssetRender(this.simplePerf);
         console.groupEnd();
-        this._assetManager = new this.AssetManager(this._simplePerf);
-        this._renderCache = new this.RenderCache(this._simplePerf);
-        this._assetRender = new this.AssetRender(this._simplePerf);
     }
     loadAsset(assetData) {
-        return this._assetManager.loadAsset(assetData);
+        return this.assetManger.loadAsset(assetData);
     }
     dumpAsset(shakey) {
-        this._assetManager.dumpAsset(shakey);
+        this.assetManger.dumpAsset(shakey);
     }
     play(shakey) {
-        this._assetManager.play(shakey);
+        this.assetManger.play(shakey);
     }
     pause(shakey) {
-        this._assetManager.pause(shakey);
+        this.assetManger.pause(shakey);
     }
     read(shakey) {
-        return this._renderCache.read(shakey);
-    }
-    version() {
-        let version = "Engine Core v"
-            + this._majorVersion.toString() + "."
-            + this._majorVersion.toString() + "."
-            + this._revisionVersion.toString()
-            + this._releaseType;
-        return version;
+        return this.renderCache.read(shakey);
     }
     tick(that) {
         let tickStart = Date.now(), tickDiff;
         let manifestLength, currentKey, assetObj, updatedCueState;
-        that._assetManager.update();
-        that._assetRender.updateManifest(that._assetManager.getManifest());
-        manifestLength = that._assetRender.getLoopCount();
+        that.assetManger.update();
+        that.assetRender.updateManifest(that.assetManger.getManifest());
+        manifestLength = that.assetRender.getLoopCount();
         for (let i = 0; i < manifestLength; i++) {
-            that._assetRender.next();
-            currentKey = that._assetRender.getCurrentKey();
-            assetObj = that._assetManager.getState(currentKey);
+            that.assetRender.next();
+            currentKey = that.assetRender.getCurrentKey();
+            assetObj = that.assetManger.getState(currentKey);
             if (assetObj !== null) {
-                updatedCueState = that._assetRender.update(assetObj);
-                that._renderCache.write(currentKey.hex, updatedCueState);
+                updatedCueState = that.assetRender.update(assetObj);
+                that.renderCache.write(currentKey.hex, updatedCueState);
             }
             else {
                 console.log("ENGINE::ASSET_NULL:", currentKey.hex);
             }
         }
-        that._simplePerf.hit(that.ENGINELOOP);
+        that.simplePerf.hit(that.ENGINELOOP);
         tickDiff = Date.now() - tickStart;
     }
 }

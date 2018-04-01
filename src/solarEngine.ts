@@ -2,31 +2,56 @@ import { sha1 } from "./engine.core/interface/sha1";
 
 class SolarEngine {
 	
+	/* module version info */
+	readonly majorVersion: number = 0;
+	readonly minorversion: number = 0;
+	readonly revisionVersion: number = 1;
+	readonly releaseType: string = "a";
+	
 	/* imported modules */
 	private EngineCore: any = require("./engine.core/engine.alpha");
-	private ClientCom: any = require("./client.com/client.com");
-	private ControllerCom: any = require("./controller.com/controller.com");
+	private EngineServer: any = require("./engine.server/server");
+	private EngineClient: any = require("./engine.client/client");
 	private Crystal: any = require("./engine.core/crystalClock");
 	
 	/* module variables */
-	private _engine: any;
-	private _clients: any;
-	private _controller: any;
-	private _assetKeys: any = [];
-	private _crystal: any;
+	private engine: any;
+	private server: any;
+	private client: any;
+	private assetKeys: any = [];
+	private crystal: any;
 	
 	constructor() {
 		
-		this._engine = new this.EngineCore();
+		console.log(this.version());
+		console.group();
 		
-		this._clients = new this.ClientCom();
+		this.engine = new this.EngineCore();
 		
-		this._controller = new this.ControllerCom();
+		this.server = new this.EngineServer();
+		
+		this.client = new this.EngineClient();
 		
 		/* timer module initialization */
 		let that = this;
-		this._crystal = new this.Crystal(250);
-		this._crystal.onUpdate(that.tick, that);
+		this.crystal = new this.Crystal(250);
+		this.crystal.onUpdate(that.tick, that);
+		
+		console.groupEnd();
+		console.log("------------------------------");
+		
+	}
+	
+	/* log the application name and the current version */
+	version(): string {
+		
+		let version = "Solar Engine v" 
+			+ this.majorVersion.toString() + "."
+			+ this.majorVersion.toString() + "."
+			+ this.revisionVersion.toString()
+			+ this.releaseType;
+		
+		return version;
 		
 	}
 	
@@ -38,40 +63,38 @@ class SolarEngine {
 		
 		let assetKey = null;
 		
-		assetKey = this._engine.loadAsset(assetData);
+		assetKey = this.engine.loadAsset(assetData);
 		
-		this._assetKeys.push(assetKey)
+		this.assetKeys.push(assetKey)
 		
-		return assetKey
+		return assetKey;
 		
 	}
 	
 	dumpAsset(shakey: sha1) {
 		
-		this._engine.dumpAsset(shakey);
+		this.engine.dumpAsset(shakey);
 		
 	}
 	
 	play(shakey: sha1) {
 		
-		this._engine.play(shakey);
+		this.engine.play(shakey);
 		
 	}
 	
 	pause(shakey: sha1) {
 		
-		this._engine.pause(shakey);
+		this.engine.pause(shakey);
 		
 	}
 	
 	/*----------------------------------------------\
-	|	ClientCom Functionality
+	|	Server Functionality
 	\----------------------------------------------*/
 	
-	
-	
 	/*----------------------------------------------\
-	|	Controller Com Functionality
+	|	Client Functionality
 	\----------------------------------------------*/
 	
 	/*----------------------------------------------\

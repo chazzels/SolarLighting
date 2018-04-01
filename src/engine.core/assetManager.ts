@@ -39,6 +39,7 @@ class AssetManager {
 	|	manager module functionality
 	\----------------------------------------------*/
 	
+	/* update playhead state and active asset manifest. */
 	update() {
 		
 		this._playhead.update();
@@ -239,14 +240,10 @@ class AssetManager {
 		let shaReturn = "0";
 		
 		let shaIn = assetData.assetID.toString() 
-			+ "==" 
-			+ assetData.cueTimeline.length.toString()
-			+ "x"
-			+ assetData.cueTrack.length.toString()
-			+ ":"
-			+ assetData.cueTrackMeta.length.toString()
-			+ "@"
-			+ this._assetCount.toString();
+			+ "==" + assetData.cueTimeline.length.toString()
+			+ "x" + assetData.cueTrack.length.toString()
+			+ ":" + assetData.cueTrackMeta.length.toString()
+			+ "@" + this._assetCount.toString();
 		
 		/* generate sha1 from input string */
 		shaSum.update(shaIn);

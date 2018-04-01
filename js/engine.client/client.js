@@ -4,4 +4,4 @@ class ControllerCom {
     }
 }
 module.exports = ControllerCom;
-//# sourceMappingURL=controller.com.js.map
+//# sourceMappingURL=client.js.map

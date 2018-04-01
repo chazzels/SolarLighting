@@ -23,6 +23,9 @@ class ClientCom {
 	
 	constructor() {
 		
+		console.log("ENGINE_SERVER::STARTING");
+		console.group();
+		
 		this.perf = new this.SimplePerf();
 		
 		/* timer module initialization. */
@@ -36,6 +39,8 @@ class ClientCom {
 		this.server = new this.WebSocketServer();
 		
 		this.meta = new this.ClientMeta(this.perf);
+		
+		console.groupEnd();
 		
 	}
 	

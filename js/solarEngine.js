@@ -1,32 +1,48 @@
 "use strict";
 class SolarEngine {
     constructor() {
+        this.majorVersion = 0;
+        this.minorversion = 0;
+        this.revisionVersion = 1;
+        this.releaseType = "a";
         this.EngineCore = require("./engine.core/engine.alpha");
-        this.ClientCom = require("./client.com/client.com");
-        this.ControllerCom = require("./controller.com/controller.com");
+        this.EngineServer = require("./engine.server/server");
+        this.EngineClient = require("./engine.client/client");
         this.Crystal = require("./engine.core/crystalClock");
-        this._assetKeys = [];
-        this._engine = new this.EngineCore();
-        this._clients = new this.ClientCom();
-        this._controller = new this.ControllerCom();
+        this.assetKeys = [];
+        console.log(this.version());
+        console.group();
+        this.engine = new this.EngineCore();
+        this.server = new this.EngineServer();
+        this.client = new this.EngineClient();
         let that = this;
-        this._crystal = new this.Crystal(250);
-        this._crystal.onUpdate(that.tick, that);
+        this.crystal = new this.Crystal(250);
+        this.crystal.onUpdate(that.tick, that);
+        console.groupEnd();
+        console.log("------------------------------");
+    }
+    version() {
+        let version = "Solar Engine v"
+            + this.majorVersion.toString() + "."
+            + this.majorVersion.toString() + "."
+            + this.revisionVersion.toString()
+            + this.releaseType;
+        return version;
     }
     loadAsset(assetData) {
         let assetKey = null;
-        assetKey = this._engine.loadAsset(assetData);
-        this._assetKeys.push(assetKey);
+        assetKey = this.engine.loadAsset(assetData);
+        this.assetKeys.push(assetKey);
         return assetKey;
     }
     dumpAsset(shakey) {
-        this._engine.dumpAsset(shakey);
+        this.engine.dumpAsset(shakey);
     }
     play(shakey) {
-        this._engine.play(shakey);
+        this.engine.play(shakey);
     }
     pause(shakey) {
-        this._engine.pause(shakey);
+        this.engine.pause(shakey);
     }
     tick(that) {
     }
