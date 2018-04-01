@@ -39,16 +39,16 @@ class EngineCoreAlpha {
 		
 		}
 		
-		/* performance module initialization.  */
+		// performance module initialization.
 		this.simplePerf = new this.SimplePerf(options.perf);
 		this.simplePerf.registerParameter(this.ENGINELOOP);
 		
-		/* timer module initialization */
+		// timer module initialization.
 		let that = this;
 		this.crystal = new this.Crystal(10);
 		this.crystal.onUpdate(that.tick, that);
 		
-		/* internal modules */
+		// internal modules.
 		this.assetManger = new this.AssetManager(this.simplePerf);
 		
 		this.renderCache = new this.RenderCache(this.simplePerf);
