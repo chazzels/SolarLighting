@@ -62,7 +62,7 @@ class AssetRender {
 			
 		} else {
 			
-			return false
+			return null;
 			
 		}
 		

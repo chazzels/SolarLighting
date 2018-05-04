@@ -25,7 +25,7 @@ class AssetRender {
             return this._manifest[this._manifestIndex];
         }
         else {
-            return false;
+            return null;
         }
     }
     getLoopCount() {
