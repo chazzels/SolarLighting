@@ -23,7 +23,10 @@ class SolarEngine {
 	
 	constructor() {
 		
+		let engineStartTime = Date.now();
+		
 		console.log(this.version());
+		
 		console.group();
 		
 		this.engine = new this.EngineCore();
@@ -38,6 +41,9 @@ class SolarEngine {
 		this.crystal.onUpdate(that.tick, that);
 		
 		console.groupEnd();
+		
+		console.log("Start Up Time:", Date.now() - engineStartTime, "ms");
+		
 		console.log("------------------------------");
 		
 	}
