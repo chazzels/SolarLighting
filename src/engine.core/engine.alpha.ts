@@ -25,7 +25,7 @@ class EngineCoreAlpha {
 	private renderCache: any;
 	
 	/* performance variables */
-	private ENGINELOOP: string = "EngineLoop";
+	private readonly ENGINELOOP: string = "EngineLoop";
 	
 	constructor(options?: any) {
 		
