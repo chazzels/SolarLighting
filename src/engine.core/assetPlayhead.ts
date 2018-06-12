@@ -85,6 +85,7 @@ class AssetPlayhead {
 	}
 	
 	/* remove timeline from the playhead module. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpTimeline(shakey: sha1) {
 		
 		let playheadStatus: boolean = this._playheads.delete(shakey);
@@ -108,6 +109,7 @@ class AssetPlayhead {
 	}
 	
 	/* returns the data stored for a timeline. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getPlayhead(shakey: sha1) : playheadObject {
 		
 		return this._playheads.get(shakey);
@@ -115,6 +117,7 @@ class AssetPlayhead {
 	}
 	
 	/* returns the progress of a playhead as a value between 0 and 1. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getProgress(shakey: sha1) {
 		
 		let playhead = this._playheads.get(shakey);
@@ -130,6 +133,7 @@ class AssetPlayhead {
 	}
 	
 	/* returnns the current index of a playhead as a unsigned integer. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getIndex(shakey: sha1) : number {
 		
 		let playhead = this._playheads.get(shakey);
@@ -147,6 +151,7 @@ class AssetPlayhead {
 	}
 	
 	/* resume or start tracking of an asset playhead.  */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	play(shakey: sha1) {
 		
 		let playhead = this._playheads.get(shakey);
@@ -168,6 +173,7 @@ class AssetPlayhead {
 	}
 	
 	/* stop or pause tracking of an asset playhead. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	pause(shakey: sha1) {
 		
 		let playhead = this._playheads.get(shakey);
@@ -202,6 +208,7 @@ class AssetPlayhead {
 	}
 	
 	/* update a playhead based on the sha1 key passed in. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	private _updatePlayhead(shakey: sha1) {
 		
 		let now = Date.now();
@@ -229,6 +236,8 @@ class AssetPlayhead {
 	
 	/* advance a playhead to the next index. */
 	/* routes to playhead logic module based on next cues mode. */
+	/* @param {playheadObject} playhead - asset playhead. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	private _advancePlayhead(playhead: playheadObject, shakey: sha1) {
 		
 		if(playhead.nextCueMode === this.MODE_FOLLOW) {

@@ -31,6 +31,7 @@ class RenderCache {
 	}
 	
 	/* write an new or updated entry to the map */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	write(shahex: sha1, value: any) {
 		
 		let writeStatus = false;
@@ -44,6 +45,7 @@ class RenderCache {
 	}
 	
 	/* return the value from a entry on the map */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	read(shahex: sha1) {
 		
 		let cacheObj =  {
