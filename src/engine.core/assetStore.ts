@@ -25,6 +25,8 @@ class AssetStore {
 	}
 	
 	/* loads cue track into storage */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
+	/* @param {any} assetData - an assets cue style data. */
 	loadTrack(shakey: sha1, assetData: any) {
 		
 		this._tracks.set(shakey, assetData.cueTrack);
@@ -40,6 +42,7 @@ class AssetStore {
 	}
 	
 	/* remove track from the store module. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpTrack(shakey: sha1) {
 		
 		this._tracks.delete(shakey);
@@ -51,6 +54,7 @@ class AssetStore {
 	}
 	
 	/* fetch cue data from storage */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getCue(shakey: sha1,  cueIndex: number) {
 		
 		let track = this._tracks.get(shakey); 

@@ -161,7 +161,7 @@ class AssetRender {
 		return result;
 		
 	}
-
+	
 }
 
 export = AssetRender;

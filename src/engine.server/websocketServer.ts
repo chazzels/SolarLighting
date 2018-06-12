@@ -112,7 +112,7 @@ class WebSocketServer {
 	}
 	
 	/* removes socket reference and object from websocket server module. */
-	/* @param {string} shakey - sha1 key used to reference a socket*/
+	/* @param {string} shakey - sha1 key used to reference a socket */
 	private removeSocket(shakey: sha1) {
 		
 		/* delete key from client map. return false if failed. */

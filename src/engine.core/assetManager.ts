@@ -68,6 +68,7 @@ class AssetManager {
 	}
 	
 	/* remove asset from the manager. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpAsset(shakey: sha1) {
 		
 		this._store.dumpTrack(shakey);
@@ -85,6 +86,7 @@ class AssetManager {
 	}
 	
 	/* returns all the current data on an asset. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getState(shakey: sha1) {
 		
 		let assetObj: assetState = {
@@ -131,6 +133,7 @@ class AssetManager {
 	\----------------------------------------------*/
 	
 	/* return cue data from a loaded asset. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getCue(shakey: sha1) {
 		
 		let currentIndex = this._playhead.getIndex(shakey);
@@ -149,6 +152,7 @@ class AssetManager {
 	
 	/* return the previous cue data from a loaded asset. */
 	/* will return a zerod out cue if one is not avaible. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getPreviousCue(shakey: sha1) {
 		
 		let playhead = this._playhead.getPlayhead(shakey);
@@ -176,6 +180,7 @@ class AssetManager {
 	\----------------------------------------------*/
 	
 	/* return _playhead data from a loaded asset. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getPlayhead(shakey: sha1) {
 		
 		return this._playhead.getPlayhead(shakey);
@@ -183,13 +188,15 @@ class AssetManager {
 	}
 	
 	/* return progress [0-100.00] from a loaded asset. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getProgress(shakey: sha1) {
 		
 		return this._playhead.getProgress(shakey);
 		
 	}
 	
-	/* change playhead state to start playing. */
+	/* change asset playhead state to start playing. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	play(shakey: sha1,) {
 		
 		this._playhead.play(shakey);
@@ -198,7 +205,8 @@ class AssetManager {
 		
 	}
 	
-	/* change playehad state to stop playing */
+	/* change asset playehad state to stop playing */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	pause(shakey: sha1) {
 		
 		this._playhead.pause(shakey);
@@ -211,7 +219,7 @@ class AssetManager {
 	|	internal module functions
 	\----------------------------------------------*/
 	
-	/* generate a array of sha1 keys for only playing assets. */
+	/* generate a array of sha1 keys only for playing/active assets. */
 	private generateActiveAssetManifest() {
 		
 		var manifest: any = [];

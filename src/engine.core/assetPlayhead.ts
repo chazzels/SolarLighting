@@ -54,6 +54,8 @@ class AssetPlayhead {
 	/* debug: playheader current. */
 	
 	/* load a timeline in and create a new playhead for it. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
+	/* @param {any} assetTimeline - an assets cue timing data. */
 	loadTimeline(shakey: sha1, assetTimeline: any) {
 		
 		let nextCueMode = assetTimeline[1].cueMode || "END";
@@ -130,11 +132,11 @@ class AssetPlayhead {
 	/* returnns the current index of a playhead as a unsigned integer. */
 	getIndex(shakey: sha1) : number {
 		
-		let index = this._playheads.get(shakey);
+		let playhead = this._playheads.get(shakey);
 		
-		if(typeof index !== 'undefined') {
+		if(typeof playhead !== 'undefined') {
 			
-			return index.index;
+			return playhead.index;
 			
 		} else {
 			
@@ -144,7 +146,7 @@ class AssetPlayhead {
 		
 	}
 	
-	/* resume or start tracking of a playhead.  */
+	/* resume or start tracking of an asset playhead.  */
 	play(shakey: sha1) {
 		
 		let playhead = this._playheads.get(shakey);
@@ -165,7 +167,7 @@ class AssetPlayhead {
 		
 	}
 	
-	/* stop or pause tracking of a playhead. */
+	/* stop or pause tracking of an asset playhead. */
 	pause(shakey: sha1) {
 		
 		let playhead = this._playheads.get(shakey);
