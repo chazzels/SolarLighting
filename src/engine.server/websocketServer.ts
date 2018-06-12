@@ -48,34 +48,38 @@ class WebSocketServer {
 		let that = this;
 		
 		/* new websocket connection event */
-		this.wss.on('connection', function socketConnect(ws: any, req: any) {
+		this.wss.on('connection', socketConnect);
+		
+		function socketConnect(ws: any, req: any) {
 			
-			/* socket initialization. */
 			that.createKey(ws);
 			
 			ws.state = that.STATEMETA;
 			
 			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
 			
-			/* socket message handling. */
-			ws.on('message', function socketMessage(message: any) {
-				
-				
-				
-			});
+			ws.on('message', socketMessage);
 			
-			/* socket disconnection handling. */
-			ws.on('close', function socketClose(message: any) {
+			ws.on('close', socketClose);
+			
+			function socketMessage(message: any) {
+				
+				// On new Message event.
+				
+			}
+			
+			function socketClose(message: any) {
 				
 				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
 				
 				that.removeSocket(this.key);
 				
-			});
+			}
+			
 			
 			ws.send(that.clientKeys.length);
 			
-		});
+		}
 		
 	}
 	
@@ -107,7 +111,7 @@ class WebSocketServer {
 		
 	}
 	
-	/* remoces socket reference and object from websocket server module. */
+	/* removes socket reference and object from websocket server module. */
 	/* @param {string} shakey - sha1 key used to reference a socket*/
 	private removeSocket(shakey: sha1) {
 		

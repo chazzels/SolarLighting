@@ -20,6 +20,7 @@ class ClientMeta {
 	updateKeys(manifest: any) {
 		
 		this.clientsKeys = manifest;
+		
 	}
 	
 }
