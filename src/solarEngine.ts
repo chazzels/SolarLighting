@@ -21,7 +21,7 @@ class SolarEngine {
 	private assetKeys: any = [];
 	private crystal: any;
 	
-	constructor(serverReadyFunc?:any) {
+	constructor(options?:any) {
 		
 		let engineStartTime = Date.now();
 		
@@ -29,7 +29,7 @@ class SolarEngine {
 		
 		console.group();
 		
-		this.engine = new this.EngineCore();
+		this.engine = new this.EngineCore(options);
 		
 		this.server = new this.EngineServer();
 		
