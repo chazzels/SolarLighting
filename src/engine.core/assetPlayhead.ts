@@ -51,6 +51,8 @@ class AssetPlayhead {
 		
 	}
 	
+	/* debug: playheader current. */
+	
 	/* load a timeline in and create a new playhead for it. */
 	loadTimeline(shakey: sha1, assetTimeline: any) {
 		
@@ -117,7 +119,7 @@ class AssetPlayhead {
 		
 		let val = playhead.current / playhead.timing;
 		
-		let factor = Math.pow(10, 2);
+		let factor = Math.pow(10, 4);
 		
 		val = Math.round(val * factor) / factor;
 		

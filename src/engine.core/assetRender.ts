@@ -13,7 +13,6 @@ class AssetRender {
 	private _manifestLength: number = 0;
 	private _manifestIndex: number = -1;
 	private _playheads: any;
-	private _store
 	private perf: any;
 	
 	/* performance variables */
@@ -108,13 +107,10 @@ class AssetRender {
 	/* using asset data passed in current state will be calculated. */
 	private updateAsset(assetObj: any) {
 		
-		let playhead = assetObj.playhead;
-		
-		let cue = assetObj.cue;
-		
-		let prevCue = assetObj.previousCue;
-		
-		let progress = this.calcProgress(playhead);
+		let playhead = assetObj.playhead,
+			cue = assetObj.cue,
+			prevCue = assetObj.previousCue,
+			progress = assetObj.progress;
 		
 		let calcCue = this.calcCue(prevCue, cue, progress);
 		
@@ -141,6 +137,7 @@ class AssetRender {
 		this.perf.hit(this.ASSETCALC);
 		
 		return calcCue;
+		
 	}
 	
 	/* process new values for the cues based on last state, next state and  */
@@ -162,20 +159,6 @@ class AssetRender {
 		result = Math.floor(result);
 		
 		return result;
-		
-	}
-	
-	/* calculate cue progress and how close it is to the end. */
-	/* Return number betwene 0 and 1. */
-	private calcProgress(playhead: any) {
-		
-		let progress = playhead.current / playhead.timing;
-		
-		let factor = Math.pow(10, 2);
-		
-		progress = Math.round(progress * factor) / factor;
-		
-		return progress;
 		
 	}
 

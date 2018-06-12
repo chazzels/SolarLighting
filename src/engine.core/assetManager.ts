@@ -90,14 +90,14 @@ class AssetManager {
 		let assetObj: assetState = {
 			cue: {},
 			previousCue: {}, 
-			playhead: {}
+			playhead: {},
+			progress: 0
 		};
 		
-		let cue = this.getCue(shakey);
-		
-		let previousCue = this.getPreviousCue(shakey);
-		
-		let playhead = this.getPlayhead(shakey);
+		let cue = this.getCue(shakey),
+			previousCue = this.getPreviousCue(shakey),
+			playhead = this.getPlayhead(shakey),
+			progress = this.getProgress(shakey);
 		
 		if(typeof cue !== null) {
 		
@@ -106,6 +106,8 @@ class AssetManager {
 			assetObj.previousCue = previousCue;
 			
 			assetObj.playhead = playhead;
+			
+			assetObj.progress = progress;
 			
 			return assetObj;
 			
