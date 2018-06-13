@@ -12,7 +12,7 @@ class SolarEngine {
 	private EngineCore: any = require("./engine.core/engine.alpha");
 	private EngineServer: any = require("./engine.server/server");
 	private EngineClient: any = require("./engine.client/client");
-	private Crystal: any = require("./engine.core/crystalClock");
+	private Crystal: any = require("./shared/crystalClock");
 	
 	/* module variables */
 	private engine: any;
