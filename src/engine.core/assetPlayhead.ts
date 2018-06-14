@@ -11,6 +11,9 @@ class AssetPlayhead {
 	/* imported modules */
 	private PlayheadLogic: any = require("./playheadLogic");
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	
 	/* module varaibles */
 	private _playheads: any = new Map();
 	private _playheadsMeta: any = new Map();
@@ -30,12 +33,18 @@ class AssetPlayhead {
 	/* performance variables */
 	private readonly PLAYUPDATE: string = "PlayheadUpdate";
 	
-	constructor(perf: any) {
+	constructor(options: any, perf: any) {
+		
+		if(options && options.hasOwnProperty("verbose")) {
+			
+			this.VERBOSE = options.verbose;
+			
+		}
 		
 		console.log("PLAYHEAD::STARTING");
 		console.group();
 		
-		this._logic = new this.PlayheadLogic(this._playheads, this._playheadsMeta);
+		this._logic = new this.PlayheadLogic(options, this._playheads, this._playheadsMeta);
 		
 		this.perf = perf;
 		perf.registerParameter(this.PLAYUPDATE);
@@ -80,7 +89,11 @@ class AssetPlayhead {
 		
 		this._totalAssets++;
 		
-		console.log("PLAYHEAD::LOAD:", shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("PLAYHEAD::LOAD:", shakey.hex);
+			
+		}
 		
 	}
 	
@@ -100,7 +113,7 @@ class AssetPlayhead {
 			
 		}
 		
-		if(playheadStatus && metaStatus) {
+		if(playheadStatus && metaStatus && this.VERBOSE) {
 			
 			console.log("PLAYHEAD::DUMP:", shakey.hex);
 			
@@ -162,11 +175,19 @@ class AssetPlayhead {
 			
 			playhead.state = this.STATUS_PLAY;
 			
-			console.log("PLAYHEAD::PLAYED:", shakey.hex);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::PLAYED:", shakey.hex);
+				
+			}
 			
 		} else {
 			
-			console.log("PLAYHEAD::PLAY_STATE_UNEXPECTED:", playhead.state);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::PLAY_STATE_UNEXPECTED:", playhead.state);
+				
+			}
 			
 		}
 		
@@ -184,7 +205,11 @@ class AssetPlayhead {
 			
 		}
 		
-		console.log("PLAYHEAD::PAUSED:", shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("PLAYHEAD::PAUSED:", shakey.hex);
+			
+		}
 		
 	}
 	

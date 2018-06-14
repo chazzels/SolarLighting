@@ -26,11 +26,11 @@ class SimplePerf {
 	/* external modules. */
 	private Crystal = require("./crystalClock");
 	
-	constructor(option?: any) {
+	constructor(options?: any) {
 		
-		if(option && option.hasOwnProperty("verbose")) {
+		if(options && options.hasOwnProperty("verbose")) {
 			
-			this.VERBOSE = option.verbose;
+			this.VERBOSE = options.verbose;
 			
 		}
 		

@@ -50,7 +50,7 @@ class EngineCoreAlpha {
 		this.crystal.onUpdate(that.tick, that);
 		
 		// internal modules.
-		this.assetManger = new this.AssetManager(this.simplePerf);
+		this.assetManger = new this.AssetManager(options, this.simplePerf);
 		
 		this.renderCache = new this.RenderCache(this.simplePerf);
 		

@@ -7,6 +7,9 @@ import { playheadObject } from "./interface/playheadObject"
 
 class PlayheadLogic {
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	
 	/* module varaibles */
 	private _playheads: any;
 	private _playheadsMeta: any;
@@ -18,7 +21,13 @@ class PlayheadLogic {
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
 	
-	constructor(playheadStore: any, playheadMetaStore: any) {
+	constructor(options: any, playheadStore: any, playheadMetaStore: any) {
+		
+		if(options && options.hasOwnProperty("verbose")) {
+			
+			this.VERBOSE = options.verbose;
+			
+		}
 		
 		this._playheads = playheadStore;
 		
@@ -48,7 +57,11 @@ class PlayheadLogic {
 				
 			}
 			
-			console.log("PLAYHEAD::ADVANCING: ", shakey.hex);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::ADVANCING: ", shakey.hex);
+				
+			}
 			
 		} else if(playhead.index >= playhead.indexMax) {
 			/* determines if the playhead is at the end */
@@ -61,7 +74,11 @@ class PlayheadLogic {
 				
 				playhead.state = this.STATUS_PAUSED;
 				
-				console.log("PLAYHEAD::END_OF_ASSET: ", shakey.hex);
+				if(this.VERBOSE) {
+					
+					console.log("PLAYHEAD::END_OF_ASSET: ", shakey.hex);
+					
+				}
 				
 			}
 		
@@ -79,7 +96,11 @@ class PlayheadLogic {
 			
 			playhead.state = this.STATUS_PAUSED;
 			
-			console.log("PLAYHEAD::HELD: ", shakey.hex);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::HELD: ", shakey.hex);
+				
+			}
 			
 		}
 	
@@ -105,7 +126,11 @@ class PlayheadLogic {
 			
 		}
 		
-		console.log("PLAYHEAD::END:", shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("PLAYHEAD::END:", shakey.hex);
+			
+		}
 		
 	}
 

@@ -23,14 +23,14 @@ class AssetManager {
 	private _assetKeys: any = [];
 	private _assetCount: number = 0;
 	
-	constructor(perf: any) {
+	constructor(options: any, perf: any) {
 		
 		console.log("MANAGER::STARTING");
 		console.group();
 		
-		this._store = new this.AssetStore(perf);
+		this._store = new this.AssetStore(options.store, perf);
 		
-		this._playhead = new this.AssetPlayhead(perf);
+		this._playhead = new this.AssetPlayhead(options.playhead, perf);
 		
 		console.groupEnd();
 	}

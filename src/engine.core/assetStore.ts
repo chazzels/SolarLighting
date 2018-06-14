@@ -6,6 +6,9 @@ import { sha1 } from "./interface/sha1";
 
 class AssetStore {
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	
 	/* module variables */
 	private _totalTracks: number = 0;
 	private _tracks: any = new Map();
@@ -16,7 +19,13 @@ class AssetStore {
 	private readonly STOREWRITE: string = "StoreWrite";
 	private perf: any;
 	
-	constructor(perf: any) {
+	constructor(options: any, perf: any) {
+		
+		if(options && options.hasOwnProperty("verbose")) {
+			
+			this.VERBOSE = options.verbose;
+			
+		}
 		
 		console.log("STORE::STARTING");
 		
@@ -37,8 +46,12 @@ class AssetStore {
 		
 		this.perf.hit(this.STOREWRITE);
 		
-		console.log("STORE::LOAD: " + shakey.hex);
-	
+		if(this.VERBOSE) {
+			
+			console.log("STORE::LOAD: " + shakey.hex);
+			
+		}
+		
 	}
 	
 	/* remove track from the store module. */
@@ -49,7 +62,11 @@ class AssetStore {
 		
 		this._tracksMeta.delete(shakey);
 		
-		console.log("STORE::DUMP: " + shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("STORE::DUMP: " + shakey.hex);
+			
+		}
 		
 	}
 	

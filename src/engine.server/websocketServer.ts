@@ -1,6 +1,7 @@
 /*
 *	module for starting a websocket server.
 *	TODO return splash page for http hit.
+*	TODO 
 */
 
 import { sha1 } from "./interface/sha1";
@@ -45,16 +46,16 @@ class WebSocketServer {
 	/* this is center logic to this module. */
 	private initWebSocketConnection() {
 		
-		let that = this;
+		let server = this;
 		
 		/* new websocket connection event */
 		this.wss.on('connection', socketConnect);
 		
 		function socketConnect(ws: any, req: any) {
 			
-			that.createKey(ws);
+			server.createKey(ws);
 			
-			ws.state = that.STATEMETA;
+			ws.state = server.STATEMETA;
 			
 			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
 			
@@ -72,12 +73,12 @@ class WebSocketServer {
 				
 				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
 				
-				that.removeSocket(this.key);
+				server.removeSocket(this.key);
 				
 			}
 			
 			
-			ws.send(that.clientKeys.length);
+			ws.send(server.clientKeys.length);
 			
 		}
 		
@@ -206,7 +207,7 @@ class WebSocketServer {
 	 /* start the websocket server from the express/http server. */
 	private initWebSocketServer() {
 		
-		this.wss = new this.WebSocket.Server({ server: this.server });
+		this.wss = new this.WebSocket.Server({server: this.server});
 		
 	}
 	
