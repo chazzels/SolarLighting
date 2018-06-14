@@ -8,7 +8,7 @@ import { sha1 } from "./interface/sha1";
 
 import {crystalObject } from "./interface/crystalObject";
 
-class EngineCoreAlpha {
+class EngineCore {
 	
 	/* imported modules */
 	private SimplePerf: any = require("../shared/simplePerf");
@@ -146,4 +146,4 @@ class EngineCoreAlpha {
 
 }
 
-export = EngineCoreAlpha;
+export = EngineCore;

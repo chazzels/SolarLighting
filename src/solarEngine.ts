@@ -9,7 +9,7 @@ class SolarEngine {
 	readonly releaseType: string = "a";
 	
 	/* imported modules */
-	private EngineCore: any = require("./engine.core/engine.alpha");
+	private EngineCore: any = require("./engine.core/engineCore");
 	private EngineServer: any = require("./engine.server/server");
 	private EngineClient: any = require("./engine.client/client");
 	private Crystal: any = require("./shared/crystalClock");
