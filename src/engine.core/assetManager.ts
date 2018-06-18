@@ -39,6 +39,7 @@ class AssetManager {
 	|	manager module functionality
 	\----------------------------------------------*/
 	
+	// NOTE: ??? return active manifest from here to the engineCore instead of making another call to the assetManager. Do this is pair with the notet about generateActiveAssetManifest() being migrated to the playhead update cycle to reduce number of calls.
 	/* update playhead state and active asset manifest. */
 	update() {
 		
@@ -219,6 +220,7 @@ class AssetManager {
 	|	internal module functions
 	\----------------------------------------------*/
 	
+	// NOTE: ??? could this be moved into the playhead logic to save on cycles? could cut extra step out of the cycle.
 	/* generate a array of sha1 keys only for playing/active assets. */
 	private generateActiveAssetManifest() {
 		

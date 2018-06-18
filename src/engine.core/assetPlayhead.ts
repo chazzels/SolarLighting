@@ -25,7 +25,7 @@ class AssetPlayhead {
 	
 	/* module constants */
 	private readonly STATUS_PAUSED: string = "PAUSE";
-	private readonly STATUS_PLAY: string = "PLAY";
+	private readonly STATE_PLAY: string = "PLAY";
 	private readonly MODE_HOLD: string = "HOLD";
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
@@ -173,7 +173,7 @@ class AssetPlayhead {
 			
 			playhead.last = Date.now();
 			
-			playhead.state = this.STATUS_PLAY;
+			playhead.state = this.STATE_PLAY;
 			
 			if(this.VERBOSE) {
 				
@@ -199,7 +199,7 @@ class AssetPlayhead {
 		
 		let playhead = this._playheads.get(shakey);
 		
-		if(playhead.state === this.STATUS_PLAY) {
+		if(playhead.state === this.STATE_PLAY) {
 			
 			playhead.state = this.STATUS_PAUSED;
 			
@@ -242,16 +242,21 @@ class AssetPlayhead {
 		
 		let diff = now - playhead.last;
 		
-		if(playhead.state === this.STATUS_PLAY) {
+		// Check the playhead is in the play state
+		if(playhead.state === this.STATE_PLAY) {
 			
+			// add ms time difference to the current ms counter. 
 			playhead.current += diff;
 			
+			// if current ms counter greater than cues timing then...
 			if(playhead.current >= playhead.timing) {
 				
+				// ... then trigger advance playhead logic..
 				this._advancePlayhead(playhead, shakey);
 				
 			} 
 			
+			// update the UTC clock to the last update time. 
 			playhead.last = Date.now();
 			
 		}

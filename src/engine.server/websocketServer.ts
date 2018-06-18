@@ -67,6 +67,8 @@ class WebSocketServer {
 				
 				// On new Message event.
 				
+				// if(ws.state = server.STATEMETA) {} function validateMetaMessage() {}
+				
 			}
 			
 			function socketClose(message: any) {

@@ -7,6 +7,10 @@ import { sha1 } from "./interface/sha1";
 
 class AssetRender {
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	private readonly DEBUG: boolean = false;
+	
 	/* module variables */
 	private _stateUpdate: any;
 	private _manifest: any = [];

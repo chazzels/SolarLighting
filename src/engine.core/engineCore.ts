@@ -2,6 +2,10 @@
 *	module to link up all the other engine modules to create a cohesive system.
 *	TODO: build logging module.
 *	TODO: function to dump shakey name map for later debug
+*	TODO: add functionality to halt processig to allow for a debug scearios.
+*	TODO: make simplePerf optional functionality. (just not always useful).
+*	TODO: update the assetRender and renderCache.
+*	TODO: ??? rename renderCache to styleCache for clarity ???
 */
 
 import { sha1 } from "./interface/sha1";
@@ -100,6 +104,7 @@ class EngineCore {
 	/* function passed to crystal update with this module as context passed*/
 	private tick(that) {
 		
+		// create and start timers for debuging.
 		let tickStart = Date.now(),
 			tickDiff;
 		
@@ -108,38 +113,49 @@ class EngineCore {
 			assetObj,
 			updatedCueState;
 		
-		// update variables used for claculating the current styles. 
+		// update the active playheads states
 		that.assetManger.update();
 		
+		// pass a list of active playheads 
 		that.assetRender.updateManifest(that.assetManger.getManifest());
 		
+		// get the length of the manifest length for the engine loop.
 		manifestLength = that.assetRender.getLoopCount();
 		
 		// loop through each active asset and calculate its current styles.
 		for(let i = 0; i < manifestLength; i++) {
 			
+			// advance the renders manifest index to read from.
 			that.assetRender.next();
 			
+			// get the sha1 key that the asset render is using.
 			currentKey = that.assetRender.getCurrentKey();
 			
+			// get the assets data. 
 			assetObj = that.assetManger.getState(currentKey);
 			
+			// check the asset resolved.
 			if(assetObj !== null) {
-			
+				
+				// set with new generated style from the render.
 				updatedCueState = that.assetRender.update(assetObj);
 				
+				// write generated style to the cache.
 				that.renderCache.write(currentKey.hex, updatedCueState);
 			
 			} else {
 				
+				// asset not resolved console log message.
 				console.log("ENGINE::ASSET_NULL:", currentKey.hex);
 				
 			}
 			
 		}
 		
+		// register a hit with the performance monitor.
 		that.simplePerf.hit(that.ENGINELOOP);
 		
+		// get end time of full execution for debugging.
 		tickDiff = Date.now() - tickStart;
 		
 	}

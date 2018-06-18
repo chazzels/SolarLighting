@@ -36,9 +36,9 @@ class SolarEngine {
 		this.client = new this.EngineClient();
 		
 		/* timer module initialization */
-		let that = this;
-		this.crystal = new this.Crystal(250);
-		this.crystal.onUpdate(that.tick, that);
+		// let that = this;
+		// this.crystal = new this.Crystal(250);
+		// this.crystal.onUpdate(that.tick, that);
 		
 		console.groupEnd();
 		
@@ -107,9 +107,9 @@ class SolarEngine {
 	|	Private Module Functions.
 	\----------------------------------------------*/
 	
-	private tick(that) {
+	// private tick(that) {
 		
-	}
+	// }
 	
 }
 

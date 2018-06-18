@@ -16,7 +16,7 @@ class PlayheadLogic {
 	
 	/* module constants */
 	private readonly STATUS_PAUSED: string = "PAUSE";
-	private readonly STATUS_PLAY: string = "PLAY";
+	private readonly STATE_PLAY: string = "PLAY";
 	private readonly MODE_HOLD: string = "HOLD";
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
@@ -70,7 +70,7 @@ class PlayheadLogic {
 			
 			playhead.current = 0;
 			
-			if(playhead.state === this.STATUS_PLAY) {
+			if(playhead.state === this.STATE_PLAY) {
 				
 				playhead.state = this.STATUS_PAUSED;
 				
@@ -92,7 +92,7 @@ class PlayheadLogic {
 		
 		playhead.current = 0;
 		
-		if(playhead.state === this.STATUS_PLAY) {
+		if(playhead.state === this.STATE_PLAY) {
 			
 			playhead.state = this.STATUS_PAUSED;
 			
