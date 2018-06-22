@@ -29,6 +29,8 @@ class AssetPlayhead {
 	private readonly MODE_HOLD: string = "HOLD";
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
+	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
+	private readonly ASSET_MODE_END: string = "END";
 	
 	/* performance variables */
 	private readonly PLAYUPDATE: string = "PlayheadUpdate";
@@ -65,21 +67,22 @@ class AssetPlayhead {
 	/* load a timeline in and create a new playhead for it. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	/* @param {any} assetTimeline - an assets cue timing data. */
-	loadTimeline(shakey: sha1, assetTimeline: any) {
+	loadTimeline(shakey: sha1, asset: any) {
 		
-		let nextCueMode = assetTimeline[1].cueMode || "END";
+		let nextCueMode = asset.cueTimeline[1].cueMode || "END";
 		
 		let playhead = {
 			index: 0,
-			indexMax: assetTimeline.length-1,
-			timing: parseInt(assetTimeline[0].timing),
+			indexMax: asset.cueTimeline.length-1,
+			timing: parseInt(asset.cueTimeline[0].timing),
 			current: 0,
 			last: Date.now(),
 			state: this.STATUS_PAUSED,
-			nextCueMode: nextCueMode
+			nextCueMode: nextCueMode,
+			assetMode: asset.assetMode
 		};
 		
-		let meta = assetTimeline;
+		let meta = asset.cueTimeline;
 		
 		this._playheads.set(shakey, playhead);
 		

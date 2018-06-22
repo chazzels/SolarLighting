@@ -1,9 +1,10 @@
 {
 	"assetID": "sampleCuelist",
+	"assetMode": "REPEAT",
 	"cueTimeline": [
 		{
 			"cueName": "cue01",
-			"cueMode": "HOLD",
+			"cueMode": "FOLLOW",
 			"timing": 4000,
 			"timeMultipler": 1
 		},

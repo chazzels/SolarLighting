@@ -62,7 +62,7 @@ class AssetManager {
 		this._assetKeys.push(shakey);
 		
 		this._store.loadTrack(shakey, assetData);
-		this._playhead.loadTimeline(shakey, assetData.cueTimeline);
+		this._playhead.loadTimeline(shakey, assetData);
 		
 		return shakey;
 		

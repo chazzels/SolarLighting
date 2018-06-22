@@ -6,4 +6,5 @@ export interface playheadObject {
     last: number;
     state: string;
     nextCueMode: string;
+    assetMode: string;
 }

@@ -20,6 +20,8 @@ class PlayheadLogic {
 	private readonly MODE_HOLD: string = "HOLD";
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
+	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
+	private readonly ASSET_MODE_END: string = "END";
 	
 	constructor(options: any, playheadStore: any, playheadMetaStore: any) {
 		
@@ -53,7 +55,21 @@ class PlayheadLogic {
 				
 			} else {
 				
-				playhead.nextCueMode = this.MODE_END;
+				if(playhead.assetMode === this.ASSET_MODE_REPEAT) {
+					
+					playhead.index = 0;
+					
+					playhead.nextCueMode = meta[0].cueMode;
+					
+				} else if(playhead.assetMode === this.ASSET_MODE_END) {
+					
+					playhead.nextCueMode = this.MODE_END;
+					
+				} else {
+					
+					console.log("PLAYHEAD::ASSET_MODE_UNKNOWN:", playhead.assetMode);
+					
+				}
 				
 			}
 			
