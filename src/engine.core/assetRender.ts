@@ -30,6 +30,7 @@ class AssetRender {
 		/* performance parameters declarations */
 		this.perf = perf;
 		perf.registerParameter(this.ASSETCALC);
+		perf.autoLog(this.ASSETCALC);
 		
 		console.groupEnd();
 		

@@ -6,6 +6,9 @@ import { sha1 } from "./interface/sha1";
 
 class ClientCom {
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false; 
+	
 	/* imported modules */
 	private Crystal: any = require('../shared/crystalClock');
 	private SimplePerf: any = require('../shared/simplePerf');
@@ -21,7 +24,7 @@ class ClientCom {
 	/* module constants */
 	private readonly REFRESH_RESOLUTION: number = 100;
 	
-	constructor() {
+	constructor(options: any) {
 		
 		console.log("ENGINE_SERVER::STARTING");
 		console.group();
@@ -36,7 +39,7 @@ class ClientCom {
 		this.crystal.onUpdate(that.tick, that);
 		
 		/* websocket server initialization. */
-		this.server = new this.WebSocketServer();
+		this.server = new this.WebSocketServer(options);
 		
 		this.meta = new this.ClientMeta(this.perf);
 		

@@ -31,9 +31,9 @@ class SolarEngine {
 		
 		this.engine = new this.EngineCore(options);
 		
-		this.server = new this.EngineServer();
+		this.server = new this.EngineServer(options.server);
 		
-		this.client = new this.EngineClient();
+		this.client = new this.EngineClient(options.client);
 		
 		/* timer module initialization */
 		// let that = this;
