@@ -1,10 +1,9 @@
 /*
 *	module to link up all the other engine modules to create a cohesive system.
 *	TODO: build logging module.
-*	TODO: function to dump shakey name map for later debug
+*	TODO: function to dump shakey name map for later debuggin
 *	TODO: add functionality to halt processig to allow for a debug scearios.
 *	TODO: make simplePerf optional functionality. (just not always useful).
-*	TODO: update the assetRender and renderCache.
 *	TODO: ??? rename renderCache to styleCache for clarity ???
 */
 
@@ -19,14 +18,27 @@ class EngineCore {
 	private Crystal: any = require("../shared/crystalClock");
 	private AssetManager: any = require("./assetManager");
 	private AssetRender: any = require("./assetRender");
-	private RenderCache: any = require("./renderCache"); 
+	private RenderCache: any = require("./renderCache");
 	
-	/* module variables */
+	/* external modules */
 	private simplePerf: any;
 	private crystal: crystalObject;
 	private assetManger: any;
 	private assetRender: any;
 	private renderCache: any;
+	
+	/* module variables */
+	private manifest: any = [];
+	private manifestLength: number = 0;
+	private manifestIndex: number = -1;
+	
+	/* core loop variables */
+	private tickStart: number = 0;
+	private tickDiff: number = 0;
+	private currentAssetKey: sha1;
+	private assetObj: any;
+	private currentAssetState: any;
+	
 	
 	/* performance variables */
 	private readonly ENGINELOOP: string = "EngineLoop";
@@ -43,10 +55,10 @@ class EngineCore {
 		
 		}
 		
-		
 		// performance module initialization.
 		this.simplePerf = new this.SimplePerf(options.perf);
 		this.simplePerf.registerParameter(this.ENGINELOOP);
+		this.simplePerf.autoLog(this.ENGINELOOP);
 		
 		// timer module initialization.
 		let that = this;
@@ -102,51 +114,43 @@ class EngineCore {
 	
 	/* funciton that triggers updating the calculated styles. */
 	/* function passed to crystal update with this module as context passed*/
+	/* TODO: change the name of this function. not clear as to what it does. */
 	private tick(that) {
 		
-		// create and start timers for debuging.
-		let tickStart = Date.now(),
-			tickDiff;
-		
-		let manifestLength,
-			currentKey,
-			assetObj,
-			updatedCueState;
+		that.tickStart = Date.now();
 		
 		// update the active playheads states
-		that.assetManger.update();
-		
-		// pass a list of active playheads 
-		that.assetRender.updateManifest(that.assetManger.getManifest());
-		
-		// get the length of the manifest length for the engine loop.
-		manifestLength = that.assetRender.getLoopCount();
+		that.manifest = that.assetManger.update();
+		that.manifestLength = that.manifest.length;
+		that.manifestIndex = -1;
 		
 		// loop through each active asset and calculate its current styles.
-		for(let i = 0; i < manifestLength; i++) {
+		for(let i = 0; i < that.manifestLength; i++) {
 			
-			// advance the renders manifest index to read from.
-			that.assetRender.next();
+			if(that.manifestIndex + 1 < that.manifestLength) {
+				
+				that.manifestIndex++;
+				
+			}
 			
-			// get the sha1 key that the asset render is using.
-			currentKey = that.assetRender.getCurrentKey();
+			// update current asset key.
+			that.currentAssetKey = that.manifest[that.manifestIndex];
 			
 			// get the assets data. 
-			assetObj = that.assetManger.getState(currentKey);
+			that.assetObj = that.assetManger.getState(that.currentAssetKey);
 			
-			// check the asset resolved.
-			if(assetObj !== null) {
+			if(that.assetObj !== null) {
 				
 				// set with new generated style from the render.
-				updatedCueState = that.assetRender.update(assetObj);
+				that.currentAssetState = that.assetRender.update(that.assetObj);
 				
 				// write generated style to the cache.
-				that.renderCache.write(currentKey.hex, updatedCueState);
-			
+				that.renderCache.write(that.currentAssetKey.hex, that.currentAssetState);
+				
 			} else {
 				
 				// asset not resolved console log message.
-				console.log("ENGINE::ASSET_NULL:", currentKey.hex);
+				console.log("ENGINE::ASSET_NULL:", that.currentAssetKey.hex);
 				
 			}
 			
@@ -156,7 +160,7 @@ class EngineCore {
 		that.simplePerf.hit(that.ENGINELOOP);
 		
 		// get end time of full execution for debugging.
-		tickDiff = Date.now() - tickStart;
+		that.tickDiff = Date.now() - that.tickStart;
 		
 	}
 

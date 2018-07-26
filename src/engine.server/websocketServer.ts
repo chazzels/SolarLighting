@@ -1,7 +1,6 @@
 /*
 *	module for starting a websocket server.
 *	TODO return splash page for http hit.
-*	TODO 
 */
 
 import { sha1 } from "./interface/sha1";

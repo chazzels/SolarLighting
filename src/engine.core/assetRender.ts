@@ -30,7 +30,6 @@ class AssetRender {
 		/* performance parameters declarations */
 		this.perf = perf;
 		perf.registerParameter(this.ASSETCALC);
-		perf.autoLog(this.ASSETCALC);
 		
 		console.groupEnd();
 		
@@ -41,53 +40,6 @@ class AssetRender {
 	update(assetObj: any) {
 		
 		return this.tick(assetObj);
-		
-	}
-	
-	/* advance the manifest index so the next asset get calculated. */
-	next() {
-		
-		if(this._manifestIndex + 1 < this._manifestLength) {
-			
-			this._manifestIndex++;
-			
-		}
-		
-	}
-	
-	/* get the current key that renderer will be using. */
-	/* other modules use this to determine the data passed to the render. */
-	getCurrentKey() {
-		
-		if(this._manifestIndex < this._manifestLength
-			&& this._manifestIndex >= 0) {
-			
-			return this._manifest[this._manifestIndex];
-			
-		} else {
-			
-			return null;
-			
-		}
-		
-	}
-	
-	/* get the total number of active assets. */
-	getLoopCount() {
-		
-		return this._manifestLength;
-		
-	}
-	
-	
-	/* update the list of active asset keys to be rendered. */
-	updateManifest(manifest: any) {
-		
-		this._manifest = manifest;
-		
-		this._manifestLength = manifest.length;
-		
-		this._manifestIndex = -1;
 		
 	}
 	

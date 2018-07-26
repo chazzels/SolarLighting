@@ -43,9 +43,9 @@ class AssetManager {
 	/* update playhead state and active asset manifest. */
 	update() {
 		
-		this._playhead.update();
+		this.activeManifest = this._playhead.update();
 		
-		this.activeManifest = this.generateActiveAssetManifest();
+		return this.activeManifest;
 		
 	}
 	
@@ -202,8 +202,6 @@ class AssetManager {
 		
 		this._playhead.play(shakey);
 		
-		this.activeManifest = this.generateActiveAssetManifest();
-		
 	}
 	
 	/* change asset playehad state to stop playing */
@@ -212,37 +210,11 @@ class AssetManager {
 		
 		this._playhead.pause(shakey);
 		
-		this.activeManifest = this.generateActiveAssetManifest();
-		
 	}
 	
 	/*----------------------------------------------\
 	|	internal module functions
 	\----------------------------------------------*/
-	
-	// NOTE: ??? could this be moved into the playhead logic to save on cycles? could cut extra step out of the cycle.
-	/* generate a array of sha1 keys only for playing/active assets. */
-	private generateActiveAssetManifest() {
-		
-		var manifest: any = [];
-		
-		let keysLength = this._assetKeys.length;
-		
-		for(let i = 0; i < keysLength; i++) {
-			
-			let playhead = this._playhead.getPlayhead(this._assetKeys[i]);
-			
-			if(playhead.state === "PLAY") {
-				
-				manifest.push(this._assetKeys[i]);
-				
-			}
-			
-		}
-		
-		return manifest;
-		
-	}
 	
 	/* generates a SHA1 hex string based on asset parameters */
 	private generateAssetSHA1(assetData: any) : sha1 {

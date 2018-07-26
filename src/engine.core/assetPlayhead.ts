@@ -21,6 +21,7 @@ class AssetPlayhead {
 	private _totalAssets: number = 0;
 	private _playheadIndex: number;
 	private _logic: any;
+	private _activeManifest: any = [];
 	private perf: any;
 	
 	/* module constants */
@@ -59,6 +60,8 @@ class AssetPlayhead {
 	update() {
 			
 		this.tick();
+		
+		return this._activeManifest;
 		
 	}
 	
@@ -221,7 +224,9 @@ class AssetPlayhead {
 	/* also determines if a playhead needs to be advanced. */
 	private tick() {
 		
-		let keysLength = this._playheadKeys.length;;
+		let keysLength = this._playheadKeys.length;
+		
+		this._activeManifest = [];
 		
 		for(let i = 0; i < keysLength; i++) {
 			
@@ -239,16 +244,18 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	private _updatePlayhead(shakey: sha1) {
 		
-		let now = Date.now();
-		
 		let playhead = this._playheads.get(shakey);
+		
+		let now = Date.now();
 		
 		let diff = now - playhead.last;
 		
 		// Check the playhead is in the play state
 		if(playhead.state === this.STATE_PLAY) {
 			
-			// add ms time difference to the current ms counter. 
+			this._activeManifest.push(shakey);
+			
+			// add ms time difference to the current ms counter.
 			playhead.current += diff;
 			
 			// if current ms counter greater than cues timing then...
@@ -257,9 +264,9 @@ class AssetPlayhead {
 				// ... then trigger advance playhead logic..
 				this._advancePlayhead(playhead, shakey);
 				
-			} 
+			}
 			
-			// update the UTC clock to the last update time. 
+			// update the UTC clock to the last update time.
 			playhead.last = Date.now();
 			
 		}
