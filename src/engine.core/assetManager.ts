@@ -58,7 +58,7 @@ class AssetManager {
 		shakey = this.generateAssetSHA1(assetData);
 		
 		this._assetCount++;	
-		this._assetNames.set(shakey, assetData.assetID);
+		this._assetNames.set(shakey, assetData.assetName);
 		this._assetKeys.push(shakey);
 		
 		this._store.loadTrack(shakey, assetData);
@@ -223,7 +223,7 @@ class AssetManager {
 		
 		let shaReturn = "0";
 		
-		let shaIn = assetData.assetID.toString() 
+		let shaIn = assetData.assetName.toString() 
 			+ "==" + assetData.cueTimeline.length.toString()
 			+ "x" + assetData.cueTrack.length.toString()
 			+ ":" + assetData.cueTrackMeta.length.toString()

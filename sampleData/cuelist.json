@@ -1,5 +1,5 @@
-{
-	"assetID": "sampleCuelist",
+{	
+	"assetName": "sampleCuelist",
 	"assetMode": "REPEAT",
 	"cueTimeline": [
 		{
@@ -31,10 +31,6 @@
 		{
 			"trackName": "master",
 			"trackTarget": ".center-wash"
-		},
-		{
-			"trackName": "track01",
-			"trackTarget": ".wash"
 		}
 	]
 }
