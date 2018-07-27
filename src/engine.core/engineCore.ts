@@ -58,8 +58,6 @@ class EngineCore {
 		
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
 		
-		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
-		
 		// timer module initialization.
 		EngineCore.crystal = new this.Crystal(10);
 		

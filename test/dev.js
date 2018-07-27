@@ -1,16 +1,16 @@
 /* create a new engine */
-let SolarEngine = require("./js/solarEngine");
+let SolarEngine = require("../js/solarEngine");
 let engine = new SolarEngine({
 	perf: {verbose: true},
 	store: {verbose: false},
-	playhead: {verbose: false},
+	playhead: {verbose: true},
 	server: {verbose: false}
 });
 
 //ASSET LOAD TEST
 
 /* load an asset into the engine */
-let sampleAsset = require("./sampleData/cuelist.json");
+let sampleAsset = require("../sampleData/cuelist.json");
 let sha1 = engine.loadAsset(sampleAsset);
 let sha2 = engine.loadAsset(sampleAsset);
 let sha3 = engine.loadAsset(sampleAsset);
