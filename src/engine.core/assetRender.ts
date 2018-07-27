@@ -47,17 +47,7 @@ class AssetRender {
 	/* calculates the new value of one asset passed in. */
 	private tick(assetObj: any) {
 		
-		let manifestLength = this._manifest.length;
-		
-		if(manifestLength > 0) {
-			
-			return this.updateAsset(assetObj);
-			
-		} else {
-		
-			return false;
-		
-		}
+		return this.updateAsset(assetObj);
 		
 	}
 	
