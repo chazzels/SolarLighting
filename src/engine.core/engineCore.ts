@@ -21,27 +21,25 @@ class EngineCore {
 	private RenderCache: any = require("./renderCache");
 	
 	/* external modules */
-	private simplePerf: any;
-	private crystal: crystalObject;
-	private assetManger: any;
-	private assetRender: any;
-	private renderCache: any;
-	
-	/* module variables */
-	private manifest: any = [];
-	private manifestLength: number = 0;
-	private manifestIndex: number = -1;
+	static simplePerf: any;
+	static crystal: crystalObject;
+	static assetManger: any;
+	static assetRender: any;
+	static renderCache: any;
 	
 	/* core loop variables */
-	private tickStart: number = 0;
-	private tickDiff: number = 0;
-	private currentAssetKey: sha1;
-	private assetObj: any;
-	private currentAssetState: any;
+	static manifest: any = [];
+	static manifestLength: number = 0;
+	static manifestIndex: number = -1;
+	static tickStart: number = 0;
+	static tickDiff: number = 0;
+	static currentAssetKey: sha1;
+	static assetObj: any;
+	static currentAssetState: any;
 	
 	
 	/* performance variables */
-	private readonly ENGINELOOP: string = "EngineLoop";
+	static readonly ENGINELOOP: string = "EngineLoop";
 	
 	constructor(options?: any) {
 		
@@ -56,21 +54,23 @@ class EngineCore {
 		}
 		
 		// performance module initialization.
-		this.simplePerf = new this.SimplePerf(options.perf);
-		this.simplePerf.registerParameter(this.ENGINELOOP);
-		this.simplePerf.autoLog(this.ENGINELOOP);
+		EngineCore.simplePerf = new this.SimplePerf(options.perf);
+		
+		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
+		
+		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
 		// timer module initialization.
-		let that = this;
-		this.crystal = new this.Crystal(10);
-		this.crystal.onUpdate(that.tick, that);
+		EngineCore.crystal = new this.Crystal(10);
+		
+		EngineCore.crystal.onUpdate(this.tick);
 		
 		// internal modules.
-		this.assetManger = new this.AssetManager(options, this.simplePerf);
+		EngineCore.assetManger = new this.AssetManager(options, EngineCore.simplePerf);
 		
-		this.renderCache = new this.RenderCache(this.simplePerf);
+		EngineCore.renderCache = new this.RenderCache(EngineCore.simplePerf);
 		
-		this.assetRender = new this.AssetRender(this.simplePerf);
+		EngineCore.assetRender = new this.AssetRender(EngineCore.simplePerf);
 		
 		console.groupEnd();
 		
@@ -80,90 +80,90 @@ class EngineCore {
 	/* returns an sha1 key for referencing the asset later. */
 	loadAsset(assetData: any) {
 		
-		return this.assetManger.loadAsset(assetData);
+		return EngineCore.assetManger.loadAsset(assetData);
 		
 	}
 	
 	/* removes asset data from the engine */
 	dumpAsset(shakey: sha1) {
 		
-		this.assetManger.dumpAsset(shakey);
+		EngineCore.assetManger.dumpAsset(shakey);
 		
 	}
 	
 	/* play an asset. set asset state to play and active. */
 	play(shakey: sha1) {
 		
-		this.assetManger.play(shakey);
+		EngineCore.assetManger.play(shakey);
 		
 	}
 	
 	/* pause an asset. */
 	pause(shakey: sha1) {
 		
-		this.assetManger.pause(shakey);
+		EngineCore.assetManger.pause(shakey);
 		
 	}
 	
 	/* read cahced value from the render cahce. */
 	read(shakey: sha1) {
 		
-		return this.renderCache.read(shakey);
+		return EngineCore.renderCache.read(shakey);
 		
 	}
 	
 	/* funciton that triggers updating the calculated styles. */
 	/* function passed to crystal update with this module as context passed*/
 	/* TODO: change the name of this function. not clear as to what it does. */
-	private tick(that) {
+	private tick() {
 		
-		that.tickStart = Date.now();
+		EngineCore.tickStart = Date.now();
 		
 		// update the active playheads states
-		that.manifest = that.assetManger.update();
-		that.manifestLength = that.manifest.length;
-		that.manifestIndex = -1;
+		EngineCore.manifest = EngineCore.assetManger.update();
+		EngineCore.manifestLength = EngineCore.manifest.length;
+		EngineCore.manifestIndex = -1;
 		
 		// loop through each active asset and calculate its current styles.
-		for(let i = 0; i < that.manifestLength; i++) {
+		for(let i = 0; i < EngineCore.manifestLength; i++) {
 			
-			if(that.manifestIndex + 1 < that.manifestLength) {
+			if(EngineCore.manifestIndex + 1 < EngineCore.manifestLength) {
 				
-				that.manifestIndex++;
+				EngineCore.manifestIndex++;
 				
 			}
 			
 			// update current asset key.
-			that.currentAssetKey = that.manifest[that.manifestIndex];
+			EngineCore.currentAssetKey = EngineCore.manifest[EngineCore.manifestIndex];
 			
 			// get the assets data. 
-			that.assetObj = that.assetManger.getState(that.currentAssetKey);
+			EngineCore.assetObj = EngineCore.assetManger.getState(EngineCore.currentAssetKey);
 			
-			if(that.assetObj !== null) {
+			if(EngineCore.assetObj !== null) {
 				
 				// set with new generated style from the render.
-				that.currentAssetState = that.assetRender.update(that.assetObj);
+				EngineCore.currentAssetState = EngineCore.assetRender.update(EngineCore.assetObj);
 				
 				// write generated style to the cache.
-				that.renderCache.write(that.currentAssetKey.hex, that.currentAssetState);
+				EngineCore.renderCache.write(EngineCore.currentAssetKey.hex, EngineCore.currentAssetState);
 				
 			} else {
 				
 				// asset not resolved console log message.
-				console.log("ENGINE::ASSET_NULL:", that.currentAssetKey.hex);
+				console.log("ENGINE::ASSET_NULL:", EngineCore.currentAssetKey.hex);
 				
 			}
 			
 		}
 		
 		// register a hit with the performance monitor.
-		that.simplePerf.hit(that.ENGINELOOP);
+		EngineCore.simplePerf.hit(EngineCore.ENGINELOOP);
 		
 		// get end time of full execution for debugging.
-		that.tickDiff = Date.now() - that.tickStart;
+		EngineCore.tickDiff = Date.now() - EngineCore.tickStart;
 		
 	}
-
+	
 }
 
 export = EngineCore;
