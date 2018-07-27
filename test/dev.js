@@ -3,7 +3,7 @@ let SolarEngine = require("../js/solarEngine");
 let engine = new SolarEngine({
 	perf: {verbose: true},
 	store: {verbose: false},
-	playhead: {verbose: true},
+	playhead: {verbose: false},
 	server: {verbose: false}
 });
 
