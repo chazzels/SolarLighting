@@ -238,7 +238,7 @@ class AssetManager {
 		return {
 			hex: shaReturn,
 			short: shaReturn.toString().substring(0,10)
-		}
+		};
 		
 	}
 	
