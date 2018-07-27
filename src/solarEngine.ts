@@ -5,7 +5,7 @@ class SolarEngine {
 	/* module version info */
 	readonly majorVersion: number = 0;
 	readonly minorversion: number = 0;
-	readonly revisionVersion: number = 1;
+	readonly revisionVersion: number = 2;
 	readonly releaseType: string = "a";
 	
 	/* imported modules */
