@@ -35,11 +35,6 @@ class SolarEngine {
 		
 		this.client = new this.EngineClient(options.client);
 		
-		/* timer module initialization */
-		// let that = this;
-		// this.crystal = new this.Crystal(250);
-		// this.crystal.onUpdate(that.tick, that);
-		
 		console.groupEnd();
 		
 		console.log("Start Up Time:", Date.now() - engineStartTime, "ms");
