@@ -195,7 +195,7 @@ class WebSocketServer {
 	/* start server listening on given ip and port. */
 	private HTTPServerListen() {
 		
-		this.server.listen(8420, '0.0.0.0', function httpServerListening() {
+		this.server.listen(8081, '0.0.0.0', function httpServerListening() {
 			
 			console.log("SOCKET_SERVER::LISTENING:", 
 				this.address().address+":", 
