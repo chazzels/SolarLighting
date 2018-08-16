@@ -58,6 +58,8 @@ class EngineCore {
 		
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
 		
+		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
+		
 		// timer module initialization.
 		EngineCore.crystal = new this.Crystal(10);
 		
@@ -117,19 +119,12 @@ class EngineCore {
 		
 		EngineCore.tickStart = Date.now();
 		
-		// update the active playheads states
-		EngineCore.manifest = EngineCore.assetManger.update();
-		EngineCore.manifestLength = EngineCore.manifest.length;
-		EngineCore.manifestIndex = -1;
+		EngineCore._updateManifest();
 		
 		// loop through each active asset and calculate its current styles.
 		for(let i = 0; i < EngineCore.manifestLength; i++) {
 			
-			if(EngineCore.manifestIndex + 1 < EngineCore.manifestLength) {
-				
-				EngineCore.manifestIndex++;
-				
-			}
+			EngineCore._advanceManifestIndex();
 			
 			// update current asset key.
 			EngineCore.currentAssetKey = EngineCore.manifest[EngineCore.manifestIndex];
@@ -159,6 +154,26 @@ class EngineCore {
 		
 		// get end time of full execution for debugging.
 		EngineCore.tickDiff = Date.now() - EngineCore.tickStart;
+		
+	}
+	
+	// update the active playheads states.
+	static _updateManifest() {
+		
+		EngineCore.manifest = EngineCore.assetManger.update();
+		EngineCore.manifestLength = EngineCore.manifest.length;
+		EngineCore.manifestIndex = -1;
+		
+	}
+	
+	// update the index of manifest.
+	static _advanceManifestIndex() {
+		
+		if(EngineCore.manifestIndex + 1 < EngineCore.manifestLength) {
+				
+				EngineCore.manifestIndex++;
+				
+		}
 		
 	}
 	
