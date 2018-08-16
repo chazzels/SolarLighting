@@ -30,7 +30,7 @@
 	"cueTrackMeta": [
 		{
 			"trackName": "master",
-			"trackTarget": ".center-wash"
+			"trackTarget": ".center.wash"
 		}
 	]
 }
