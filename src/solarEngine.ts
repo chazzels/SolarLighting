@@ -25,9 +25,11 @@ class SolarEngine {
 		
 		let engineStartTime = Date.now();
 		
+		console.log("------------------------------");
+		
 		console.log(this.version());
 		
-		console.group();
+		console.log("------------------------------");
 		
 		this.engine = new this.EngineCore(options);
 		
@@ -35,7 +37,7 @@ class SolarEngine {
 		
 		this.client = new this.EngineClient(options.client);
 		
-		console.groupEnd();
+		console.log("------------------------------");
 		
 		console.log("Start Up Time:", Date.now() - engineStartTime, "ms");
 		
@@ -101,10 +103,6 @@ class SolarEngine {
 	/*----------------------------------------------\
 	|	Private Module Functions.
 	\----------------------------------------------*/
-	
-	// private tick(that) {
-		
-	// }
 	
 }
 
