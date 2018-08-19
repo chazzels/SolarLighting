@@ -115,6 +115,7 @@ class AssetStore {
 		let qryInfo = {
 			sourceQuery: qryStr,
 			query: qryStr.trim().split(" ")[0],
+			maxRank: 0,
 			deviceIndex: qryStr.indexOf('@'),
 			deviceCheck: (qryStr.indexOf('@') >= 0),
 			deviceValid: false,
@@ -129,7 +130,8 @@ class AssetStore {
 		let targetObj = {
 			device: null,
 			id: null,
-			class: null
+			class: null,
+			maxRank: 0
 		};
 		
 		this._validateQuery(qryInfo);
@@ -147,6 +149,8 @@ class AssetStore {
 			this._parseId(qryInfo, targetObj);
 			
 			this._parseClasses(qryInfo, targetObj);
+			
+			targetObj.maxRank = qryInfo.maxRank;
 			
 			console.log(targetObj);
 			
@@ -216,6 +220,8 @@ class AssetStore {
 				
 				targetObj.device = qryInfo.query.slice(0, qryInfo.idIndex);
 				
+				qryInfo.maxRank += 10;
+				
 				qryInfo.query = qryInfo.query.slice(qryInfo.idIndex, qryInfo.query.length);
 				
 			}
@@ -224,6 +230,8 @@ class AssetStore {
 				
 				targetObj.device = qryInfo.query.slice(0, qryInfo.classIndex);
 				
+				qryInfo.maxRank += 10;
+				
 				qryInfo.query = qryInfo.query.slice(qryInfo.classIndex, qryInfo.query.length);
 				
 			} 
@@ -231,6 +239,8 @@ class AssetStore {
 			if(!qryInfo.classCheck && !qryInfo.idCheck) {
 				
 				targetObj.device = qryInfo.query;
+				
+				qryInfo.maxRank += 10;
 				
 			}
 			
@@ -253,6 +263,8 @@ class AssetStore {
 				
 				targetObj.id = qryInfo.query.slice(0, qryInfo.classIndex);
 				
+				qryInfo.maxRank += 100;
+				
 				qryInfo.query = qryInfo.query.slice(qryInfo.classIndex, qryInfo.query.length);
 				
 			}
@@ -260,6 +272,8 @@ class AssetStore {
 			if(!qryInfo.deviceCheck && !qryInfo.classCheck) {
 				
 				targetObj.id = qryInfo.query;
+				
+				qryInfo.maxRank += 100;
 				
 			}
 			
@@ -275,6 +289,8 @@ class AssetStore {
 		if(qryInfo.classCheck && qryInfo.classValid) {
 			
 			targetObj.class = qryInfo.query.split('.').slice(1);
+			
+			qryInfo.maxRank += targetObj.class.length;
 			
 		}
 		
