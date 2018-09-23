@@ -199,8 +199,8 @@ class WebSocketServer {
 		
 		this.server.listen(8080, '0.0.0.0', function httpServerListening() {
 			
-			console.log("SOCKET_SERVER::LISTENING:", 
-				this.address().address+":", 
+			console.log("SOCKET_SERVER::LISTENING:",
+				this.address().address+":" +
 				this.address().port);
 			
 		});
