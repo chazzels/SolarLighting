@@ -152,8 +152,6 @@ class AssetStore {
 			
 			targetObj.maxRank = qryInfo.maxRank;
 			
-			console.log(targetObj);
-			
 		}
 		
 		return targetObj;

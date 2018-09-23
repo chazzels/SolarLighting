@@ -80,7 +80,6 @@ class AssetManager {
 		// DEV: do a sample query based on the load asset targets.
 		this.queryTargets(assetData.cueTrackMeta[0].trackTarget);
 		
-		
 		// return the sha1 key object as a refence to the asset.
 		return shakey;
 		

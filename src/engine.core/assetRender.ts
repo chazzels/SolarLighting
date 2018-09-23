@@ -1,6 +1,6 @@
 /*
 *	main calculations of the engine generates values for the fixtures.
-*	** this modulerelies on the data from the AssetManager module ** 
+*	** this module relies on the data from the AssetManager module ** 
 */
 
 import { sha1 } from "./interface/sha1";
