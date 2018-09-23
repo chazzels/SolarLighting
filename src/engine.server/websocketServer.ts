@@ -177,9 +177,11 @@ class WebSocketServer {
 		
 		this.app = this.express();
 		
+		this.app.set('port', process.env.PORT || 8080);
+		
 		this.app.use(function(req, res) {
 			
-			res.status(500).end();
+			//res.status(500).end();
 			
 		});
 		
@@ -195,7 +197,7 @@ class WebSocketServer {
 	/* start server listening on given ip and port. */
 	private HTTPServerListen() {
 		
-		this.server.listen(8081, '0.0.0.0', function httpServerListening() {
+		this.server.listen(8080, '0.0.0.0', function httpServerListening() {
 			
 			console.log("SOCKET_SERVER::LISTENING:", 
 				this.address().address+":", 
