@@ -78,8 +78,8 @@ class WebSocketServer {
 				
 			}
 			
-			
-			ws.send(server.clientKeys.length);
+			// DEV. this message only confirms that the client is accepting data.
+			ws.send(server.clientKeys.length + '(' + server.connectionCounter + ')');
 			
 		}
 		
