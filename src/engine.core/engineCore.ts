@@ -37,7 +37,6 @@ class EngineCore {
 	static assetObj: any;
 	static currentAssetState: any;
 	
-	
 	/* performance variables */
 	static readonly ENGINELOOP: string = "EngineLoop";
 	
@@ -109,6 +108,12 @@ class EngineCore {
 	read(shakey: sha1) {
 		
 		return EngineCore.renderCache.read(shakey);
+		
+	}
+	
+	queryTargets(qryStr: string) {
+		
+		return EngineCore.assetManger.queryTargets(qryStr);
 		
 	}
 	
