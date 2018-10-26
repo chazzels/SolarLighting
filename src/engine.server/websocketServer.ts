@@ -1,6 +1,7 @@
 /*
 *	module for starting a websocket server.
-*	TODO return splash page for http hit.
+*	TODO: return splash page for http hit.
+*	TODO: add unique server id which is tied to installation or pre-assigned. created unless found.
 */
 
 import { sha1 } from "./interface/sha1";
@@ -19,11 +20,12 @@ class WebSocketServer {
 	private wss: any;
 	private clients: any = new Map();
 	private clientKeys: any = [];
+	private deviceIds: any = new Map();
 	private connectionCounter: number = 0;
 	
 	/* module constants */
 	private readonly STATEMETA: string = "StateMeta";
-	private readonly STATEDATA: string = "StateMeta";
+	private readonly STATEDATA: string = "StateData";
 	
 	constructor(wsOpt?: any) {
 		
@@ -42,34 +44,54 @@ class WebSocketServer {
 	}
 	
 	/* code to execute when a client has connected. */
-	/* this is center logic to this module. */
+	/* this is main logic to this module. */
 	private initWebSocketConnection() {
 		
 		let server = this;
 		
 		/* new websocket connection event */
-		this.wss.on('connection', socketConnect);
+		server.wss.on('connection', socketConnect);
 		
 		function socketConnect(ws: any, req: any) {
 			
+			let clientId,
+				deviceId;
+			
 			server.createKey(ws);
 			
+			// set new websocket state.
 			ws.state = server.STATEMETA;
-			
-			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
 			
 			ws.on('message', socketMessage);
 			
 			ws.on('close', socketClose);
 			
+			// function called message event.
 			function socketMessage(message: any) {
 				
-				// On new Message event.
-				
-				// if(ws.state = server.STATEMETA) {} function validateMetaMessage() {}
+				if(ws.state === server.STATEMETA
+					&& typeof clientId === "undefined"
+					&& typeof deviceId === "undefined") {
+						
+						message = message.trim().split(',');
+						
+						deviceId = message[0];
+						
+						clientId = ws.key;
+						
+						server.deviceIds.set(deviceId, clientId);
+						
+						ws.state = server.STATEDATA;
+						
+				} else {
+					
+					console.log(message);
+					
+				}
 				
 			}
 			
+			// function called on close event.
 			function socketClose(message: any) {
 				
 				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
@@ -78,8 +100,11 @@ class WebSocketServer {
 				
 			}
 			
-			// DEV. this message only confirms that the client is accepting data.
-			ws.send(server.clientKeys.length + '(' + server.connectionCounter + ')');
+			// responde to connection with generate key.
+			ws.send(ws.key);
+			
+			// log new connection.
+			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
 			
 		}
 		
@@ -159,7 +184,10 @@ class WebSocketServer {
 		});
 		
 		/* store key on the websocket. */
-		ws.key = shakey.hex;
+		Object.defineProperty(ws, 'key', {
+			value: shakey.hex,
+			writable: false
+		});
 		
 		/* add new websocket to tracking system. */
 		this.clients.set(ws.key, ws);
@@ -181,7 +209,7 @@ class WebSocketServer {
 		
 		this.app.use(function(req, res) {
 			
-			//res.status(500).end();
+			res.status(500).end();
 			
 		});
 		
