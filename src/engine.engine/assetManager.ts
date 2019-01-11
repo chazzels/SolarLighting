@@ -142,8 +142,6 @@ class AssetManager {
 	/* returns a list of active asset keys in a array. */
 	getManifest() {
 		
-		console.log(this.activeManifest);
-		
 		return this.activeManifest;
 		
 	}
