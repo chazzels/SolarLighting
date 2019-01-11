@@ -1,2 +1,2 @@
 #!/bin/bash
-grep -R "TODO" src/ > currentTodo.txt
+grep -R "TODO" src/ > dev/currentTodo.txt
