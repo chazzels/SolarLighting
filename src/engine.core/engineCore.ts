@@ -2,8 +2,8 @@
 *	module to link up all the other engine modules to create a cohesive system.
 *	TODO: build logging module.
 *	TODO: function to dump shakey name map for later debuggin
-*	TODO: add functionality to halt processig to allow for a debug scearios.
-*	TODO: make simplePerf optional functionality. (just not always useful).
+*	TODO: add functionality to halt processig and clock to allow for a debug scearios.
+*	TODO: make simplePerf optional functionality. (not always useful).
 *	TODO: ??? rename renderCache to styleCache for clarity ???
 */
 
@@ -17,15 +17,15 @@ class EngineCore {
 	private SimplePerf: any = require("../shared/simplePerf");
 	private Crystal: any = require("../shared/crystalClock");
 	private AssetManager: any = require("./assetManager");
-	private AssetRender: any = require("./assetRender");
-	private RenderCache: any = require("./renderCache");
+	private StyleRender: any = require("./styleRender");
+	private RenderCache: any = require("./styleCache");
 	
-	/* external modules */
+	/* imported modules variables */
 	static simplePerf: any;
 	static crystal: crystalObject;
 	static assetManger: any;
-	static assetRender: any;
-	static renderCache: any;
+	static styleRender: any;
+	static styleCache: any;
 	
 	/* core loop variables */
 	static manifest: any = [];
@@ -67,9 +67,9 @@ class EngineCore {
 		// internal modules.
 		EngineCore.assetManger = new this.AssetManager(options, EngineCore.simplePerf);
 		
-		EngineCore.renderCache = new this.RenderCache(EngineCore.simplePerf);
+		EngineCore.styleCache = new this.RenderCache(EngineCore.simplePerf);
 		
-		EngineCore.assetRender = new this.AssetRender(EngineCore.simplePerf);
+		EngineCore.styleRender = new this.StyleRender(EngineCore.simplePerf);
 		
 		console.groupEnd();
 		
@@ -107,7 +107,7 @@ class EngineCore {
 	/* read cahced value from the render cahce. */
 	read(shakey: sha1) {
 		
-		return EngineCore.renderCache.read(shakey);
+		return EngineCore.styleCache.read(shakey);
 		
 	}
 	
@@ -124,26 +124,29 @@ class EngineCore {
 		
 		EngineCore.tickStart = Date.now();
 		
+		
 		EngineCore._updateManifest();
 		
 		// loop through each active asset and calculate its current styles.
 		for(let i = 0; i < EngineCore.manifestLength; i++) {
 			
+			// advance the value of the asset manifest index.
 			EngineCore._advanceManifestIndex();
 			
 			// update current asset key.
 			EngineCore.currentAssetKey = EngineCore.manifest[EngineCore.manifestIndex];
 			
-			// get the assets data. 
+			// get the assets data from the asset manager.
 			EngineCore.assetObj = EngineCore.assetManger.getState(EngineCore.currentAssetKey);
 			
 			if(EngineCore.assetObj !== null) {
 				
-				// set with new generated style from the render.
-				EngineCore.currentAssetState = EngineCore.assetRender.update(EngineCore.assetObj);
+				// set with new generated style from the style render.
+				EngineCore.currentAssetState = EngineCore.styleRender.update(EngineCore.assetObj);
 				
-				// write generated style to the cache.
-				EngineCore.renderCache.write(EngineCore.currentAssetKey.hex, EngineCore.currentAssetState);
+				// send the generated style to the style cache.
+				// last rendered style can be fetched from here.
+				EngineCore.styleCache.write(EngineCore.currentAssetKey.hex, EngineCore.currentAssetState);
 				
 			} else {
 				
@@ -162,16 +165,17 @@ class EngineCore {
 		
 	}
 	
-	// update the active playheads states.
+	/* update the active playheads states. */
 	static _updateManifest() {
 		
-		EngineCore.manifest = EngineCore.assetManger.update();
+		EngineCore.assetManger.generateManifest();
+		EngineCore.manifest = EngineCore.assetManger.getManifest();
 		EngineCore.manifestLength = EngineCore.manifest.length;
 		EngineCore.manifestIndex = -1;
 		
 	}
 	
-	// update the index of manifest.
+	/* update the index of manifest. */
 	static _advanceManifestIndex() {
 		
 		if(EngineCore.manifestIndex + 1 < EngineCore.manifestLength) {

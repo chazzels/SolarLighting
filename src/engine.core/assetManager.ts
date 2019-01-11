@@ -42,8 +42,8 @@ class AssetManager {
 	|	manager module functionality
 	\----------------------------------------------*/
 	
-	/* update playhead state and active asset manifest. */
-	update() {
+	/* update playhead states and update active asset manifest. */
+	generateManifest() {
 		
 		this.activeManifest = this._playhead.update();
 		
@@ -141,6 +141,8 @@ class AssetManager {
 	
 	/* returns a list of active asset keys in a array. */
 	getManifest() {
+		
+		console.log(this.activeManifest);
 		
 		return this.activeManifest;
 		

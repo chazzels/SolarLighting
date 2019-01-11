@@ -5,7 +5,7 @@
 
 import { sha1 } from "./interface/sha1";
 
-class AssetRender {
+class StyleRender {
 	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
@@ -111,4 +111,4 @@ class AssetRender {
 	
 }
 
-export = AssetRender;
+export = StyleRender;

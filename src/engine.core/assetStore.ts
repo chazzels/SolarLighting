@@ -43,7 +43,11 @@ class AssetStore {
 		
 		this._totalTracks + assetData.cueTrack.length;
 		
-		this._tracksMeta.set(shakey, assetData.cueTrackMeta);
+		// DEV: used to test the new asset ranking.
+		//let targetObj = this._parseTargetQuery(assetData.cueTrackMeta);
+		
+		// DEV: used to test the new asset ranking.
+		//this._tracksMeta.set(shakey, targetObj);
 		
 		this.perf.hit(this.STOREWRITE);
 		
@@ -136,13 +140,9 @@ class AssetStore {
 		
 		this._validateQuery(qryInfo);
 		
-		if( !((qryInfo.deviceValid || !qryInfo.deviceCheck) 
+		if( (qryInfo.deviceValid || !qryInfo.deviceCheck) 
 			&& (qryInfo.idValid || !qryInfo.idCheck) 
-			&& (qryInfo.classValid || !qryInfo.classCheck))) {
-			
-			console.log('MANAGER::TARGET_QUERY: query failed to be validated.');
-			
-		} else {
+			&& (qryInfo.classValid || !qryInfo.classCheck)) {
 			
 			this._parseDevice(qryInfo, targetObj);
 			
@@ -151,6 +151,10 @@ class AssetStore {
 			this._parseClasses(qryInfo, targetObj);
 			
 			targetObj.maxRank = qryInfo.maxRank;
+			
+		} else {
+			
+			console.log('MANAGER::TARGET_QUERY: query failed to be validated.');
 			
 		}
 		

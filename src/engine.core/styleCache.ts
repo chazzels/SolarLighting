@@ -5,7 +5,7 @@
 
 import { sha1 } from "./interface/sha1";
 
-class RenderCache {
+class StyleCache {
 	
 	/* module variables */
 	private _storage: any = new Map();
@@ -65,4 +65,4 @@ class RenderCache {
 	
 }
 
-export = RenderCache;
+export = StyleCache;
