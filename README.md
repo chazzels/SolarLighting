@@ -1,8 +1,13 @@
 # SolarEngine
 Lighting Control Engine
+---
 
+## 
 
-# Compiling for use
+---
+
+## Compiling for use
 
 ` $ tsc `
 ##### * must have typescript installed. 
+---
