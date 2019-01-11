@@ -27,18 +27,19 @@ class ClientCom {
 	constructor(options: any) {
 		
 		console.log("ENGINE_SERVER::STARTING");
+		
 		console.group();
 		
 		this.perf = new this.SimplePerf();
 		
-		/* timer module initialization. */
+		// timer module initialization.
 		let that = this;
 		
 		this.crystal = new this.Crystal(this.REFRESH_RESOLUTION);
 		
 		this.crystal.onUpdate(that.tick, that);
 		
-		/* websocket server initialization. */
+		// websocket server initialization.
 		this.server = new this.WebSocketServer(options);
 		
 		this.meta = new this.ClientMeta(this.perf);
