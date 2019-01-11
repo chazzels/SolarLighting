@@ -1,14 +1,14 @@
 /*
-*	module to link up all the other engine modules to create a cohesive system.
+*	module to link up all the other engine modules to create a facade module.
 *	TODO: build logging module.
-*	TODO: function to dump shakey name map for later debuggin
-*	TODO: add functionality to halt processig and clock to allow for a debug scearios.
+*	TODO: function to dump shakey name map for debugging.
+*	TODO: add functionality to halt processig and clock for a debug scearios.
 *	TODO: make simplePerf optional functionality. (not always useful).
-*	TODO: ??? rename renderCache to styleCache for clarity ???
+*	TODO: build more interfaces for the engine.
+*	TODO: implement a task runner to automate build process for developement.
 */
 
 import { sha1 } from "./interface/sha1";
-
 import {crystalObject } from "./interface/crystalObject";
 
 class EngineCore {
@@ -65,11 +65,14 @@ class EngineCore {
 		EngineCore.crystal.onUpdate(this.tick);
 		
 		// internal modules.
-		EngineCore.assetManger = new this.AssetManager(options, EngineCore.simplePerf);
+		EngineCore.assetManger = 
+			new this.AssetManager(options, EngineCore.simplePerf);
 		
-		EngineCore.styleCache = new this.RenderCache(EngineCore.simplePerf);
+		EngineCore.styleCache = 
+			new this.RenderCache(EngineCore.simplePerf);
 		
-		EngineCore.styleRender = new this.StyleRender(EngineCore.simplePerf);
+		EngineCore.styleRender =
+			new this.StyleRender(EngineCore.simplePerf);
 		
 		console.groupEnd();
 		
@@ -134,19 +137,25 @@ class EngineCore {
 			EngineCore._advanceManifestIndex();
 			
 			// update current asset key.
-			EngineCore.currentAssetKey = EngineCore.manifest[EngineCore.manifestIndex];
+			EngineCore.currentAssetKey = 
+				EngineCore.manifest[EngineCore.manifestIndex];
 			
 			// get the assets data from the asset manager.
-			EngineCore.assetObj = EngineCore.assetManger.getState(EngineCore.currentAssetKey);
+			EngineCore.assetObj = 
+				EngineCore.assetManger.getState(EngineCore.currentAssetKey);
 			
 			if(EngineCore.assetObj !== null) {
 				
 				// set with new generated style from the style render.
-				EngineCore.currentAssetState = EngineCore.styleRender.update(EngineCore.assetObj);
+				EngineCore.currentAssetState = 
+					EngineCore.styleRender.update(EngineCore.assetObj);
 				
 				// send the generated style to the style cache.
 				// last rendered style can be fetched from here.
-				EngineCore.styleCache.write(EngineCore.currentAssetKey.hex, EngineCore.currentAssetState);
+				EngineCore.styleCache.write(
+					EngineCore.currentAssetKey.hex, 
+					EngineCore.currentAssetState
+				);
 				
 			} else {
 				

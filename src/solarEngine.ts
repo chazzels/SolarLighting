@@ -1,4 +1,4 @@
-import { sha1 } from "./engine.core/interface/sha1";
+import { sha1 } from "./engine.engine/interface/sha1";
 
 class SolarEngine {
 	
@@ -9,7 +9,7 @@ class SolarEngine {
 	readonly releaseType: string = "a";
 	
 	/* imported modules */
-	private EngineCore: any = require("./engine.core/engineCore");
+	private EngineCore: any = require("./engine.engine/engineCore");
 	private EngineServer: any = require("./engine.server/server");
 	private EngineClient: any = require("./engine.client/client");
 	private Crystal: any = require("./shared/crystalClock");
