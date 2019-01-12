@@ -1,5 +1,6 @@
 /*
 *	main calculations of the engine generates values for the fixtures.
+*	takes static asset data and calculates current style values.
 *	** this module relies on the data from the AssetManager module ** 
 */
 
