@@ -15,3 +15,14 @@ There are 3 main components to this application.
 
 - Controller Communications
 	- Websocket client to communicate with the show controller.
+---
+
+## 
+
+---
+
+## Compiling for use
+
+` $ tsc `
+##### * must have typescript installed. 
+---

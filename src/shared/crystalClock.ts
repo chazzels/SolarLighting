@@ -59,7 +59,7 @@ class CrsytalClock {
 			
 			let start = Date.now();
 			
-			setTimeout(function () {
+			setTimeout(function timeoutCallback() {
 				
 				if(typeof callback === "function") {
 				

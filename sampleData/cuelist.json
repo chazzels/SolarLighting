@@ -1,9 +1,10 @@
-{
-	"assetID": "sampleCuelist",
+{	
+	"assetName": "sampleCuelist",
+	"assetMode": "REPEAT",
 	"cueTimeline": [
 		{
 			"cueName": "cue01",
-			"cueMode": "HOLD",
+			"cueMode": "FOLLOW",
 			"timing": 4000,
 			"timeMultipler": 1
 		},
@@ -26,14 +27,8 @@
 			"blue": 0
 		}
 	],
-	"cueTrackMeta": [
-		{
-			"trackName": "master",
-			"trackTarget": ".center-wash"
-		},
-		{
-			"trackName": "track01",
-			"trackTarget": ".wash"
-		}
-	]
+	"cueTrackMeta": {
+		"trackName": "master",
+		"trackTarget": ".center.wash"
+	}
 }

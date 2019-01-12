@@ -2,10 +2,13 @@
 *	module for all playhead state logic.
 */
 
-import { sha1 } from "./interface/sha1";
-import { playheadObject } from "./interface/playheadObject"
+import { sha1 } from "../interface/sha1";
+import { playheadObject } from "../interface/playheadObject"
 
 class PlayheadLogic {
+	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
 	
 	/* module varaibles */
 	private _playheads: any;
@@ -13,12 +16,20 @@ class PlayheadLogic {
 	
 	/* module constants */
 	private readonly STATUS_PAUSED: string = "PAUSE";
-	private readonly STATUS_PLAY: string = "PLAY";
+	private readonly STATE_PLAY: string = "PLAY";
 	private readonly MODE_HOLD: string = "HOLD";
 	private readonly MODE_FOLLOW: string = "FOLLOW";
 	private readonly MODE_END: string = "END";
+	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
+	private readonly ASSET_MODE_END: string = "END";
 	
-	constructor(playheadStore: any, playheadMetaStore: any) {
+	constructor(options: any, playheadStore: any, playheadMetaStore: any) {
+		
+		if(options && options.hasOwnProperty("verbose")) {
+			
+			this.VERBOSE = options.verbose;
+			
+		}
 		
 		this._playheads = playheadStore;
 		
@@ -44,11 +55,29 @@ class PlayheadLogic {
 				
 			} else {
 				
-				playhead.nextCueMode = this.MODE_END;
+				if(playhead.assetMode === this.ASSET_MODE_REPEAT) {
+					
+					playhead.index = 0;
+					
+					playhead.nextCueMode = meta[0].cueMode;
+					
+				} else if(playhead.assetMode === this.ASSET_MODE_END) {
+					
+					playhead.nextCueMode = this.MODE_END;
+					
+				} else {
+					
+					console.log("PLAYHEAD::ASSET_MODE_UNKNOWN:", playhead.assetMode);
+					
+				}
 				
 			}
 			
-			console.log("PLAYHEAD::ADVANCING: ", shakey.hex);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::ADVANCING: ", shakey.hex);
+				
+			}
 			
 		} else if(playhead.index >= playhead.indexMax) {
 			/* determines if the playhead is at the end */
@@ -57,11 +86,15 @@ class PlayheadLogic {
 			
 			playhead.current = 0;
 			
-			if(playhead.state === this.STATUS_PLAY) {
+			if(playhead.state === this.STATE_PLAY) {
 				
 				playhead.state = this.STATUS_PAUSED;
 				
-				console.log("PLAYHEAD::END_OF_ASSET: ", shakey.hex);
+				if(this.VERBOSE) {
+					
+					console.log("PLAYHEAD::END_OF_ASSET: ", shakey.hex);
+					
+				}
 				
 			}
 		
@@ -75,11 +108,15 @@ class PlayheadLogic {
 		
 		playhead.current = 0;
 		
-		if(playhead.state === this.STATUS_PLAY) {
+		if(playhead.state === this.STATE_PLAY) {
 			
 			playhead.state = this.STATUS_PAUSED;
 			
-			console.log("PLAYHEAD::HELD: ", shakey.hex);
+			if(this.VERBOSE) {
+				
+				console.log("PLAYHEAD::HELD: ", shakey.hex);
+				
+			}
 			
 		}
 	
@@ -105,7 +142,11 @@ class PlayheadLogic {
 			
 		}
 		
-		console.log("PLAYHEAD::END:", shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("PLAYHEAD::END:", shakey.hex);
+			
+		}
 		
 	}
 

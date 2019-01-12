@@ -1,18 +1,24 @@
-import { sha1 } from "./engine.core/interface/sha1";
+/*
+*	module to serve as a main management API to engine subsystems. 
+*	TODO: implement a task runner to automate build process for developement.
+*	TODO: build logging module.
+*/
+
+import { sha1 } from "./engine.engine/interface/sha1";
 
 class SolarEngine {
 	
 	/* module version info */
 	readonly majorVersion: number = 0;
 	readonly minorversion: number = 0;
-	readonly revisionVersion: number = 1;
+	readonly revisionVersion: number = 2;
 	readonly releaseType: string = "a";
 	
 	/* imported modules */
-	private EngineCore: any = require("./engine.core/engine.alpha");
+	private EngineCore: any = require("./engine.engine/engineCore");
 	private EngineServer: any = require("./engine.server/server");
 	private EngineClient: any = require("./engine.client/client");
-	private Crystal: any = require("./engine.core/crystalClock");
+	private Crystal: any = require("./shared/crystalClock");
 	
 	/* module variables */
 	private engine: any;
@@ -21,23 +27,26 @@ class SolarEngine {
 	private assetKeys: any = [];
 	private crystal: any;
 	
-	constructor() {
+	constructor(options?:any) {
+		
+		let engineStartTime = Date.now();
+		
+		console.log("------------------------------");
 		
 		console.log(this.version());
-		console.group();
 		
-		this.engine = new this.EngineCore();
+		console.log("------------------------------");
 		
-		this.server = new this.EngineServer();
+		this.engine = new this.EngineCore(options);
 		
-		this.client = new this.EngineClient();
+		this.server = new this.EngineServer(options.server);
 		
-		/* timer module initialization */
-		let that = this;
-		this.crystal = new this.Crystal(250);
-		this.crystal.onUpdate(that.tick, that);
+		this.client = new this.EngineClient(options.client);
 		
-		console.groupEnd();
+		console.log("------------------------------");
+		
+		console.log("Start Up Time:", Date.now() - engineStartTime, "ms");
+		
 		console.log("------------------------------");
 		
 	}
@@ -100,10 +109,6 @@ class SolarEngine {
 	/*----------------------------------------------\
 	|	Private Module Functions.
 	\----------------------------------------------*/
-	
-	private tick(that) {
-		
-	}
 	
 }
 

@@ -26,11 +26,11 @@ class SimplePerf {
 	/* external modules. */
 	private Crystal = require("./crystalClock");
 	
-	constructor(option?: any) {
+	constructor(options?: any) {
 		
-		if(option && option.hasOwnProperty("verbose")) {
+		if(options && options.hasOwnProperty("verbose")) {
 			
-			this.VERBOSE = option.verbose;
+			this.VERBOSE = options.verbose;
 			
 		}
 		
@@ -39,12 +39,12 @@ class SimplePerf {
 		let triggerCallback = this.trigger(that)
 		
 		let crystal = new this.Crystal(1000, triggerCallback);
-	
+		
 	}
 	
 	/* trigger function for the crystal timing module. */
 	trigger(that: any) {
-	
+		
 		return function() {
 			
 			let parameterLength: number = that._parameterNames.length;

@@ -6,6 +6,9 @@ import { sha1 } from "./interface/sha1";
 
 class AssetStore {
 	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	
 	/* module variables */
 	private _totalTracks: number = 0;
 	private _tracks: any = new Map();
@@ -14,9 +17,16 @@ class AssetStore {
 	/* performance variables */
 	private readonly STOREREAD: string = "StoreRead";
 	private readonly STOREWRITE: string = "StoreWrite";
+	private readonly STOREMETAREAD: string = "StoreMetaRead";
 	private perf: any;
 	
-	constructor(perf: any) {
+	constructor(options: any, perf: any) {
+		
+		if(options && options.hasOwnProperty("verbose")) {
+			
+			this.VERBOSE = options.verbose;
+			
+		}
 		
 		console.log("STORE::STARTING");
 		
@@ -25,6 +35,8 @@ class AssetStore {
 	}
 	
 	/* loads cue track into storage */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
+	/* @param {any} assetData - an assets cue style data. */
 	loadTrack(shakey: sha1, assetData: any) {
 		
 		this._tracks.set(shakey, assetData.cueTrack);
@@ -35,22 +47,33 @@ class AssetStore {
 		
 		this.perf.hit(this.STOREWRITE);
 		
-		console.log("STORE::LOAD: " + shakey.hex);
-	
+		if(this.VERBOSE) {
+			
+			console.log("STORE::LOAD:", shakey.hex);
+			
+		}
+		
 	}
 	
 	/* remove track from the store module. */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpTrack(shakey: sha1) {
 		
 		this._tracks.delete(shakey);
 		
 		this._tracksMeta.delete(shakey);
 		
-		console.log("STORE::DUMP: " + shakey.hex);
+		if(this.VERBOSE) {
+			
+			console.log("STORE::DUMP:", shakey.hex);
+			
+		}
 		
 	}
 	
 	/* fetch cue data from storage */
+	/* @param {sha1} shakey - sha1 key object used to reference an asset. */
+	/* @param {number} cueIndex - the index of the cue to be returned. */
 	getCue(shakey: sha1,  cueIndex: number) {
 		
 		let track = this._tracks.get(shakey); 
@@ -66,6 +89,14 @@ class AssetStore {
 			return -1;
 			
 		}
+	}
+	
+	/* fetch an assets meta data. */
+	/* @param {sha1} shakey - sha1 key object used to reference an asset. */
+	getMeta(shakey: sha1) {
+		
+		return this._tracksMeta.get(shakey);
+		
 	}
 	
 }

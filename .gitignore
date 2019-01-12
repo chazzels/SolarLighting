@@ -1,5 +1,7 @@
 # SolarEngine Ignore
-dev.js
+js/
+public/
+dev/
 
 # Logs
 logs

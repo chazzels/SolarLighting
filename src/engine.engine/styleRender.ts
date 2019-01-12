@@ -1,11 +1,16 @@
 /*
 *	main calculations of the engine generates values for the fixtures.
-*	** this modulerelies on the data from the AssetManager module ** 
+*	takes static asset data and calculates current style values.
+*	** this module relies on the data from the AssetManager module ** 
 */
 
 import { sha1 } from "./interface/sha1";
 
-class AssetRender {
+class StyleRender {
+	
+	/* module flags */
+	private readonly VERBOSE: boolean = false;
+	private readonly DEBUG: boolean = false;
 	
 	/* module variables */
 	private _stateUpdate: any;
@@ -13,13 +18,12 @@ class AssetRender {
 	private _manifestLength: number = 0;
 	private _manifestIndex: number = -1;
 	private _playheads: any;
-	private _store
 	private perf: any;
 	
 	/* performance variables */
 	private readonly ASSETCALC: string = "AssetCalc";
 	
-	constructor(perf:any) {
+	constructor(options: any, perf: any) {
 		
 		console.log("RENDER::STARTING");
 		console.group();
@@ -40,81 +44,21 @@ class AssetRender {
 		
 	}
 	
-	/* advance the manifest index so the next asset get calculated. */
-	next() {
-		
-		if(this._manifestIndex + 1 < this._manifestLength) {
-			
-			this._manifestIndex++;
-			
-		}
-		
-	}
-	
-	/* get the current key that renderer will be using. */
-	/* other modules use this to determine the data passed to the render. */
-	getCurrentKey() {
-		
-		if(this._manifestIndex < this._manifestLength
-			&& this._manifestIndex >= 0) {
-			
-			return this._manifest[this._manifestIndex];
-			
-		} else {
-			
-			return false
-			
-		}
-		
-	}
-	
-	/* get the total number of active assets. */
-	getLoopCount() {
-		
-		return this._manifestLength;
-		
-	}
-	
-	
-	/* update the list of active asset keys to be rendered. */
-	updateManifest(manifest: any) {
-		
-		this._manifest = manifest;
-		
-		this._manifestLength = manifest.length;
-		
-		this._manifestIndex = -1;
-		
-	}
-	
 	/* one loop of the asset render system. */
 	/* calculates the new value of one asset passed in. */
 	private tick(assetObj: any) {
 		
-		let manifestLength = this._manifest.length;
-		
-		if(manifestLength > 0) {
-			
-			return this.updateAsset(assetObj);
-			
-		} else {
-		
-			return false;
-		
-		}
+		return this.updateAsset(assetObj);
 		
 	}
 	
 	/* using asset data passed in current state will be calculated. */
 	private updateAsset(assetObj: any) {
 		
-		let playhead = assetObj.playhead;
-		
-		let cue = assetObj.cue;
-		
-		let prevCue = assetObj.previousCue;
-		
-		let progress = this.calcProgress(playhead);
+		let playhead = assetObj.playhead,
+			cue = assetObj.cue,
+			prevCue = assetObj.previousCue,
+			progress = assetObj.progress;
 		
 		let calcCue = this.calcCue(prevCue, cue, progress);
 		
@@ -141,6 +85,7 @@ class AssetRender {
 		this.perf.hit(this.ASSETCALC);
 		
 		return calcCue;
+		
 	}
 	
 	/* process new values for the cues based on last state, next state and  */
@@ -165,20 +110,6 @@ class AssetRender {
 		
 	}
 	
-	/* calculate cue progress and how close it is to the end. */
-	/* Return number betwene 0 and 1. */
-	private calcProgress(playhead: any) {
-		
-		let progress = playhead.current / playhead.timing;
-		
-		let factor = Math.pow(10, 2);
-		
-		progress = Math.round(progress * factor) / factor;
-		
-		return progress;
-		
-	}
-
 }
 
-export = AssetRender;
+export = StyleRender;

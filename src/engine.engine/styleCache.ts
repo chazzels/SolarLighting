@@ -5,7 +5,7 @@
 
 import { sha1 } from "./interface/sha1";
 
-class RenderCache {
+class StyleCache {
 	
 	/* module variables */
 	private _storage: any = new Map();
@@ -16,7 +16,7 @@ class RenderCache {
 	private readonly CACHEREAD: string = "CacheRead";
 	private perf: any;
 	
-	constructor(perf:any) {
+	constructor(options: any, perf: any) {
 		
 		console.log("CACHE::STARTING");
 		console.group();
@@ -31,6 +31,7 @@ class RenderCache {
 	}
 	
 	/* write an new or updated entry to the map */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	write(shahex: sha1, value: any) {
 		
 		let writeStatus = false;
@@ -44,6 +45,7 @@ class RenderCache {
 	}
 	
 	/* return the value from a entry on the map */
+	/* @param {string} shakey - sha1 key used to reference an asset. */
 	read(shahex: sha1) {
 		
 		let cacheObj =  {
@@ -63,4 +65,4 @@ class RenderCache {
 	
 }
 
-export = RenderCache;
+export = StyleCache;

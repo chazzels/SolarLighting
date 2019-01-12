@@ -1,6 +1,7 @@
 /*
-*	module for starting a websocket server.
-*	TODO return splash page for http hit.
+*	module for creating a websocket server.
+*	TODO: return splash page for http hit.
+*	TODO: add unique server id which is tied to installation or pre-assigned. created unless found.
 */
 
 import { sha1 } from "./interface/sha1";
@@ -19,11 +20,12 @@ class WebSocketServer {
 	private wss: any;
 	private clients: any = new Map();
 	private clientKeys: any = [];
+	private deviceIds: any = new Map();
 	private connectionCounter: number = 0;
 	
 	/* module constants */
 	private readonly STATEMETA: string = "StateMeta";
-	private readonly STATEDATA: string = "StateMeta";
+	private readonly STATEDATA: string = "StateData";
 	
 	constructor(wsOpt?: any) {
 		
@@ -42,40 +44,77 @@ class WebSocketServer {
 	}
 	
 	/* code to execute when a client has connected. */
-	/* this is center logic to this module. */
+	/* this is main logic to this module. */
 	private initWebSocketConnection() {
 		
-		let that = this;
+		let server = this;
 		
-		/* new websocket connection event */
-		this.wss.on('connection', function socketConnect(ws: any, req: any) {
+		// new websocket connection event.
+		server.wss.on("connection", socketConnect);
+		
+		function socketConnect(ws: any, req: any) {
 			
-			/* socket initialization. */
-			that.createKey(ws);
+			let clientId,
+				deviceId;
 			
-			ws.state = that.STATEMETA;
+			server.createKey(ws);
 			
-			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
+			// set new websocket state.
+			ws.state = server.STATEMETA;
 			
-			/* socket message handling. */
-			ws.on('message', function socketMessage(message: any) {
+			// bind function to message event.
+			ws.on("message", socketMessage);
+			
+			// bind function to close event.
+			ws.on("close", socketClose);
+			
+			// function called message event.
+			function socketMessage(message: any) {
 				
+				if(typeof message === "string") {
+					// if the message is a string execute the correct function.
+					
+					if(ws.state === server.STATEMETA
+						&& typeof clientId === "undefined"
+						&& typeof deviceId === "undefined") {
+							
+							message = message.trim().split(',');
+							
+							console.log(typeof message);
+							console.log(message);
+							
+							deviceId = message[0];
+							
+							clientId = ws.key;
+							
+							server.deviceIds.set(deviceId, clientId);
+							
+							ws.state = server.STATEDATA;
+							
+					}
+					
+				} else if(typeof message === 'object') {
+					// if the message is a object relay the data.
+					
+					console.log(message.toJSON());
+					
+				}
 				
-				
-			});
+			}
 			
-			/* socket disconnection handling. */
-			ws.on('close', function socketClose(message: any) {
+			// function called on close event.
+			function socketClose(message: any) {
 				
 				console.log("SOCKET_SERVER::DISCONNECTED:", this.key);
 				
-				that.removeSocket(this.key);
+				server.removeSocket(this.key);
 				
-			});
+			}
 			
-			ws.send(that.clientKeys.length);
+			// log new connection.
+			console.log("SOCKET_SERVER::NEW_CONNECTION:", ws.key);
 			
-		});
+		}
 		
 	}
 	
@@ -107,25 +146,28 @@ class WebSocketServer {
 		
 	}
 	
-	/* remoces socket reference and object from websocket server module. */
-	/* @param {string} shakey - sha1 key used to reference a socket*/
+	/* removes socket reference and object from websocket server module. */
+	/* @param {string} shakey - sha1 key used to reference a socket */
 	private removeSocket(shakey: sha1) {
 		
-		/* delete key from client map. return false if failed. */
+		// delete key from client map. return false if failed.
 		let clientStatus = this.clients.delete(shakey);
 		
-		/* delete key from clientKeys array. returns -1 if failed. s*/
+		// check index of the key in the client key array. returns -1 if failed.
 		let keyIndex = this.clientKeys.indexOf(shakey);
 		
+		// check the returned key index is valid.
 		if(keyIndex !== -1 && keyIndex >= 0) {
 			
+			// remove key from client keys array.
 			this.clientKeys.splice(keyIndex, 1);
 			
 		}
 		
+		// confirm the client key has been removed.
 		let clientKeysStatus = (this.clientKeys.indexOf(shakey) === -1);
 		
-		/* return false if either removal operation failed.*/
+		// return false if either removal operation failed.
 		if(clientStatus && clientKeysStatus) {
 			
 			return true;
@@ -142,22 +184,26 @@ class WebSocketServer {
 	/* @param {any} ws - websocket to assign key too. */
 	private createKey(ws: any) {
 		
-		/* advance connection counter */
+		// advance connection counter.
 		this.connectionCounter++;
 		
-		/* generate and save key. */
+		// generate and save key.
 		let shakey = this.generateSocketSHA1({
 			ip: this.server.address().address,
 			port: this.server.address().port,
 			count: this.connectionCounter
 		});
 		
-		/* store key on the websocket. */
-		ws.key = shakey.hex;
+		// store key on the websocket.
+		Object.defineProperty(ws, 'key', {
+			value: shakey.hex,
+			writable: false
+		});
 		
-		/* add new websocket to tracking system. */
+		// add new websocket to the clients map.
 		this.clients.set(ws.key, ws);
 		
+		// add the new key to the client keys array/manifest.
 		this.clientKeys.push(ws.key);
 		
 	}
@@ -169,7 +215,11 @@ class WebSocketServer {
 	/* start the express app instance.  */
 	private initExpress() {
 		
+		// create an express app object.
 		this.app = this.express();
+		
+		// set the port property of the application.
+		this.app.set('port', process.env.PORT || 8080);
 		
 		this.app.use(function(req, res) {
 			
@@ -189,20 +239,20 @@ class WebSocketServer {
 	/* start server listening on given ip and port. */
 	private HTTPServerListen() {
 		
-		this.server.listen(8420, '0.0.0.0', function httpServerListening() {
+		this.server.listen(8080, '0.0.0.0', function httpServerListening() {
 			
-			console.log("SOCKET_SERVER::LISTENING:", 
-				this.address().address+":", 
+			console.log("SOCKET_SERVER::LISTENING:",
+				this.address().address+":" +
 				this.address().port);
 			
 		});
 		
 	}
 	
-	 /* start the websocket server from the express/http server. */
+	/* start the websocket server from the express/http server. */
 	private initWebSocketServer() {
 		
-		this.wss = new this.WebSocket.Server({ server: this.server });
+		this.wss = new this.WebSocket.Server({server: this.server});
 		
 	}
 	
@@ -223,10 +273,10 @@ class WebSocketServer {
 			+ data.count.toString()
 			+ Date.now();
 		
-		/* generate sha1 from input string */
+		// generate sha1 from input string.
 		shaSum.update(shaIn);
 		
-		/* save a hex value of the sha1 */
+		// save a hex value of the sha1.
 		shaReturn = shaSum.digest("hex");
 		
 		return {
