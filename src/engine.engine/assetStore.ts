@@ -43,8 +43,7 @@ class AssetStore {
 		
 		this._totalTracks + assetData.cueTrack.length;
 		
-		//should be moved to the rank file. 
-		//this._tracksMeta.set(shakey, targetObj);
+		this._tracksMeta.set(shakey, assetData.cueTrackMeta);
 		
 		this.perf.hit(this.STOREWRITE);
 		
