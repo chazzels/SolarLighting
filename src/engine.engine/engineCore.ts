@@ -62,7 +62,7 @@ class EngineCore {
 		// timer module initialization.
 		EngineCore.crystal = new this.Crystal(10);
 		
-		EngineCore.crystal.onUpdate(this.tick);
+		EngineCore.crystal.onUpdate(this.generateStyles);
 		
 		// internal modules.
 		EngineCore.assetManger = 
@@ -122,8 +122,7 @@ class EngineCore {
 	
 	/* funciton that triggers updating the calculated styles. */
 	/* function passed to crystal update with this module as context passed*/
-	/* TODO: change the name of this function. not clear as to what it does. */
-	private tick() {
+	private generateStyles() {
 		
 		EngineCore.tickStart = Date.now();
 		
