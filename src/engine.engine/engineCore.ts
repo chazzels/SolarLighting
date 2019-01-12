@@ -4,6 +4,7 @@
 *	TODO: add functionality to halt processig and clock for a debug scearios.
 *	TODO: make simplePerf optional functionality. (not always useful).
 *	TODO: build more interfaces for the engine.
+*	TODO: make asset properties modular.
 */
 
 import { sha1 } from "./interface/sha1";
