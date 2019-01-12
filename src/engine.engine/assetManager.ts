@@ -17,11 +17,13 @@ class AssetManager {
 	/* imported modules */
 	private AssetStore: any = require('./assetStore');
 	private AssetPlayhead: any = require('./assetPlayhead');
+	private AssetRank:any = require('./assetRank');
 	private Crypto: any = require('crypto');
 	
 	/* module variables */
 	private _store: any;
 	private _playhead: any;
+	private _rank:any;
 	private _assetNames: any = new Map();
 	private _assetKeys: any = [];
 	private _assetCount: number = 0;
@@ -34,6 +36,8 @@ class AssetManager {
 		this._store = new this.AssetStore(options.store, perf);
 		
 		this._playhead = new this.AssetPlayhead(options.playhead, perf);
+		
+		this._rank = new this.AssetRank(options.rank, perf);
 		
 		console.groupEnd();
 	}
@@ -78,7 +82,7 @@ class AssetManager {
 		this._playhead.loadTimeline(shakey, assetData);
 		
 		// DEV: do a sample query based on the load asset targets.
-		this.queryTargets(assetData.cueTrackMeta[0].trackTarget);
+		this.queryTargets(assetData.cueTrackMeta.trackTarget);
 		
 		// return the sha1 key object as a refence to the asset.
 		return shakey;
@@ -197,7 +201,7 @@ class AssetManager {
 	/* @param {string} qryStr - a string containing targetting  */
 	queryTargets(qryStr: string) {
 		
-		return this._store.queryTargets(qryStr);
+		return this._rank.queryTargets(qryStr);
 		
 	}
 	
@@ -251,7 +255,7 @@ class AssetManager {
 		let shaIn = assetData.assetName.toString() 
 			+ '==' + assetData.cueTimeline.length.toString()
 			+ 'x' + assetData.cueTrack.length.toString()
-			+ ':' + assetData.cueTrackMeta.length.toString()
+			+ ':' + assetData.cueTrackMeta.toString()
 			+ '@' + this._assetCount.toString();
 		
 		/* generate sha1 from input string */
