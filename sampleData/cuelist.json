@@ -27,10 +27,8 @@
 			"blue": 0
 		}
 	],
-	"cueTrackMeta": [
-		{
-			"trackName": "master",
-			"trackTarget": ".center.wash"
-		}
-	]
+	"cueTrackMeta": {
+		"trackName": "master",
+		"trackTarget": ".center.wash"
+	}
 }
