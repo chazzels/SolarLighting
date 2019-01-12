@@ -22,7 +22,7 @@ class StyleRender {
 	/* performance variables */
 	private readonly ASSETCALC: string = "AssetCalc";
 	
-	constructor(perf:any) {
+	constructor(options: any, perf: any) {
 		
 		console.log("RENDER::STARTING");
 		console.group();

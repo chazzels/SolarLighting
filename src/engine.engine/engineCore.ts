@@ -17,7 +17,8 @@ class EngineCore {
 	private Crystal: any = require("../shared/crystalClock");
 	private AssetManager: any = require("./assetManager");
 	private StyleRender: any = require("./styleRender");
-	private RenderCache: any = require("./styleCache");
+	private StyleCache: any = require("./styleCache");
+	private StyleCompositor: any = require("./styleCompositor");
 	
 	/* imported modules variables */
 	static simplePerf: any;
@@ -25,6 +26,7 @@ class EngineCore {
 	static assetManger: any;
 	static styleRender: any;
 	static styleCache: any;
+	static styleCompositor: any;
 	
 	/* core loop variables */
 	static manifest: any = [];
@@ -68,10 +70,10 @@ class EngineCore {
 			new this.AssetManager(options, EngineCore.simplePerf);
 		
 		EngineCore.styleCache = 
-			new this.RenderCache(EngineCore.simplePerf);
+			new this.StyleCache(options, EngineCore.simplePerf);
 		
 		EngineCore.styleRender =
-			new this.StyleRender(EngineCore.simplePerf);
+			new this.StyleRender(options, EngineCore.simplePerf);
 		
 		console.groupEnd();
 		

@@ -16,7 +16,7 @@ class StyleCache {
 	private readonly CACHEREAD: string = "CacheRead";
 	private perf: any;
 	
-	constructor(perf:any) {
+	constructor(options: any, perf: any) {
 		
 		console.log("CACHE::STARTING");
 		console.group();
