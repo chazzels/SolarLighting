@@ -1,3 +1,9 @@
+/*
+*	module to serve as a main management API to engine subsystems. 
+*	TODO: implement a task runner to automate build process for developement.
+*	TODO: build logging module.
+*/
+
 import { sha1 } from "./engine.engine/interface/sha1";
 
 class SolarEngine {

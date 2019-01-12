@@ -1,11 +1,9 @@
 /*
 *	module to link up all the other engine modules to create a facade module.
-*	TODO: build logging module.
 *	TODO: function to dump shakey name map for debugging.
 *	TODO: add functionality to halt processig and clock for a debug scearios.
 *	TODO: make simplePerf optional functionality. (not always useful).
 *	TODO: build more interfaces for the engine.
-*	TODO: implement a task runner to automate build process for developement.
 */
 
 import { sha1 } from "./interface/sha1";
