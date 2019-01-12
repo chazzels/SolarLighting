@@ -2,8 +2,8 @@
 *	module for all playhead state logic.
 */
 
-import { sha1 } from "./interface/sha1";
-import { playheadObject } from "./interface/playheadObject"
+import { sha1 } from "../interface/sha1";
+import { playheadObject } from "../interface/playheadObject"
 
 class PlayheadLogic {
 	

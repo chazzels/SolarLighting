@@ -9,7 +9,7 @@ import { playheadObject } from "./interface/playheadObject"
 class AssetPlayhead {
 	
 	/* imported modules */
-	private PlayheadLogic: any = require("./playheadLogic");
+	private PlayheadLogic: any = require("./ext/playheadLogic");
 	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
