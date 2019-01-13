@@ -5,14 +5,15 @@
 */
 
 import { sha1 } from "./engine.engine/interface/sha1";
+import { assetData } from "./engine.engine/interface/assetData";
 
 class SolarEngine {
 	
 	/* module version info */
-	readonly majorVersion: number = 0;
-	readonly minorversion: number = 0;
-	readonly revisionVersion: number = 2;
-	readonly releaseType: string = "a";
+	static readonly majorVersion: number = 0;
+	static readonly minorversion: number = 0;
+	static readonly revisionVersion: number = 2;
+	static readonly releaseType: string = "a";
 	
 	/* imported modules */
 	private EngineCore: any = require("./engine.engine/engineCore");
@@ -55,10 +56,10 @@ class SolarEngine {
 	version(): string {
 		
 		let version = "Solar Engine v" 
-			+ this.majorVersion.toString() + "."
-			+ this.majorVersion.toString() + "."
-			+ this.revisionVersion.toString()
-			+ this.releaseType;
+			+ SolarEngine.majorVersion.toString() + "."
+			+ SolarEngine.majorVersion.toString() + "."
+			+ SolarEngine.revisionVersion.toString()
+			+ SolarEngine.releaseType;
 		
 		return version;
 		
@@ -68,7 +69,7 @@ class SolarEngine {
 	|	EngineCore Functionality.
 	\----------------------------------------------*/
 	
-	loadAsset(assetData: any) {
+	loadAsset(assetData: assetData) {
 		
 		let assetKey = null;
 		

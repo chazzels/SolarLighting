@@ -5,18 +5,19 @@
 *	TODO: validate assets before loading.
 */
 
-import { sha1 } from './interface/sha1';
-import { assetState } from './interface/assetState';
+import { sha1 } from "./interface/sha1";
+import { assetState } from "./interface/assetState";
+import { assetData } from "./interface/assetData";
 
 class AssetManager {
 	
 	activeManifest: any = [];
 	
 	/* imported modules */
-	private AssetStore: any = require('./assetStore');
-	private AssetPlayhead: any = require('./assetPlayhead');
-	private AssetRank:any = require('./assetRank');
-	private Crypto: any = require('crypto');
+	private AssetStore: any = require("./assetStore");
+	private AssetPlayhead: any = require("./assetPlayhead");
+	private AssetRank:any = require("./assetRank");
+	private Crypto: any = require("crypto");
 	
 	/* module variables */
 	private _store: any;

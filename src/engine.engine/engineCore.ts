@@ -8,7 +8,9 @@
 */
 
 import { sha1 } from "./interface/sha1";
-import {crystalObject } from "./interface/crystalObject";
+import { assetData } from "./interface/assetData";
+
+import {crystalObject } from "../shared/interface/crystalObject";
 
 class EngineCore {
 	
