@@ -40,14 +40,6 @@ class StyleRender {
 	/* return the updated cue value form the passed in asset data. */
 	update(assetObj: any) {
 		
-		return this.tick(assetObj);
-		
-	}
-	
-	/* one loop of the asset render system. */
-	/* calculates the new value of one asset passed in. */
-	private tick(assetObj: any) {
-		
 		return this.updateAsset(assetObj);
 		
 	}
@@ -76,11 +68,11 @@ class StyleRender {
 			blue: 0
 		}
 		
-		calcCue.red = this.calcParameter(prevCue.red, curCue.red, progress);
+		calcCue.red = StyleRender.calcDefaultParameter(prevCue.red, curCue.red, progress);
 		
-		calcCue.green = this.calcParameter(prevCue.green,curCue.green,progress);
+		calcCue.green = StyleRender.calcDefaultParameter(prevCue.green,curCue.green,progress);
 		
-		calcCue.blue = this.calcParameter(prevCue.blue, curCue.blue, progress);
+		calcCue.blue = StyleRender.calcDefaultParameter(prevCue.blue, curCue.blue, progress);
 		
 		this.perf.hit(this.ASSETCALC);
 		
@@ -90,7 +82,7 @@ class StyleRender {
 	
 	/* process new values for the cues based on last state, next state and  */
 	/* curent progress. Returns single number to update one parameter. */
-	private calcParameter(startVal: number, endVal: number, progress: number) {
+	private static calcDefaultParameter(startVal: number, endVal: number, progress: number) {
 		
 		let signed = (endVal < startVal);
 		
@@ -112,4 +104,4 @@ class StyleRender {
 	
 }
 
-export = StyleRender;
+export { StyleRender };

@@ -65,4 +65,4 @@ class StyleCache {
 	
 }
 
-export = StyleCache;
+export { StyleCache };

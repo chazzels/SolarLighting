@@ -4,22 +4,18 @@
 
 import { sha1 } from "./interface/sha1";
 
-class ClientCom {
+import { WebSocketServer } from "./websocketServer";
+import { ClientMeta }  from "./clientMeta";
+
+class ControllerCom {
 	
 	/* module flags */
-	private readonly VERBOSE: boolean = false; 
-	
-	/* imported modules */
-	private Crystal: any = require('../shared/crystalClock');
-	private SimplePerf: any = require('../shared/simplePerf');
-	private WebSocketServer: any = require("./websocketServer");
-	private ClientMeta: any = require("./clientMeta");
+	private readonly VERBOSE: boolean = false;
+	private readonly VERBOSE_BOOT: boolean = false;
 	
 	/* module variables */
-	private crystal: any;
-	private perf: any;
-	private server: any;
-	private meta: any;
+	private static server: any;
+	private static meta: any;
 	
 	/* module constants */
 	private readonly REFRESH_RESOLUTION: number = 100;
@@ -30,32 +26,40 @@ class ClientCom {
 		
 		console.group();
 		
-		this.perf = new this.SimplePerf();
-		
-		// timer module initialization.
-		let that = this;
-		
-		this.crystal = new this.Crystal(this.REFRESH_RESOLUTION);
-		
-		this.crystal.onUpdate(that.tick, that);
-		
 		// websocket server initialization.
-		this.server = new this.WebSocketServer(options);
+		ControllerCom.server = new WebSocketServer(options);
 		
-		this.meta = new this.ClientMeta(this.perf);
+		// initializing the client meta data tracker.
+		ControllerCom.meta = new ClientMeta(options);
+		
+		ControllerCom.registerServerEventHandlers();
 		
 		console.groupEnd();
 		
 	}
 	
-	private tick(that: any) {
+	private  static registerServerEventHandlers() {
 		
-		let manifest = that.server.getClientManifest();
+		// register a manifest change event to update the meta module.
+		// TODO: add interfaces for socketManifestChangeHandler arguments.
+		ControllerCom.server.registerHandler('socketManifestChange', socketManifestChangeHandler);
+		function socketManifestChangeHandler(manifest) {
+			
+			ControllerCom.meta.setSocketManifest(manifest);
+			
+		};
 		
-		that.meta.updateKeys(manifest);
+		// register socket connection event to add the client to the meta module.
+		// TODO: add interfaces for socketConnectionHandler arguments.
+		ControllerCom.server.registerHandler('socketConnection', socketConnectionHandler);
+		function socketConnectionHandler(key, clientId) {
+			
+			ControllerCom.meta.registerSocket(key, clientId);
+			
+		};
 		
 	}
 	
 }
 
-export = ClientCom;
+export { ControllerCom };

@@ -9,15 +9,15 @@ import { sha1 } from "./interface/sha1";
 import { assetState } from "./interface/assetState";
 import { assetData } from "./interface/assetData";
 
+import { AssetStore } from "./assetStore";
+import { AssetPlayhead } from "./assetPlayhead";
+import { AssetRank } from "./assetRank";
+
+import * as Crypto from "crypto";
+
 class AssetManager {
 	
 	activeManifest: any = [];
-	
-	/* imported modules */
-	private AssetStore: any = require("./assetStore");
-	private AssetPlayhead: any = require("./assetPlayhead");
-	private AssetRank:any = require("./assetRank");
-	private Crypto: any = require("crypto");
 	
 	/* module variables */
 	private _store: any;
@@ -32,11 +32,11 @@ class AssetManager {
 		console.log('MANAGER::STARTING');
 		console.group();
 		
-		this._store = new this.AssetStore(options.store, perf);
+		this._store = new AssetStore(options.store, perf);
 		
-		this._playhead = new this.AssetPlayhead(options.playhead, perf);
+		this._playhead = new AssetPlayhead(options.playhead, perf);
 		
-		this._rank = new this.AssetRank(options.rank, perf);
+		this._rank = new AssetRank(options.rank, perf);
 		
 		console.groupEnd();
 	}
@@ -55,8 +55,8 @@ class AssetManager {
 	}
 	
 	/* generate a key and load the asset data into modules. */
-	/* advance internal asset count by one. _store data in modules. */
-	/* return the sha1 key */
+	/* advance internal asset count by one. store data in modules. */
+	/* return the new sha1 key */
 	/* @param {any} assetDate - json object containing valid asset data structure. */
 	loadAsset(assetData: any) {
 		
@@ -108,7 +108,7 @@ class AssetManager {
 	
 	/* returns all the current data on an asset. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
-	getState(shakey: sha1) {
+	getState(shakey: sha1): assetState {
 		
 		let assetObj: assetState = {
 			cue: {},
@@ -247,7 +247,7 @@ class AssetManager {
 	/* generates a SHA1 hex string based on asset parameters */
 	private generateAssetSHA1(assetData: any) : sha1 {
 		
-		let shaSum = this.Crypto.createHash('sha1');
+		let shaSum = Crypto.createHash('sha1');
 		
 		let shaReturn = '0';
 		
@@ -272,4 +272,4 @@ class AssetManager {
 	
 }
 
-export = AssetManager;
+export { AssetManager };

@@ -7,6 +7,11 @@
 import { sha1 } from "./engine.engine/interface/sha1";
 import { assetData } from "./engine.engine/interface/assetData";
 
+import { EngineCore } from "./engine.engine/engineCore";
+import { ControllerCom } from "./engine.server/server";
+import { ClientCom } from "./engine.client/client";
+import { CrystalClock } from "./shared/crystalClock";
+
 class SolarEngine {
 	
 	/* module version info */
@@ -14,12 +19,6 @@ class SolarEngine {
 	static readonly minorversion: number = 0;
 	static readonly revisionVersion: number = 2;
 	static readonly releaseType: string = "a";
-	
-	/* imported modules */
-	private EngineCore: any = require("./engine.engine/engineCore");
-	private EngineServer: any = require("./engine.server/server");
-	private EngineClient: any = require("./engine.client/client");
-	private Crystal: any = require("./shared/crystalClock");
 	
 	/* module variables */
 	private engine: any;
@@ -38,11 +37,11 @@ class SolarEngine {
 		
 		console.log("------------------------------");
 		
-		this.engine = new this.EngineCore(options);
+		this.engine = new EngineCore(options);
 		
-		this.server = new this.EngineServer(options.server);
+		this.server = new ControllerCom(options.server);
 		
-		this.client = new this.EngineClient(options.client);
+		this.client = new ClientCom(options.client);
 		
 		console.log("------------------------------");
 		

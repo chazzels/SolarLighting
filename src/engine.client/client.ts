@@ -2,12 +2,12 @@
 *	websocket client to talk to you controller software/server.
 */
 
-class ControllerCom {
+class ClientCom {
 	
-	constructor() {
+	constructor(options?: any) {
 		
 	}
 	
 }
 
-export = ControllerCom;
+export { ClientCom };

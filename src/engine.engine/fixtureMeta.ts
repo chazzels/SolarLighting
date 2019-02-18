@@ -1,7 +1,7 @@
 /*
 *	module to collect a current manifest of connected fixture attributes.
 *	dead assets can be detect and prevent unneeded calculations.
-*	NOTE: the playhead module also generates a active manifest used to skip inactive assets. this could be a second filter to that.
+*	NOTE: the playhead module also generates an active manifest used to skip inactive assets. this could be a second filter to that.
 */
 
 class fixtureMeta {

@@ -5,40 +5,40 @@
 *	TODO: make simplePerf optional functionality. (not always useful).
 *	TODO: build more interfaces for the engine.
 *	TODO: make asset properties modular.
+*	TODO: implement central logger.
 */
 
 import { sha1 } from "./interface/sha1";
 import { assetData } from "./interface/assetData";
+import { crystalObject } from "../shared/interface/crystalObject";
 
-import {crystalObject } from "../shared/interface/crystalObject";
+import { AssetManager } from "./assetManager";
+import { StyleRender } from "./styleRender";
+import { StyleCache } from "./styleCache";
+import { StyleCompositor } from "./styleCompositor";
+import { SimplePerf } from "../shared/simplePerf";
+import { CrystalClock } from "../shared/crystalClock";
+
 
 class EngineCore {
 	
-	/* imported modules */
-	private SimplePerf: any = require("../shared/simplePerf");
-	private Crystal: any = require("../shared/crystalClock");
-	private AssetManager: any = require("./assetManager");
-	private StyleRender: any = require("./styleRender");
-	private StyleCache: any = require("./styleCache");
-	private StyleCompositor: any = require("./styleCompositor");
-	
-	/* imported modules variables */
+	/* imported modules member objects. */
 	static simplePerf: any;
-	static crystal: crystalObject;
+	static crystal: any;
 	static assetManger: any;
 	static styleRender: any;
 	static styleCache: any;
 	static styleCompositor: any;
 	
-	/* core loop variables */
+	/* core logic variables */
 	static manifest: any = [];
 	static manifestLength: number = 0;
 	static manifestIndex: number = -1;
-	static tickStart: number = 0;
-	static tickDiff: number = 0;
-	static currentAssetKey: sha1;
-	static assetObj: any;
-	static currentAssetState: any;
+	static tickStart: number = 0;		// the start timestamp of the loop.
+	static tickDiff: number = 0;		// time taken to execute the loop.
+	static currentAssetKey: sha1;		// current asset key being updated.
+	static assetObj: any;				// object holding assets data.
+	static currentAssetState: any;		// contains the update asset data.
 	
 	/* performance variables */
 	static readonly ENGINELOOP: string = "EngineLoop";
@@ -50,32 +50,32 @@ class EngineCore {
 		console.group();
 		
 		if(options === undefined || options === null) {
-		
+			
 			options = {};
-		
+			
 		}
 		
 		// performance module initialization.
-		EngineCore.simplePerf = new this.SimplePerf(options.perf);
+		EngineCore.simplePerf = new SimplePerf(options.perf);
 		
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
 		
 		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
 		// timer module initialization.
-		EngineCore.crystal = new this.Crystal(10);
+		EngineCore.crystal = new CrystalClock(10);
 		
 		EngineCore.crystal.onUpdate(this.generateStyles);
 		
 		// internal modules.
 		EngineCore.assetManger = 
-			new this.AssetManager(options, EngineCore.simplePerf);
+			new AssetManager(options, EngineCore.simplePerf);
 		
 		EngineCore.styleCache = 
-			new this.StyleCache(options, EngineCore.simplePerf);
+			new StyleCache(options, EngineCore.simplePerf);
 		
 		EngineCore.styleRender =
-			new this.StyleRender(options, EngineCore.simplePerf);
+			new StyleRender(options, EngineCore.simplePerf);
 		
 		console.groupEnd();
 		
@@ -83,7 +83,7 @@ class EngineCore {
 	
 	/* load asset data into the engine. */
 	/* returns an sha1 key for referencing the asset later. */
-	loadAsset(assetData: any) {
+	loadAsset(assetData: assetData) {
 		
 		return EngineCore.assetManger.loadAsset(assetData);
 		
@@ -128,7 +128,6 @@ class EngineCore {
 	private generateStyles() {
 		
 		EngineCore.tickStart = Date.now();
-		
 		
 		EngineCore._updateManifest();
 		
@@ -199,4 +198,4 @@ class EngineCore {
 	
 }
 
-export = EngineCore;
+export { EngineCore };

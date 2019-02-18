@@ -4,7 +4,7 @@
 *	TODO make variable timerTarget configurable for on-the-fly tweaking - maybe profile loader(?).
 *	TODO set refresh based on desired number of updates per second.
 */
-class CrsytalClock {
+class CrystalClock {
 	
 	private timerTarget: number = 1000;
 	private targetRefrashRate: number = -1;
@@ -91,4 +91,4 @@ class CrsytalClock {
 	
 }
 
-export = CrsytalClock;
+export { CrystalClock };

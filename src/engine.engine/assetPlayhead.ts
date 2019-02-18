@@ -302,4 +302,4 @@ class AssetPlayhead {
 	
 }
 
-export = AssetPlayhead;
+export { AssetPlayhead };
