@@ -152,4 +152,4 @@ class PlayheadLogic {
 
 }
 
-export = PlayheadLogic;
+export { PlayheadLogic };

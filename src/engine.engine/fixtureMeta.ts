@@ -4,7 +4,7 @@
 *	NOTE: the playhead module also generates an active manifest used to skip inactive assets. this could be a second filter to that.
 */
 
-class fixtureMeta {
+class FixtureMeta {
 	
 	static deviceAttributeMap: any = new Map();
 	static idAttributeMap: any = new Map();
@@ -38,4 +38,4 @@ class fixtureMeta {
 	
 }
 
-export = fixtureMeta;
+export { FixtureMeta };

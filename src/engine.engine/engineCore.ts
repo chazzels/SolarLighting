@@ -2,10 +2,6 @@
 *	module to link up all the other engine modules to create a facade module.
 *	TODO: function to dump shakey name map for debugging.
 *	TODO: add functionality to halt processig and clock for a debug scearios.
-*	TODO: make simplePerf optional functionality. (not always useful).
-*	TODO: build more interfaces for the engine.
-*	TODO: make asset properties modular.
-*	TODO: implement central logger.
 */
 
 import { sha1 } from "./interface/sha1";
@@ -16,6 +12,7 @@ import { AssetManager } from "./assetManager";
 import { StyleRender } from "./styleRender";
 import { StyleCache } from "./styleCache";
 import { StyleCompositor } from "./styleCompositor";
+
 import { SimplePerf } from "../shared/simplePerf";
 import { CrystalClock } from "../shared/crystalClock";
 

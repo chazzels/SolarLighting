@@ -9,9 +9,9 @@ import { sha1 } from "./interface/sha1";
 import { assetState } from "./interface/assetState";
 import { assetData } from "./interface/assetData";
 
-import { AssetStore } from "./assetStore";
-import { AssetPlayhead } from "./assetPlayhead";
-import { AssetRank } from "./assetRank";
+import { AssetStore } from "./ext/assetStore";
+import { AssetPlayhead } from "./ext/assetPlayhead";
+import { AssetRank } from "./ext/assetRank";
 
 import * as Crypto from "crypto";
 

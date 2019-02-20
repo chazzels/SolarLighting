@@ -2,7 +2,7 @@
 *	module to parse target query strings to objects.
 */
 
-import { sha1 } from "./interface/sha1";
+import { sha1 } from "../interface/sha1";
 
 class AssetRank {
 	

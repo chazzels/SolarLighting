@@ -2,6 +2,9 @@
 *	module to serve as a main management API to engine subsystems. 
 *	TODO: implement a task runner to automate build process for developement.
 *	TODO: build logging module.
+*	TODO: make asset properties modular.
+*	TODO: build more interfaces for the engine.
+*	TODO: make simplePerf optional functionality. (not always useful).
 */
 
 import { sha1 } from "./engine.engine/interface/sha1";
@@ -10,6 +13,7 @@ import { assetData } from "./engine.engine/interface/assetData";
 import { EngineCore } from "./engine.engine/engineCore";
 import { ControllerCom } from "./engine.server/server";
 import { ClientCom } from "./engine.client/client";
+
 import { CrystalClock } from "./shared/crystalClock";
 
 class SolarEngine {
