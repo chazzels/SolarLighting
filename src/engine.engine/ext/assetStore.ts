@@ -1,5 +1,5 @@
 /*
-*   module to store asset data that can be accessed later.
+*	module to store asset data that can be accessed later.
 */
 
 import { sha1 } from "../interface/sha1";
