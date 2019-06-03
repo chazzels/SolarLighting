@@ -8,6 +8,7 @@
 import { sha1 } from "./interface/sha1";
 import { assetState } from "./interface/assetState";
 import { assetData } from "./interface/assetData";
+import { fixtureTarget } from "./interface/fixtureTarget";
 
 import { AssetStore } from "./ext/assetStore";
 import { AssetPlayhead } from "./ext/assetPlayhead";
@@ -81,7 +82,7 @@ class AssetManager {
 		this._playhead.loadTimeline(shakey, assetData);
 		
 		// DEV: do a sample query based on the load asset targets.
-		this.queryTargets(assetData.cueTrackMeta.trackTarget);
+		this.queryTarget(assetData.cueTrackMeta.trackTarget);
 		
 		// return the sha1 key object as a refence to the asset.
 		return shakey;
@@ -198,9 +199,9 @@ class AssetManager {
 	
 	/* parse a target query string into a target object.  */
 	/* @param {string} qryStr - a string containing targetting  */
-	queryTargets(qryStr: string) {
+	queryTarget(qryStr: string): fixtureTarget {
 		
-		return this._rank.queryTargets(qryStr);
+		return this._rank.queryTarget(qryStr);
 		
 	}
 	

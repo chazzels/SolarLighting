@@ -3,20 +3,27 @@
 */
 
 import { sha1 } from "../interface/sha1";
+import { fixtureTarget } from "../interface/fixtureTarget";
 
 class AssetRank {
 	
-	private first:boolean = true;
+	/* module options flags */
+	private readonly VERBOSE: boolean = false;
+	private readonly VERBOSE_BOOT: boolean = true;
 	
 	constructor(options: any, perf: any) {
 		
-		
+		if(this.VERBOSE_BOOT) {
+			
+			console.log("RANK::STARTING");
+			
+		}
 		
 	}
 	
 	/* parse a target query string into a target object.  */
 	/* @param {string} qryStr - a string containing targetting  */
-	queryTargets(qryStr: string) {
+	queryTarget(qryStr: string): fixtureTarget {
 		
 		return this._parseTargetQuery(qryStr);
 		

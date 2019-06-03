@@ -102,6 +102,12 @@ class SolarEngine {
 		
 	}
 	
+	queryTarget(qryStr: String) {
+		
+		return this.engine.queryTarget(qryStr);
+		
+	}
+	
 	/*----------------------------------------------\
 	|	Server Functionality
 	\----------------------------------------------*/

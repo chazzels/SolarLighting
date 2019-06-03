@@ -6,12 +6,14 @@
 
 import { sha1 } from "./interface/sha1";
 import { assetData } from "./interface/assetData";
+import { fixtureTarget } from "./interface/fixtureTarget";
 import { crystalObject } from "../shared/interface/crystalObject";
 
 import { AssetManager } from "./assetManager";
 import { StyleRender } from "./styleRender";
 import { StyleCache } from "./styleCache";
 import { StyleCompositor } from "./styleCompositor";
+//import { FixtureMeta } from "./fixtureMeta";
 
 import { SimplePerf } from "../shared/simplePerf";
 import { CrystalClock } from "../shared/crystalClock";
@@ -26,6 +28,7 @@ class EngineCore {
 	static styleRender: any;
 	static styleCache: any;
 	static styleCompositor: any;
+	static fixtureMeta: any;
 	
 	/* core logic variables */
 	static manifest: any = [];
@@ -74,6 +77,8 @@ class EngineCore {
 		EngineCore.styleRender =
 			new StyleRender(options, EngineCore.simplePerf);
 		
+		//EngineCore.fixtureMeta = new FixtureMeta(options);
+		
 		console.groupEnd();
 		
 	}
@@ -114,9 +119,15 @@ class EngineCore {
 		
 	}
 	
-	queryTargets(qryStr: string) {
+	registerFixture(key: any, deviceId: any) {
 		
-		return EngineCore.assetManger.queryTargets(qryStr);
+		EngineCore.fixtureMeta.registerFixture(key, deviceId);
+		
+	}
+	
+	queryTarget(qryStr: string): fixtureTarget {
+		
+		return EngineCore.assetManger.queryTarget(qryStr);
 		
 	}
 	
