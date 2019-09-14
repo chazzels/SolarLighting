@@ -1,5 +1,7 @@
 # SolarEngine
-Lighting Control Engine
+Lighting Control Engine  
+As for now this code repository is changing rapidly and may make breaking changes.
+Please comeback for the full release.
 ---
 
 ## Directories

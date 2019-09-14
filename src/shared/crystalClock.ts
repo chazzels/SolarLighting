@@ -17,7 +17,7 @@ class CrystalClock {
 		
 		this.timerTarget = delay;
 		
-		this.targetRefrashRate = Math.floor(1000 / delay)
+		this.targetRefrashRate = Math.floor(1000 / delay);
 		
 		if(typeof argCallback === "function") {
 		

@@ -32,20 +32,26 @@ class ControllerCom {
 		// initializing the client meta data tracker.
 		ControllerCom.meta = new ClientMeta(options);
 		
-		ControllerCom.registerServerEventHandlers();
+		this.registerServerEventHandlers();
 		
 		console.groupEnd();
 		
 	}
 	
-	private  static registerServerEventHandlers() {
+	registerHandler(eventName: string, eventFunc: any) {
+		
+		ControllerCom.server.registerHandler(eventName, eventFunc);
+		
+	}
+	
+	registerServerEventHandlers() {
 		
 		// register a manifest change event to update the meta module.
 		// TODO: add interfaces for socketManifestChangeHandler arguments.
 		ControllerCom.server.registerHandler('socketManifestChange', socketManifestChangeHandler);
 		function socketManifestChangeHandler(manifest) {
 			
-			ControllerCom.meta.setSocketManifest(manifest);
+			ControllerCom.meta.setManifest(manifest);
 			
 		};
 		
@@ -54,7 +60,7 @@ class ControllerCom {
 		ControllerCom.server.registerHandler('socketConnection', socketConnectionHandler);
 		function socketConnectionHandler(key, clientId) {
 			
-			ControllerCom.meta.registerSocket(key, clientId);
+			ControllerCom.meta.registerMeta(key, clientId);
 			
 		};
 		
