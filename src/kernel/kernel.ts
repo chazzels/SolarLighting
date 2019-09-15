@@ -9,15 +9,15 @@
 |   URGENT = Execute immediately even if it blocks the thread. 
 |   FAST = execution time should be short. ( fast jobs will be grouped )
 \----------------------------------------------------------------*/
+
 // TODO: create interface for the log tool.
 // TODO: create time adjust system that takes increasily more.
 // NOTE: account for routine call time in timeouts. 
 // TODO: add option to make routines permenant and not able to be removed.
 // TODO: convert sort to handle number values instead of default unicode sort.
-// TODO: implement configurable cycle timer. 
+// TODO: implement configurable cycle timer. (on the fly?) 
 
 import { Logger } from "./logger";
-
 import events = require('events');
 
 class MiniKernel {
@@ -26,7 +26,7 @@ class MiniKernel {
 	static log:any;
 	static emitter:any;
 	
-	// routine variables
+	// routine execution
 	static routineMap:any = new Map();
 	static routineSortMap:any = new Map();
 	static routineExecTimeStart:number = 0;
@@ -49,15 +49,15 @@ class MiniKernel {
 		MiniKernel.log.setDebug();
 		MiniKernel.log.v('LoggingModule', "STARTED");
 		
-		// enable event emitter
+		// initialize event emitter.
 		MiniKernel.emitter = new events.EventEmitter()
 		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel.fireRoutines);
 		MiniKernel.log.v("EventModule", "STARTED");
 		
-		// start the internal timeout system.
+		// start the internal routine execution system.
 		// this system is not perfect and givevs no promis of accuracy.
-		// works best with workloads quick function calls. 
-		// any syncrous blocking operations will block an accurate time call.
+		// works best with workloads comprised of quick function calls. 
+		// any syncrous blocking operations will block a more accurate time call.
 		// the event will return info about the time accurancy accuracy.
 		MiniKernel.startRoutineTimer();
 		MiniKernel.log.v("RoutineTimer", "STARTED");
@@ -65,9 +65,9 @@ class MiniKernel {
 	}
 	
 	
-	// add a task to the queue. these task will be lazyily done. 
+	// add a task to the queue. these job will be lazyily done. 
 	// is the operation blocks the thread 
-	addTask(funcCallback:any, urgent?:boolean) {
+	addJob(funcCallback:any, fast:boolean, urgent?:boolean) {
 		
 		// coming soon... 
 		
@@ -79,6 +79,7 @@ class MiniKernel {
 	// if no rank automatically assigned rank above default number. 
 	addRoutine(funcCallback:any, rank?:number ) {
 		
+		// prevent ranks being overwritten. 
 		if(MiniKernel.routineMap.has(rank)) {
 			
 			MiniKernel.log.v("AddRoutine", "Failed. Rank Already Used");
@@ -87,6 +88,7 @@ class MiniKernel {
 			
 		}
 		
+		// divert to default rank number space. 
 		if(typeof rank === "undefined" || rank == null) {
 			
 			// advance the rank counter.
