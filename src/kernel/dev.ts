@@ -1,4 +1,4 @@
-import { Kernel } from "./kernel";
+import { MiniKernel } from "./kernel";
 
 class SolarKernel {
 	
@@ -6,11 +6,21 @@ class SolarKernel {
 	
 	constructor() {
 		
-		this.kernel = new Kernel();
+		this.kernel = new MiniKernel();
 		
-		this.kernel.addRoutine();
+		this.kernel.addRoutine(this.blah);
+		
+		
+		this.kernel.emit();
 		
 	}
+	
+	private blah() {
+		
+		console.log('this is blah');
+		
+	}
+	
 	
 }
 

@@ -1,39 +1,45 @@
 /*----------------------------------------------------------------\
 |	IN DEVELOPMENT!
-|	A system to manage lower level setting and schedule.
+|	A system to manage underlying functionality and schedule.
 \----------------------------------------------------------------*/
 // TODO: create interface for the log tool.
+// TODO: create time adjust system that takes increasily more.
+// NOTE: account for routine call time in timeouts. 
 
 import { Logger } from "./logger";
 
 import events = require('events');
 
-class Kernel {
+class MiniKernel {
 	
 	// import
 	static log:any;
+	static emitter:any;
 	
 	//default settings
-	static targetMillisecondRefresh:number = 30;
+	static timerTarget: number = 1000;
 	
-	// refresh clock
-	private timerTarget: number = 1000;
+	// routine variables
+	static routineMap:any = new Map();
+	static routineSortMap:any = new Map();
+	static LAST_RANK:number = 1000;
+	static readonly DEFAULT_RANK:number = 1000;
 	
-	// event system
-	private emitter:any;
+	// constants
+	static readonly CYCLE_FIRE:string = "CYCLEFIRE";
 	
 	constructor() {
 		
-		// this.targetRefrashRate = Math.floor(1000 / delay);
-		
-		// initialize the logging class
-		Kernel.log = new Logger("Kernal");
-		Kernel.log.setVerbose();
-		Kernel.log.v('LoggingModule', "STARTED");
+		// initialize the logging module.
+		// this logging instance is only for the kernal itself.
+		MiniKernel.log = new Logger("Kernal");
+		MiniKernel.log.setVerbose();
+		MiniKernel.log.v('LoggingModule', "STARTED");
 		
 		// enable event emitter
-		this.emitter = new events.EventEmitter()
-		Kernel.log.v("EventModule", "STARTED");
+		MiniKernel.emitter = new events.EventEmitter()
+		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, this.fireRoutines);
+		MiniKernel.log.v("EventModule", "STARTED");
 		
 		// start the internal timeout system.
 		// this system is not perfect and givevs no promis of accuracy.
@@ -42,7 +48,8 @@ class Kernel {
 		// the event will return info about the time accurancy accuracy.
 		this.startTimer();
 		
-		Kernel.log.v('STARTED');
+		MiniKernel.log.v('STARTED');
+		
 		
 	}
 	
@@ -55,10 +62,52 @@ class Kernel {
 		
 	}
 	
+	// development.
+	// working up to calling this automatically with the timer.
+	emit() {
+		
+		MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE);
+		
+	}
+	
 	// add a routine that will called each event cycle.
-	public addRoutine(funcCallback:any, rank?:boolean ) {
+	// rank determines the firing order. 
+	// the lower the number the quicker it will be called.
+	// if no rank automatically assigned rank above default number. 
+	addRoutine(funcCallback:any, rank?:number ) {
 		
+		if(MiniKernel.routineMap.has(rank)) {
+			
+			MiniKernel.log.v("AddRoutine", "Failed. Rank Already Used");
+			
+			return false;
+			
+		}
 		
+		if(typeof rank === "undefined" || rank == null) {
+			
+			MiniKernel.LAST_RANK++;
+			
+			MiniKernel.routineMap.set(MiniKernel.LAST_RANK, funcCallback);
+			
+		}
+		
+		MiniKernel.routineSortMap = 
+			new Map([...MiniKernel.routineMap.entries()].sort());
+			
+		MiniKernel.log.c('DEV', MiniKernel.routineSortMap);
+		
+	}
+	
+	
+	// fire all the routines on a cycle.
+	private fireRoutines() {
+		
+		MiniKernel.routineMap.forEach(function(value) {
+			
+			MiniKernel.log.c('DEV', value);
+			
+		});
 		
 	}
 	
@@ -68,7 +117,7 @@ class Kernel {
 		
 		let that = this;
 		
-		let timerTarget = this.timerTarget;
+		let timerTarget = MiniKernel.timerTarget;
 		
 		let callback; // = this.callback;
 		
@@ -101,4 +150,4 @@ class Kernel {
 	
 }
 
-export { Kernel };
+export { MiniKernel };
