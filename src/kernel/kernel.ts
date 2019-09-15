@@ -5,6 +5,8 @@
 // TODO: create interface for the log tool.
 // TODO: create time adjust system that takes increasily more.
 // NOTE: account for routine call time in timeouts. 
+// TODO: add option to make routines permenant and not able to be removed.
+// TODO: convert sort to handle number values instead of default unicode sort.
 
 import { Logger } from "./logger";
 
@@ -103,12 +105,14 @@ class MiniKernel {
 	
 	static sortRoutines() {
 		
-		MiniKernel.log.d("SortRoutinesSource", MiniKernel.routineMap);
+		// debug the input map of routines.
+		// MiniKernel.log.d("SortRoutinesSource", MiniKernel.routineMap);
 		
 		// sort the added routines by rank.
 		MiniKernel.routineSortMap = 
 			new Map([...MiniKernel.routineMap.entries()].sort());
 		
+		// debug the returned sorted routine map.
 		MiniKernel.log.d("SortRoutinesOutput", MiniKernel.routineSortMap);
 		
 		return MiniKernel.routineSortMap;
@@ -119,6 +123,7 @@ class MiniKernel {
 		
 		if(MiniKernel.routineMap.has(rank)) {
 			
+			// delete the map entry with matching rank
 			MiniKernel.routineMap.delete(rank);
 			
 			MiniKernel.sortRoutines();
@@ -127,29 +132,31 @@ class MiniKernel {
 			
 		} else {
 			
-			MiniKernel.log.v("RemoveRoutineNoAction", 
-				"rank " + rank);
+			MiniKernel.log.v("RemoveRoutineNoAction", "rank " + rank);
 			
 		}
 		
 	}
 	
 	
-	// fire all the routines/
-	static fireRoutines() {
+	// fire all the routines in the sorted routine map.
+	static fireRoutines(arg1:any, arg2?:any) {
 		
+		// store the start time of the routine cycle
 		MiniKernel.routineExecTimeStart = Date.now();
 		
+		// iterate over the routines and execute them
 		MiniKernel.routineSortMap.forEach(executeCallback);
-			
 		function executeCallback(routineCallback) {
 			
 			routineCallback();
 			
 		}
 		
+		// calculate and store execution time. 
 		MiniKernel.routineExecTimeDiff = Date.now() - MiniKernel.routineExecTimeStart;
 		
+		// verbose log the time difference.
 		MiniKernel.log.v("RoutineBlockTime", MiniKernel.routineExecTimeDiff);
 		
 		return MiniKernel.routineExecTimeDiff;
@@ -160,6 +167,7 @@ class MiniKernel {
 	// start the recursive timeout. 
 	static startRoutineTimer() {
 		
+		// execute the timeout recrussive function. 
 		timeout();
 		
 		function timeout() {
@@ -171,9 +179,10 @@ class MiniKernel {
 				
 			function timeoutCallback() {
 				
-				MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE);
+				// emit the cycle fire event to trigger routine execution. 
+				MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE, {});
 				
-				MiniKernel.routineCallToCall = Date.now() -MiniKernel.routineCallStart;
+				MiniKernel.routineCallToCall = Date.now() - MiniKernel.routineCallStart;
 				
 				MiniKernel.log.v("RoutineGap", MiniKernel.routineCallToCall);
 				
@@ -181,6 +190,7 @@ class MiniKernel {
 					MiniKernel.routineCallToCall + " / " + MiniKernel.timerTarget + " : " +
 					(MiniKernel.routineCallToCall - MiniKernel.timerTarget));
 				
+				// call parent function to repeat cycle. 
 				timeout();
 				
 			}
