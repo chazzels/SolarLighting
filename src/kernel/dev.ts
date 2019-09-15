@@ -8,8 +8,8 @@ class SolarKernel {
 		
 		this.kernel = new MiniKernel();
 		
-		this.kernel.addRoutine(this.foo, 20);
-		this.kernel.addRoutine(this.bar, 30);
+		this.kernel.addRoutine(this.foo);
+		this.kernel.addRoutine(this.bar);
 		this.kernel.addRoutine(this.blah, 10);
 		
 	}

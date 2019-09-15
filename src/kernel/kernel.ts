@@ -48,9 +48,6 @@ class MiniKernel {
 		MiniKernel.startRoutineTimer();
 		MiniKernel.log.v("RoutineTimer", "STARTED");
 		
-		MiniKernel.log.v('STARTED');
-		
-		
 	}
 	
 	
@@ -84,8 +81,8 @@ class MiniKernel {
 			// set the next available rank from the default space.
 			MiniKernel.routineMap.set(MiniKernel.LAST_RANK, funcCallback);
 			
-			MiniKernel.log.v("AddRoutine", 
-				"Routine registered in rank default " + MiniKernel.LAST_RANK.toString());
+			MiniKernel.log.v("AddRoutineSuccessDefault", 
+				"default rank " + MiniKernel.LAST_RANK.toString());
 			
 			// return the rank.
 			return MiniKernel.LAST_RANK;
@@ -94,7 +91,7 @@ class MiniKernel {
 		
 		MiniKernel.routineMap.set(rank, funcCallback);
 		
-		MiniKernel.log.v("AddRoutine", "Routine registered with rank " + rank);
+		MiniKernel.log.v("AddRoutineSuccess", "rank " + rank);
 		
 		MiniKernel.sortRoutines();
 		
@@ -102,21 +99,34 @@ class MiniKernel {
 	
 	static sortRoutines() {
 		
-		MiniKernel.log.d('SortRoutinesSource', MiniKernel.routineMap);
+		MiniKernel.log.d("SortRoutinesSource", MiniKernel.routineMap);
 		
 		// sort the added routines by rank.
 		MiniKernel.routineSortMap = 
 			new Map([...MiniKernel.routineMap.entries()].sort());
 		
-		MiniKernel.log.d('SortRoutinesOutput', MiniKernel.routineSortMap);
+		MiniKernel.log.d("SortRoutinesOutput", MiniKernel.routineSortMap);
 		
 		return MiniKernel.routineSortMap;
 		
 	}
 	
-	removeRoutine() {
+	removeRoutine(rank) {
 		
-		
+		if(MiniKernel.routineMap.has(rank)) {
+			
+			MiniKernel.routineMap.delete(rank);
+			
+			MiniKernel.sortRoutines();
+			
+			MiniKernel.log.v("RemoveRoutineSuccess", "rank " + rank);
+			
+		} else {
+			
+			MiniKernel.log.v("RemoveRoutineNoAction", 
+				"rank " + rank);
+			
+		}
 		
 	}
 	
@@ -126,11 +136,9 @@ class MiniKernel {
 		
 		MiniKernel.routineSortMap.forEach(executeCallback);
 			
-		function executeCallback(callback) {
+		function executeCallback(routineCallback) {
 			
-			MiniKernel.log.d
-			
-			callback();
+			routineCallback();
 			
 		}
 		
