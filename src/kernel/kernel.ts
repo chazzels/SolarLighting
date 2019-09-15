@@ -16,29 +16,28 @@ class MiniKernel {
 	static log:any;
 	static emitter:any;
 	
-	//default settings
-	static timerTarget: number = 1000;
-	
 	// routine variables
 	static routineMap:any = new Map();
 	static routineSortMap:any = new Map();
 	static LAST_RANK:number = 1000;
 	static readonly DEFAULT_RANK:number = 1000;
 	
-	// constants
+	//default settings
+	static timerTarget:number = 1000;
 	static readonly CYCLE_FIRE:string = "CYCLEFIRE";
 	
 	constructor() {
 		
 		// initialize the logging module.
 		// this logging instance is only for the kernal itself.
-		MiniKernel.log = new Logger("Kernal");
+		MiniKernel.log = new Logger("Kernel");
 		MiniKernel.log.setVerbose();
+		// MiniKernel.log.setDebug();
 		MiniKernel.log.v('LoggingModule', "STARTED");
 		
 		// enable event emitter
 		MiniKernel.emitter = new events.EventEmitter()
-		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, this.fireRoutines);
+		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel.fireRoutines);
 		MiniKernel.log.v("EventModule", "STARTED");
 		
 		// start the internal timeout system.
@@ -46,7 +45,8 @@ class MiniKernel {
 		// works best with workloads quick function calls. 
 		// any syncrous blocking operations will block an accurate time call.
 		// the event will return info about the time accurancy accuracy.
-		this.startTimer();
+		MiniKernel.startRoutineTimer();
+		MiniKernel.log.v("RoutineTimer", "STARTED");
 		
 		MiniKernel.log.v('STARTED');
 		
@@ -58,15 +58,7 @@ class MiniKernel {
 	// is the operation blocks the thread 
 	addTask(funcCallback:any, urgent?:boolean) {
 		
-		
-		
-	}
-	
-	// development.
-	// working up to calling this automatically with the timer.
-	emit() {
-		
-		MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE);
+		// coming soon... 
 		
 	}
 	
@@ -86,59 +78,78 @@ class MiniKernel {
 		
 		if(typeof rank === "undefined" || rank == null) {
 			
+			// advance the rank counter.
 			MiniKernel.LAST_RANK++;
 			
+			// set the next available rank from the default space.
 			MiniKernel.routineMap.set(MiniKernel.LAST_RANK, funcCallback);
+			
+			MiniKernel.log.v("AddRoutine", 
+				"Routine registered in rank default " + MiniKernel.LAST_RANK.toString());
+			
+			// return the rank.
+			return MiniKernel.LAST_RANK;
 			
 		}
 		
+		MiniKernel.routineMap.set(rank, funcCallback);
+		
+		MiniKernel.log.v("AddRoutine", "Routine registered with rank " + rank);
+		
+		MiniKernel.sortRoutines();
+		
+	}
+	
+	static sortRoutines() {
+		
+		MiniKernel.log.d('SortRoutinesSource', MiniKernel.routineMap);
+		
+		// sort the added routines by rank.
 		MiniKernel.routineSortMap = 
 			new Map([...MiniKernel.routineMap.entries()].sort());
-			
-		MiniKernel.log.c('DEV', MiniKernel.routineSortMap);
+		
+		MiniKernel.log.d('SortRoutinesOutput', MiniKernel.routineSortMap);
+		
+		return MiniKernel.routineSortMap;
+		
+	}
+	
+	removeRoutine() {
+		
+		
 		
 	}
 	
 	
-	// fire all the routines on a cycle.
-	private fireRoutines() {
+	// fire all the routines/
+	static fireRoutines() {
 		
-		MiniKernel.routineMap.forEach(function(value) {
+		MiniKernel.routineSortMap.forEach(executeCallback);
 			
-			MiniKernel.log.c('DEV', value);
+		function executeCallback(callback) {
 			
-		});
+			MiniKernel.log.d
+			
+			callback();
+			
+		}
 		
 	}
 	
 	
 	// start the recursive timeout. 
-	private startTimer() {
-		
-		let that = this;
-		
-		let timerTarget = MiniKernel.timerTarget;
-		
-		let callback; // = this.callback;
+	static startRoutineTimer() {
 		
 		timeout();
 		
 		function timeout() {
 			
-			let start = Date.now();
-			
 			// start recursion. 
-			setTimeout(timeoutCallback, timerTarget);
+			setTimeout(timeoutCallback, MiniKernel.timerTarget);
 				
 			function timeoutCallback() {
 				
-				if(typeof callback === "function") {
-				
-					callback();
-				
-				}
-				
-				//that.fireOnUpdate();
+				MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE);
 				
 				timeout();
 				

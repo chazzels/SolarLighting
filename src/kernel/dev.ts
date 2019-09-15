@@ -8,19 +8,17 @@ class SolarKernel {
 		
 		this.kernel = new MiniKernel();
 		
-		this.kernel.addRoutine(this.blah);
-		
-		
-		this.kernel.emit();
-		
-	}
-	
-	private blah() {
-		
-		console.log('this is blah');
+		this.kernel.addRoutine(this.foo, 20);
+		this.kernel.addRoutine(this.bar, 30);
+		this.kernel.addRoutine(this.blah, 10);
 		
 	}
 	
+	private blah() { console.log('a'); }
+	
+	private foo() { console.log('b'); }
+	
+	private bar() { console.log('c'); }
 	
 }
 
