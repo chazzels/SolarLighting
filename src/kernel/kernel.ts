@@ -19,11 +19,15 @@ class MiniKernel {
 	// routine variables
 	static routineMap:any = new Map();
 	static routineSortMap:any = new Map();
+	static routineExecTimeStart:number = 0;
+	static routineExecTimeDiff:number = 0;
+	static routineCallStart:number = 0;
+	static routineCallToCall:number =0;
 	static LAST_RANK:number = 1000;
 	static readonly DEFAULT_RANK:number = 1000;
 	
 	//default settings
-	static timerTarget:number = 1000;
+	static timerTarget:number = 280;
 	static readonly CYCLE_FIRE:string = "CYCLEFIRE";
 	
 	constructor() {
@@ -32,7 +36,7 @@ class MiniKernel {
 		// this logging instance is only for the kernal itself.
 		MiniKernel.log = new Logger("Kernel");
 		MiniKernel.log.setVerbose();
-		// MiniKernel.log.setDebug();
+		MiniKernel.log.setDebug();
 		MiniKernel.log.v('LoggingModule', "STARTED");
 		
 		// enable event emitter
@@ -134,6 +138,8 @@ class MiniKernel {
 	// fire all the routines/
 	static fireRoutines() {
 		
+		MiniKernel.routineExecTimeStart = Date.now();
+		
 		MiniKernel.routineSortMap.forEach(executeCallback);
 			
 		function executeCallback(routineCallback) {
@@ -141,6 +147,12 @@ class MiniKernel {
 			routineCallback();
 			
 		}
+		
+		MiniKernel.routineExecTimeDiff = Date.now() - MiniKernel.routineExecTimeStart;
+		
+		MiniKernel.log.v("RoutineBlockTime", MiniKernel.routineExecTimeDiff);
+		
+		return MiniKernel.routineExecTimeDiff;
 		
 	}
 	
@@ -154,10 +166,20 @@ class MiniKernel {
 			
 			// start recursion. 
 			setTimeout(timeoutCallback, MiniKernel.timerTarget);
+			
+			MiniKernel.routineCallStart = Date.now();
 				
 			function timeoutCallback() {
 				
 				MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE);
+				
+				MiniKernel.routineCallToCall = Date.now() -MiniKernel.routineCallStart;
+				
+				MiniKernel.log.v("RoutineGap", MiniKernel.routineCallToCall);
+				
+				MiniKernel.log.v("RoutineAccuracy", 
+					MiniKernel.routineCallToCall + " / " + MiniKernel.timerTarget + " : " +
+					(MiniKernel.routineCallToCall - MiniKernel.timerTarget));
 				
 				timeout();
 				

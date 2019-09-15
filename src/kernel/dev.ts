@@ -8,17 +8,38 @@ class SolarKernel {
 		
 		this.kernel = new MiniKernel();
 		
-		this.kernel.addRoutine(this.foo);
-		this.kernel.addRoutine(this.bar);
-		this.kernel.addRoutine(this.blah, 10);
+		this.kernel.addRoutine(this.foo, 4);
+		this.kernel.addRoutine(this.bar, 3);
+		this.kernel.addRoutine(this.blah, 2);
+		
+		this.kernel.addRoutine(function newlinesep() {
+			
+			console.log('------------------------------');
+			
+		}, 1);
 		
 	}
 	
-	private blah() { console.log('a'); }
+	private blah() { 
+		for(let i;i< 20000000;i++) {
+			i++;
+		} 
+		
+	}
 	
-	private foo() { console.log('b'); }
+	private foo() { 
+		let i,a=10;
+		for(let i;i< 2000000;i++) {
+			a+=10;
+		}
+	}
 	
-	private bar() { console.log('c'); }
+	private bar() { 
+		let a="";
+		for(let i = 0;i < 2000000;i++) {
+			a+="Hi!";
+		} 
+	}
 	
 }
 
