@@ -1,12 +1,20 @@
 /*----------------------------------------------------------------\
 |	IN DEVELOPMENT!
-|	A system to manage underlying functionality and schedule.
+|	Small kernel like software to manage load.
+|   Functions can be added as a routine or job. 
+|   Routines execution is attempted at the set interval. 
+|   ( There is no garuntee on timely execution if the thread gets blocked).
+|   Jobs are executed if there is low routine utilization.
+|   Jobs will also have options for urgent and fast status.
+|   URGENT = Execute immediately even if it blocks the thread. 
+|   FAST = execution time should be short. ( fast jobs will be grouped )
 \----------------------------------------------------------------*/
 // TODO: create interface for the log tool.
 // TODO: create time adjust system that takes increasily more.
 // NOTE: account for routine call time in timeouts. 
 // TODO: add option to make routines permenant and not able to be removed.
 // TODO: convert sort to handle number values instead of default unicode sort.
+// TODO: implement configurable cycle timer. 
 
 import { Logger } from "./logger";
 
@@ -149,7 +157,7 @@ class MiniKernel {
 		MiniKernel.routineSortMap.forEach(executeCallback);
 		function executeCallback(routineCallback) {
 			
-			routineCallback();
+			routineCallback(arg1, arg2);
 			
 		}
 		
@@ -165,6 +173,8 @@ class MiniKernel {
 	
 	
 	// start the recursive timeout. 
+	// fires the cycle event to trigger all routines to execute. 
+	// once called can not be stopped or paused at this time. 
 	static startRoutineTimer() {
 		
 		// execute the timeout recrussive function. 
