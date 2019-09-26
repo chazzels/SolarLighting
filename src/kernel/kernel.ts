@@ -1,21 +1,20 @@
 /*----------------------------------------------------------------\
-|	IN DEVELOPMENT!
-|	Small kernel like software to manage load.
-|   Functions can be added as a routine or job. 
-|   Routines execution is attempted at the set interval. 
-|   ( There is no garuntee on timely execution if the thread gets blocked).
-|   Jobs are executed if there is low routine utilization.
-|   Jobs will also have options for urgent and fast status.
-|   URGENT = Execute immediately even if it blocks the thread. 
-|   FAST = execution time should be short. ( fast jobs will be grouped )
+|	Small kernel like software to manage load and routine execution.
+|	Functions can be added as a routine or job. 
+|	Routines execution is attempted at the set interval. 
+|	( There is no garuntee on timely execution if the thread gets blocked).
+|	Jobs are executed if there is low routine utilization.
+|	Jobs will also have options for urgent and fast status.
+|	URGENT = Execute immediately even if it blocks the thread. 
+|	FAST = execution time should be short. ( fast jobs will be grouped )
 \----------------------------------------------------------------*/
 
-// TODO: create interface for the log tool.
-// TODO: create time adjust system that takes increasily more.
 // NOTE: account for routine call time in timeouts. 
 // TODO: add option to make routines permenant and not able to be removed.
 // TODO: convert sort to handle number values instead of default unicode sort.
 // TODO: implement configurable cycle timer. (on the fly?) 
+// TODO: add support for cycle timers above 1000ms.
+// TODO: implement cycle load functionality. if load is high do not do jobs. 
 
 import { Logger } from "./logger";
 import events = require('events');
@@ -26,36 +25,51 @@ class MiniKernel {
 	static log:any;
 	static emitter:any;
 	
-	// routine execution
+	// routine execution variables.
 	static routineMap:any = new Map();
 	static routineSortMap:any = new Map();
 	static routineExecTimeStart:number = 0;
 	static routineExecTimeDiff:number = 0;
-	static routineCallStart:number = 0;
-	static routineCallToCall:number =0;
-	static LAST_RANK:number = 1000;
-	static readonly DEFAULT_RANK:number = 1000;
+	static routineTimerStart:number = 0;
+	static routineTimerCallToCall:number = 0;
+	static routineTimeModifier:number = 0;
+	static lastDefaultRank:number = -1;
 	
-	//default settings
-	static timerTarget:number = 280;
+	// constants 
+	static readonly DEFAULT_RANK:number = 1000;
 	static readonly CYCLE_FIRE:string = "CYCLEFIRE";
 	
-	constructor() {
+	// default settings
+	static timerTarget:number = 100;
+	
+	
+	constructor(targetRate?:number) {
+		
+		// set the default rank as the last default rank used.
+		MiniKernel.lastDefaultRank = MiniKernel.DEFAULT_RANK;
 		
 		// initialize the logging module.
 		// this logging instance is only for the kernal itself.
-		MiniKernel.log = new Logger("Kernel");
+		MiniKernel.log = new Logger("KERNEL");
 		MiniKernel.log.setVerbose();
-		MiniKernel.log.setDebug();
-		MiniKernel.log.v('LoggingModule', "STARTED");
+		// MiniKernel.log.setDebug();
+		MiniKernel.log.v("LoggingModule", "STARTED");
+		
+		// set refresh rate.
+		if(typeof targetRate === "number") {
+			MiniKernel.timerTarget = Math.floor(1000/targetRate);
+			MiniKernel.log.v("RateSet", MiniKernel.timerTarget);
+		}
 		
 		// initialize event emitter.
 		MiniKernel.emitter = new events.EventEmitter()
-		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel.fireRoutines);
 		MiniKernel.log.v("EventModule", "STARTED");
 		
+		// register the event the fires all the routines. 
+		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel.fireRoutines);
+		
 		// start the internal routine execution system.
-		// this system is not perfect and givevs no promis of accuracy.
+		// this system is not perfect and gives no promise of accuracy.
 		// works best with workloads comprised of quick function calls. 
 		// any syncrous blocking operations will block a more accurate time call.
 		// the event will return info about the time accurancy accuracy.
@@ -92,16 +106,19 @@ class MiniKernel {
 		if(typeof rank === "undefined" || rank == null) {
 			
 			// advance the rank counter.
-			MiniKernel.LAST_RANK++;
+			MiniKernel.lastDefaultRank++;
 			
 			// set the next available rank from the default space.
-			MiniKernel.routineMap.set(MiniKernel.LAST_RANK, funcCallback);
+			MiniKernel.routineMap.set(MiniKernel.lastDefaultRank, funcCallback);
 			
 			MiniKernel.log.v("AddRoutineSuccessDefault", 
-				"default rank " + MiniKernel.LAST_RANK.toString());
+				"default rank " + MiniKernel.lastDefaultRank.toString());
+			
+			// sort the routine map so it fires in order.
+			MiniKernel.sortRoutines();
 			
 			// return the rank.
-			return MiniKernel.LAST_RANK;
+			return MiniKernel.lastDefaultRank;
 			
 		}
 		
@@ -109,7 +126,10 @@ class MiniKernel {
 		
 		MiniKernel.log.v("AddRoutineSuccess", "rank " + rank);
 		
+		// sort the routine map so it fires in order.
 		MiniKernel.sortRoutines();
+		
+		return rank;
 		
 	}
 	
@@ -150,7 +170,7 @@ class MiniKernel {
 	
 	
 	// fire all the routines in the sorted routine map.
-	static fireRoutines(arg1:any, arg2?:any) {
+	static fireRoutines(arg1?:any, arg2?:any) {
 		
 		// store the start time of the routine cycle
 		MiniKernel.routineExecTimeStart = Date.now();
@@ -164,10 +184,11 @@ class MiniKernel {
 		}
 		
 		// calculate and store execution time. 
-		MiniKernel.routineExecTimeDiff = Date.now() - MiniKernel.routineExecTimeStart;
+		MiniKernel.routineExecTimeDiff = 
+			Date.now() - MiniKernel.routineExecTimeStart;
 		
 		// verbose log the time difference.
-		MiniKernel.log.v("RoutineBlockTime", MiniKernel.routineExecTimeDiff);
+		MiniKernel.log.d("RoutineBlockTime", MiniKernel.routineExecTimeDiff);
 		
 		return MiniKernel.routineExecTimeDiff;
 		
@@ -185,22 +206,41 @@ class MiniKernel {
 		function timeout() {
 			
 			// start recursion. 
-			setTimeout(timeoutCallback, MiniKernel.timerTarget);
+			setTimeout(timeoutCallback, 
+				MiniKernel.timerTarget - MiniKernel.routineTimeModifier);
 			
-			MiniKernel.routineCallStart = Date.now();
+			MiniKernel.routineTimerStart = Date.now();
 				
 			function timeoutCallback() {
 				
 				// emit the cycle fire event to trigger routine execution. 
 				MiniKernel.emitter.emit(MiniKernel.CYCLE_FIRE, {});
 				
-				MiniKernel.routineCallToCall = Date.now() - MiniKernel.routineCallStart;
+				MiniKernel.routineTimerCallToCall = 
+					Date.now() - MiniKernel.routineTimerStart;
 				
-				MiniKernel.log.v("RoutineGap", MiniKernel.routineCallToCall);
+				// development of routine offset system.
+				MiniKernel.log.d("RoutineGap", MiniKernel.routineTimerCallToCall);
+				MiniKernel.log.d("RoutineAccuracy", 
+					MiniKernel.routineTimerCallToCall + " / " + MiniKernel.timerTarget + " : " +
+					(MiniKernel.routineTimerCallToCall - MiniKernel.timerTarget));
 				
-				MiniKernel.log.v("RoutineAccuracy", 
-					MiniKernel.routineCallToCall + " / " + MiniKernel.timerTarget + " : " +
-					(MiniKernel.routineCallToCall - MiniKernel.timerTarget));
+				
+				// expemimental. might need to add a configurable flag to use.
+				// controls the automatic offsetting. 
+				// needs to be able to detect bounce between postive and negative.
+				if((MiniKernel.routineTimerCallToCall - MiniKernel.timerTarget) > -50) {
+					
+					// implement overage amplifier
+					MiniKernel.routineTimeModifier += 
+						(MiniKernel.routineTimerCallToCall - MiniKernel.timerTarget) * 0.20;
+					
+					MiniKernel.routineTimeModifier =
+						Math.floor(MiniKernel.routineTimeModifier);
+					
+				}
+				
+				MiniKernel.log.d("RoutineTimeMod", MiniKernel.routineTimeModifier);
 				
 				// call parent function to repeat cycle. 
 				timeout();

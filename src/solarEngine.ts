@@ -14,8 +14,6 @@ import { EngineCore } from "./engine.engine/engineCore";
 import { ControllerCom } from "./engine.server/server";
 import { ClientCom } from "./engine.client/client";
 
-import { CrystalClock } from "./shared/crystalClock";
-
 class SolarEngine {
 	
 	/* module version info */
@@ -29,7 +27,6 @@ class SolarEngine {
 	private server: any;
 	private client: any;
 	private assetKeys: any = [];
-	private crystal: any;
 	
 	constructor(options?:any) {
 		

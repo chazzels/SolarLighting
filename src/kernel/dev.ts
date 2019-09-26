@@ -6,7 +6,7 @@ class SolarKernel {
 	
 	constructor() {
 		
-		this.kernel = new MiniKernel();
+		this.kernel = new MiniKernel(4);
 		
 		this.kernel.addRoutine(this.foo, 4);
 		this.kernel.addRoutine(this.bar, 3);
@@ -43,5 +43,6 @@ class SolarKernel {
 	
 }
 
+export = { SolarKernel };
 
-var kernel = new SolarKernel();
+//var kernel = new SolarKernel();

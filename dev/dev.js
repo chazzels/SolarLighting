@@ -21,10 +21,10 @@ const port = 80;
 /* create a new engine */
 let SolarEngine = require("../js/solarEngine");
 let engine = new SolarEngine({
-	perf: {verbose: false},
+	perf: {verbose: true},
 	store: {verbose: false},
 	playhead: {verbose: false},
-	render: {verbose: false},
+	render: {verbose: true},
 	server: {verbose: false}
 });
 

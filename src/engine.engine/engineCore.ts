@@ -17,13 +17,14 @@ import { StyleCompositor } from "./styleCompositor";
 
 import { SimplePerf } from "../shared/simplePerf";
 import { CrystalClock } from "../shared/crystalClock";
-
+import { MiniKernel } from "../kernel/kernel";
 
 class EngineCore {
 	
 	/* imported modules member objects. */
 	static simplePerf: any;
-	static crystal: any;
+	static kernel:any;
+	
 	static assetManger: any;
 	static styleRender: any;
 	static styleCache: any;
@@ -57,15 +58,14 @@ class EngineCore {
 		
 		// performance module initialization.
 		EngineCore.simplePerf = new SimplePerf(options.perf);
-		
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
-		
 		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
-		// timer module initialization.
-		EngineCore.crystal = new CrystalClock(10);
+		// mini kernel initialization.
+		EngineCore.kernel = new MiniKernel(40);
+		EngineCore.kernel.addRoutine(this.generateStyles);
 		
-		EngineCore.crystal.onUpdate(this.generateStyles);
+		
 		
 		// internal modules.
 		EngineCore.assetManger = 
