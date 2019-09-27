@@ -10,13 +10,15 @@
 \----------------------------------------------------------------*/
 
 // NOTE: account for routine call time in timeouts. 
-// TODO: add option to make routines permenant and not able to be removed.
 // TODO: convert sort to handle number values instead of default unicode sort.
 // TODO: implement configurable cycle timer. (on the fly?) 
 // TODO: add support for cycle timers above 1000ms.
 // TODO: implement cycle load functionality. if load is high do not do jobs. 
 
-import { Logger } from "./logger";
+import { Maps } from "../shared/map";
+
+import { Logger } from "../shared/logger";
+
 import events = require("events");
 
 class MiniKernel {
@@ -26,10 +28,11 @@ class MiniKernel {
 	static emitter:any;
 	
 	// map objects to track routines and jobs
-	static routineMap:any = new Map();
-	static routineSortMap:any = new Map();
-	static jobMap:any = new Map();
-	static jobSortMap:any = new Map();
+	static routineMap:any = new Maps();
+	static routineSortMap:any = new Maps();
+	static routineProtectedMap:any = new Maps();
+	static jobMap:any = new Maps();
+	static jobSortMap:any = new Maps();
 	
 	// routine timing variables.
 	static routineExecTimeStart:number = 0;
@@ -44,6 +47,7 @@ class MiniKernel {
 	// constants 
 	static readonly DEFAULT_RANK:number = 1000;
 	static readonly CYCLE_FIRE:string = "CYCLEFIRE";
+	static readonly SORT_FIRE:string = "SORTFIRE";
 	
 	// default settings
 	static timerTarget:number = 100;
@@ -72,7 +76,8 @@ class MiniKernel {
 		MiniKernel.log.v("EventModule", "STARTED");
 		
 		// register the event the fires all the routines. 
-		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel.fireRoutines);
+		MiniKernel.emitter.on(MiniKernel.CYCLE_FIRE, MiniKernel._fireRoutines);
+		MiniKernel.emitter.on(MiniKernel.SORT_FIRE, MiniKernel._sortRoutines);
 		
 		// start the internal routine execution system.
 		// this system is not perfect and gives no promise of accuracy.
@@ -97,7 +102,7 @@ class MiniKernel {
 	// rank determines the firing order. 
 	// the lower the number the quicker it will be called.
 	// if no rank automatically assigned rank above default number. 
-	addRoutine(funcCallback:any, rank?:number, permantFlag?:boolean ) {
+	addRoutine(funcCallback:any, rank?:number, protectedFlag?:boolean ) {
 		
 		// prevent ranks being overwritten. 
 		if(MiniKernel.routineMap.has(rank)) {
@@ -121,10 +126,17 @@ class MiniKernel {
 				"default rank " + MiniKernel.lastDefaultRank.toString());
 			
 			// sort the routine map so it fires in order.
-			MiniKernel.sortRoutines();
+			MiniKernel._sortRoutines();
 			
 			// return the rank.
 			return MiniKernel.lastDefaultRank;
+			
+		}
+		
+		// if the routine is protect from deletion. 
+		if(typeof protectedFlag === "undefined" || protectedFlag == null) {
+			
+			MiniKernel.routineProtectedMap.set(MiniKernel)
 			
 		}
 		
@@ -133,25 +145,40 @@ class MiniKernel {
 		MiniKernel.log.v("AddRoutineSuccess", "rank " + rank);
 		
 		// sort the routine map so it fires in order.
-		MiniKernel.sortRoutines();
+		MiniKernel._sortRoutines();
 		
 		return rank;
 		
 	}
 	
-	static sortRoutines() {
+	sort() {
 		
-		// debug the input map of routines.
-		// MiniKernel.log.d("SortRoutinesSource", MiniKernel.routineMap);
+		MiniKernel._sortRoutines();
 		
-		// sort the added routines by rank.
-		MiniKernel.routineSortMap = 
-			new Map([...MiniKernel.routineMap.entries()].sort());
+	}
+	
+	static _sortRoutines() {
 		
-		// debug the returned sorted routine map.
-		MiniKernel.log.d("SortRoutinesOutput", MiniKernel.routineSortMap);
-		
-		return MiniKernel.routineSortMap;
+		// is the routine map is empty then skip sortin.
+		if(MiniKernel.routineMap.size 
+				&& typeof MiniKernel.routineMap.size === "number") {
+			
+			// sort the added routines by rank.
+			MiniKernel.routineSortMap = 
+				new Map([...MiniKernel.routineMap.entries()].sort());
+			
+			// debug the returned sorted routine map.
+			MiniKernel.log.d("SortRoutinesOutput", MiniKernel.routineSortMap);
+			
+			return MiniKernel.routineSortMap;
+			
+		} else {
+			
+			MiniKernel.log.v("SortSkipped", "routine map empty");
+			
+			return false;
+			
+		}
 		
 	}
 	
@@ -162,7 +189,7 @@ class MiniKernel {
 			// delete the map entry with matching rank
 			MiniKernel.routineMap.delete(rank);
 			
-			MiniKernel.sortRoutines();
+			MiniKernel._sortRoutines();
 			
 			MiniKernel.log.v("RemoveRoutineSuccess", "rank " + rank);
 			
@@ -176,7 +203,7 @@ class MiniKernel {
 	
 	
 	// fire all the routines in the sorted routine map.
-	static fireRoutines(arg1?:any, arg2?:any) {
+	static _fireRoutines(arg1?:any, arg2?:any) {
 		
 		// store the start time of the routine cycle
 		MiniKernel.routineExecTimeStart = Date.now();

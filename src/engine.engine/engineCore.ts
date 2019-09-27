@@ -5,6 +5,7 @@
 */
 
 import { sha1 } from "./interface/sha1";
+import { map } from "../shared/interface/map";
 import { assetData } from "./interface/assetData";
 import { fixtureTarget } from "./interface/fixtureTarget";
 import { crystalObject } from "../shared/interface/crystalObject";
@@ -17,6 +18,8 @@ import { StyleCompositor } from "./styleCompositor";
 
 import { SimplePerf } from "../shared/simplePerf";
 import { MiniKernel } from "../kernel/kernel";
+
+import { Logger } from "../shared/logger";
 
 class EngineCore {
 	
@@ -58,12 +61,12 @@ class EngineCore {
 		// performance module initialization.
 		EngineCore.simplePerf = new SimplePerf(options.perf);
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
-		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
+		// EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
 		// mini kernel initialization.
 		EngineCore.kernel = new MiniKernel(40);
 		EngineCore.kernel.addRoutine(this.generateStyles);
-		
+		EngineCore.kernel.sort();
 		
 		
 		// internal modules.
