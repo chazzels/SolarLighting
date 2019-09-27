@@ -1,7 +1,7 @@
 /*
 *	module to serve as a main management API to engine subsystems. 
 *	TODO: implement a task runner to automate build process for developement.
-*	TODO: build logging module.
+*	TODO: implement logging module.
 *	TODO: make asset properties modular.
 *	TODO: build more interfaces for the engine.
 *	TODO: make simplePerf optional functionality. (not always useful).
@@ -19,7 +19,7 @@ class SolarEngine {
 	/* module version info */
 	static readonly majorVersion: number = 0;
 	static readonly minorversion: number = 0;
-	static readonly revisionVersion: number = 2;
+	static readonly revisionVersion: number = 3;
 	static readonly releaseType: string = "a";
 	
 	/* module variables */

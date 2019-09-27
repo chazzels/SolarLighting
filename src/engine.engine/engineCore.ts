@@ -16,7 +16,6 @@ import { StyleCompositor } from "./styleCompositor";
 //import { FixtureMeta } from "./fixtureMeta";
 
 import { SimplePerf } from "../shared/simplePerf";
-import { CrystalClock } from "../shared/crystalClock";
 import { MiniKernel } from "../kernel/kernel";
 
 class EngineCore {

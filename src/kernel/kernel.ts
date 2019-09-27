@@ -17,7 +17,7 @@
 // TODO: implement cycle load functionality. if load is high do not do jobs. 
 
 import { Logger } from "./logger";
-import events = require('events');
+import events = require("events");
 
 class MiniKernel {
 	
@@ -25,14 +25,20 @@ class MiniKernel {
 	static log:any;
 	static emitter:any;
 	
-	// routine execution variables.
+	// map objects to track routines and jobs
 	static routineMap:any = new Map();
 	static routineSortMap:any = new Map();
+	static jobMap:any = new Map();
+	static jobSortMap:any = new Map();
+	
+	// routine timing variables.
 	static routineExecTimeStart:number = 0;
 	static routineExecTimeDiff:number = 0;
 	static routineTimerStart:number = 0;
 	static routineTimerCallToCall:number = 0;
 	static routineTimeModifier:number = 0;
+	
+	// rank variables.
 	static lastDefaultRank:number = -1;
 	
 	// constants 
@@ -91,7 +97,7 @@ class MiniKernel {
 	// rank determines the firing order. 
 	// the lower the number the quicker it will be called.
 	// if no rank automatically assigned rank above default number. 
-	addRoutine(funcCallback:any, rank?:number ) {
+	addRoutine(funcCallback:any, rank?:number, permantFlag?:boolean ) {
 		
 		// prevent ranks being overwritten. 
 		if(MiniKernel.routineMap.has(rank)) {
