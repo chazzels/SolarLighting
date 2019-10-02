@@ -7,12 +7,12 @@
 *	TODO: make simplePerf optional functionality. (not always useful).
 */
 
-import { sha1 } from "./engine.engine/interface/sha1";
-import { assetData } from "./engine.engine/interface/assetData";
+import { sha1 } from "./engine/interface/sha1";
+import { assetData } from "./engine/interface/assetData";
 
-import { EngineCore } from "./engine.engine/engineCore";
-import { ControllerCom } from "./engine.server/server";
-import { ClientCom } from "./engine.client/client";
+import { EngineCore } from "./engine/engineCore";
+import { ControllerCom } from "./server/server";
+import { ClientCom } from "./client/client";
 
 class SolarEngine {
 	

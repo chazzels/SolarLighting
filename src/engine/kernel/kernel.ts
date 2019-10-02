@@ -15,9 +15,9 @@
 // TODO: add support for cycle timers above 1000ms.
 // TODO: implement cycle load functionality. if load is high do not do jobs. 
 
-import { Maps } from "../shared/map";
+import { Maps } from "../../shared/map";
 
-import { Logger } from "../shared/logger";
+import { Logger } from "../../shared/logger";
 
 import events = require("events");
 
