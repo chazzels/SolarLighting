@@ -4,14 +4,14 @@
 \-----------------------------------------------*/
 // TODO: develop functionality to remove a layer.
 // TODO: develop functionality to adjust order of layers. 
+// TODO: develop color pallette support.
 
-var CanvasEngine = function CanvasEngineConstructor(argCanvasId) {
+var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	
 	let engine = this;
-	
-	engine.canvas = document.getElementById(argCanvasId);
-	engine.ctx = engine.canvas.getContext("2d");
-	engine.layers = new Array();
+	let layers = new Array();
+	let layerId = 1000;
+	let RENDER_RUNNING = false;
 	
 	/*-----------------------------------------------\
 	|	Public Object Methods
@@ -20,18 +20,33 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasId) {
 	// start the rendering on the canvas.
 	engine.startRender = function startRenderFunc() {
 		
-		// this will need handling for server side execution.
-		_normalizeRequestFrame();
-		
-		(function frame() {
+		if(!RENDER_RUNNING) {
 			
-			window.requestAnimationFrame(frame);
+			engine.ctx = argCanvasContext;
 			
-			engine.layers.forEach(function(layer) {
-				layer.draw(ctx);
-			});
+			// this will need handling for server side execution.
+			_normalizeRequestFrame();
 			
-		})();
+			// IIFE to start
+			(function frame() {
+				
+				window.requestAnimationFrame(frame);
+				
+				RENDER_RUNNING = false;
+				
+				layers.forEach(function(layer) {
+					layer.draw(ctx);
+				});
+				
+				RENDER_RUNNING = true;
+				
+			})();
+			
+		} else {
+			
+			console.log("CanvasRender already running!!!");
+			
+		}
 		
 	}
 	
@@ -48,16 +63,17 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasId) {
 	
 	// Layer construction object.
 	// used to create another layer for the render to use.
-	var Layer = function LayerConstructor(argFx) {
+	let Layer = function LayerConstructor(argFx) {
 		
-		this.fx = argFx
+		this.fx = argFx;
+		this.id = layerId++;
 		
 		this.draw = function(ctx) {
 			this.fx.draw(ctx);
 		};
 		
 		// add the created layer to the stack of layers.
-		engine.layers.push(this);
+		layers.push(this);
 		
 	}
 	
