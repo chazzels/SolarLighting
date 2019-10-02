@@ -5,10 +5,10 @@
 */
 
 import { sha1 } from "./interface/sha1";
-import { map } from "../shared/interface/map";
+import { map } from "../../shared/interface/map";
 import { assetData } from "./interface/assetData";
 import { fixtureTarget } from "./interface/fixtureTarget";
-import { crystalObject } from "../shared/interface/crystalObject";
+import { crystalObject } from "../../shared/interface/crystalObject";
 
 import { AssetManager } from "./assetManager";
 import { StyleRender } from "./styleRender";
@@ -16,10 +16,10 @@ import { StyleCache } from "./styleCache";
 import { StyleCompositor } from "./styleCompositor";
 //import { FixtureMeta } from "./fixtureMeta";
 
-import { SimplePerf } from "../shared/simplePerf";
+import { SimplePerf } from "../../shared/simplePerf";
 import { MiniKernel } from "../kernel/kernel";
 
-import { Logger } from "../shared/logger";
+import { Logger } from "../../shared/logger";
 
 class EngineCore {
 	
