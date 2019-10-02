@@ -4,7 +4,7 @@
 // TODO: push the stars away from center.
 // TODO: add ability to select direction of movement.
 
-var StarField = function StarFieldConstructor(argContext, argCount, argColor) {
+var StarField = function StarFieldEffectConstructor(argContext, argCount, argColor) {
 	
 	this.color = argColor ? argColor : "#eef";
 	this.count = typeof argCount === "number" ? argCount : 10;

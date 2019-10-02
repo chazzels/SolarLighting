@@ -2,7 +2,7 @@
 |	Solid Color Effect
 \-----------------------------------------------*/
 
-var Solid = function SolidConstructor(argContext, argColor) {
+var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 	this.color = argColor ? argColor : "#000";
 	
