@@ -31,8 +31,7 @@ class MiniKernel {
 	static routineMap:any = new Maps();
 	static routineSortMap:any = new Maps();
 	static routineProtectedMap:any = new Maps();
-	static jobMap:any = new Maps();
-	static jobSortMap:any = new Maps();
+	static jobStack:any = new Maps();
 	
 	// routine timing variables.
 	static routineExecTimeStart:number = 0;
