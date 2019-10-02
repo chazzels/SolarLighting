@@ -19,7 +19,7 @@ const port = 80;
 
 
 /* create a new engine */
-let SolarEngine = require("../js/solarEngine");
+let SolarEngine = require("../js/engine/solarEngine");
 let engine = new SolarEngine({
 	perf: {verbose: false},
 	store: {verbose: false},
