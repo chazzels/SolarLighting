@@ -4,12 +4,9 @@ This project is a personal effort to build from the ground up a light control sy
 As for now this code repository is changing rapidly and breaking changes may happen.
 Please comeback for the full release.
 
----
-
 ## Planned Functionality
 - Show control from real world data/sensors.
 - Pattern/design generation with Canvas API.
----
 
 ## Directories
 __bin__ -
@@ -35,10 +32,7 @@ __sampleData__ -
 sample show files to illistrate structure.
 should all be able to be loaded into the engine.  
 
----
-
 ## Compiling for use
 First, ensure that all the dependancies for the npm project are installed.  
 ` $ tsc `
 ##### * must have typescript installed. 
----
