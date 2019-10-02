@@ -3,6 +3,7 @@ This project is a personal effort to build from the ground up a light control sy
 
 As for now this code repository is changing rapidly and breaking changes may happen.
 Please comeback for the full release.
+
 ---
 
 ## Planned Functionality
