@@ -4,7 +4,10 @@
 *	TODO rename so that this can be used in other components of this system to help moniter performance.
 *	TODO transistion arrays to maps to remove for loops from source code.
 */
-class SimplePerf {
+
+import { CrystalClock } from "./crystalClock";
+
+export class SimplePerf {
 	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
@@ -38,7 +41,7 @@ class SimplePerf {
 		
 		let triggerCallback = this.trigger(that)
 		
-		let crystal = new this.Crystal(1000, triggerCallback);
+		let crystal = new CrystalClock(1000, triggerCallback);
 		
 	}
 	
@@ -198,5 +201,3 @@ class SimplePerf {
 	}
 
 }
-
-export = SimplePerf;

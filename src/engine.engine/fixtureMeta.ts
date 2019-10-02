@@ -1,18 +1,43 @@
 /*
 *	module to collect a current manifest of connected fixture attributes.
 *	dead assets can be detect and prevent unneeded calculations.
-*	NOTE: the playhead module also generates a active manifest used to skip inactive assets. this could be a second filter to that.
+*	NOTE: the playhead module also generates an active manifest used to skip inactive assets. this could be a second filter to that.
 */
 
-class fixtureMeta {
+import { sha1 } from "./interface/sha1";
+import { fixtureTarget } from "./interface/fixtureTarget";
+
+class FixtureMeta {
+	
+	/* module options flags */
+	private static readonly VERBOSE: boolean = false;
+	private static readonly VERBOSE_BOOT: boolean = true;
+	
+	/* module variables */
+	private static clientsKeys: any = []; 
+	private static clients: any = new Map();
 	
 	static deviceAttributeMap: any = new Map();
 	static idAttributeMap: any = new Map();
 	static classAttributeMap: any = new Map();
 	
-	constructor() {
+	constructor(options?:any) {
 		
 		
+		
+	}
+	
+	registerFixture(key: sha1, deviceId: string) {
+		
+		console.log(deviceId);
+		
+		FixtureMeta.clients.set(key, deviceId);
+		
+	}
+	
+	getMeta(key: sha1) {
+		
+		return FixtureMeta.clients.get(key);
 		
 	}
 	
@@ -38,4 +63,4 @@ class fixtureMeta {
 	
 }
 
-export = fixtureMeta;
+export { FixtureMeta };

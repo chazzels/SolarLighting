@@ -2,22 +2,26 @@
 *	module for creating a websocket server.
 *	TODO: return splash page for http hit.
 *	TODO: add unique server id which is tied to installation or pre-assigned. created unless found.
+*	TODO: provide event system to hook in additional functionality.
+*	TODO: create ability to update fixture meta. 
+*	TODO: expand ip/port/network options to configure.
 */
 
 import { sha1 } from "./interface/sha1";
 
+import * as express from "express";
+import * as http from "http";
+import * as WebSocket from "ws";
+import * as Crypto from "crypto";
+import * as Events from "events";
+
 class WebSocketServer {
-	
-	/* node/npm modules */
-	private express: any = require("express");	
-	private http: any = require('http');
-	private WebSocket: any = require("ws");
-	private Crypto: any = require("crypto");
 	
 	/* module variables */
 	private app: any;
 	private server: any;
 	private wss: any;
+	private emitter: any;
 	private clients: any = new Map();
 	private clientKeys: any = [];
 	private deviceIds: any = new Map();
@@ -41,6 +45,18 @@ class WebSocketServer {
 		
 		this.HTTPServerListen();
 		
+		// create event emitter for module.
+		this.emitter = new Events();
+		
+	}
+	
+	// links to the event emitter in the this class. 
+	registerHandler(eventName: string, eventFunc: any) {
+		
+		this.emitter.on(String(eventName), eventFunc);
+		
+		console.log(eventName, 'registered');
+		
 	}
 	
 	/* code to execute when a client has connected. */
@@ -52,6 +68,7 @@ class WebSocketServer {
 		// new websocket connection event.
 		server.wss.on("connection", socketConnect);
 		
+		// handle new socket connection.
 		function socketConnect(ws: any, req: any) {
 			
 			let clientId,
@@ -68,11 +85,16 @@ class WebSocketServer {
 			// bind function to close event.
 			ws.on("close", socketClose);
 			
-			// function called message event.
+			// trigger socket connection event for hook system.
+			server.emitter.emit('socketManifestChange', server.clientKeys);
+			
+			// socket message handler.
 			function socketMessage(message: any) {
 				
+				let messageData;
+				
+				// if the message is a string execute the correct function.
 				if(typeof message === "string") {
-					// if the message is a string execute the correct function.
 					
 					if(ws.state === server.STATEMETA
 						&& typeof clientId === "undefined"
@@ -91,12 +113,17 @@ class WebSocketServer {
 							
 							ws.state = server.STATEDATA;
 							
+							// TODO: actually pass real meta data.
+							server.emitter.emit('socketConnection', ws.key, clientId);
+							
 					}
 					
 				} else if(typeof message === 'object') {
 					// if the message is a object relay the data.
 					
-					console.log(message.toJSON());
+					messageData = message.toJSON();
+					
+					console.log(messageData);
 					
 				}
 				
@@ -130,10 +157,14 @@ class WebSocketServer {
 		let ws = this.clients.get(shakey);
 		
 		if(ws.state === this.STATEDATA) {
-		
+			
 			ws.send(data);
+			
+			return true
+			
+		} 
 		
-		}
+		return false;
 		
 	}
 	
@@ -150,13 +181,14 @@ class WebSocketServer {
 	/* @param {string} shakey - sha1 key used to reference a socket */
 	private removeSocket(shakey: sha1) {
 		
-		// delete key from client map. return false if failed.
+		// delete key from client map. returns false if failed.
 		let clientStatus = this.clients.delete(shakey);
 		
 		// check index of the key in the client key array. returns -1 if failed.
 		let keyIndex = this.clientKeys.indexOf(shakey);
 		
 		// check the returned key index is valid.
+		// keyIndex == -1 means no results
 		if(keyIndex !== -1 && keyIndex >= 0) {
 			
 			// remove key from client keys array.
@@ -216,7 +248,7 @@ class WebSocketServer {
 	private initExpress() {
 		
 		// create an express app object.
-		this.app = this.express();
+		this.app = express();
 		
 		// set the port property of the application.
 		this.app.set('port', process.env.PORT || 8080);
@@ -232,7 +264,7 @@ class WebSocketServer {
 	/* create a http server. */
 	private initHTTPServer() {
 		
-		this.server = this.http.createServer(this.app);
+		this.server = http.createServer(this.app);
 		
 	}
 	
@@ -252,7 +284,7 @@ class WebSocketServer {
 	/* start the websocket server from the express/http server. */
 	private initWebSocketServer() {
 		
-		this.wss = new this.WebSocket.Server({server: this.server});
+		this.wss = new WebSocket.Server({server: this.server});
 		
 	}
 	
@@ -264,7 +296,7 @@ class WebSocketServer {
 	/* @param {object} data - data need to create a sha1 key.*/
 	private generateSocketSHA1(data: any) {
 		
-		let shaSum = this.Crypto.createHash("sha1");
+		let shaSum = Crypto.createHash("sha1");
 		
 		let shaReturn = "0";
 		
@@ -288,4 +320,4 @@ class WebSocketServer {
 
 }
 
-export = WebSocketServer;
+export { WebSocketServer };

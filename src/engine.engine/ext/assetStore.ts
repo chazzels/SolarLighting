@@ -1,24 +1,26 @@
 /*
-*   module to store cue data that can be accessed later.
+*	module to store asset data that can be accessed later.
 */
 
-import { sha1 } from "./interface/sha1";
+import { sha1 } from "../interface/sha1";
+import { assetData } from "../interface/assetData";
 
 class AssetStore {
 	
-	/* module flags */
+	/* module options flags */
 	private readonly VERBOSE: boolean = false;
+	private readonly VERBOSE_BOOT: boolean = true;
 	
 	/* module variables */
 	private _totalTracks: number = 0;
 	private _tracks: any = new Map();
 	private _tracksMeta: any = new Map();
 	
-	/* performance variables */
+	/* performance private members */
+	private perf: any;
 	private readonly STOREREAD: string = "StoreRead";
 	private readonly STOREWRITE: string = "StoreWrite";
 	private readonly STOREMETAREAD: string = "StoreMetaRead";
-	private perf: any;
 	
 	constructor(options: any, perf: any) {
 		
@@ -28,7 +30,17 @@ class AssetStore {
 			
 		}
 		
-		console.log("STORE::STARTING");
+		if(options && options.hasOwnProperty("verboseBoot")) {
+			
+			this.VERBOSE_BOOT = options.verboseBoot;
+			
+		}
+		
+		if(this.VERBOSE_BOOT) {
+			
+			console.log("STORE::STARTING");
+			
+		}
 		
 		this.perf = perf;
 		
@@ -37,7 +49,7 @@ class AssetStore {
 	/* loads cue track into storage */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	/* @param {any} assetData - an assets cue style data. */
-	loadTrack(shakey: sha1, assetData: any) {
+	loadTrack(shakey: sha1, assetData: assetData) {
 		
 		this._tracks.set(shakey, assetData.cueTrack);
 		
@@ -101,4 +113,4 @@ class AssetStore {
 	
 }
 
-export = AssetStore;
+export { AssetStore };

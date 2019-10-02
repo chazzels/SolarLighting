@@ -3,13 +3,12 @@
 *	provide asset status to other modules in the engine enviroment.
 */
 
-import { sha1 } from "./interface/sha1";
-import { playheadObject } from "./interface/playheadObject"
+import { sha1 } from "../interface/sha1";
+import { playheadObject } from "../interface/playheadObject";
+
+import { PlayheadLogic } from "./playheadLogic";
 
 class AssetPlayhead {
-	
-	/* imported modules */
-	private PlayheadLogic: any = require("./ext/playheadLogic");
 	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
@@ -47,7 +46,7 @@ class AssetPlayhead {
 		console.log("PLAYHEAD::STARTING");
 		console.group();
 		
-		this._logic = new this.PlayheadLogic(options, this._playheads, this._playheadsMeta);
+		this._logic = new PlayheadLogic(options, this._playheads, this._playheadsMeta);
 		
 		this.perf = perf;
 		perf.registerParameter(this.PLAYUPDATE);
@@ -302,4 +301,4 @@ class AssetPlayhead {
 	
 }
 
-export = AssetPlayhead;
+export { AssetPlayhead };

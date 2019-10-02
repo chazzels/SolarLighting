@@ -24,7 +24,7 @@ let engine = new SolarEngine({
 	perf: {verbose: false},
 	store: {verbose: false},
 	playhead: {verbose: false},
-	render: {verbose: false},
+	render: {verbose: true},
 	server: {verbose: false}
 });
 

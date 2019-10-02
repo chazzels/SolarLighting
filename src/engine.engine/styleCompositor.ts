@@ -31,4 +31,4 @@ class StyleCompositor {
 	
 }
 
-export = StyleCompositor;
+export { StyleCompositor };

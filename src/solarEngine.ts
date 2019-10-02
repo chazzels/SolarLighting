@@ -1,31 +1,32 @@
 /*
 *	module to serve as a main management API to engine subsystems. 
 *	TODO: implement a task runner to automate build process for developement.
-*	TODO: build logging module.
+*	TODO: implement logging module.
+*	TODO: make asset properties modular.
+*	TODO: build more interfaces for the engine.
+*	TODO: make simplePerf optional functionality. (not always useful).
 */
 
 import { sha1 } from "./engine.engine/interface/sha1";
+import { assetData } from "./engine.engine/interface/assetData";
+
+import { EngineCore } from "./engine.engine/engineCore";
+import { ControllerCom } from "./engine.server/server";
+import { ClientCom } from "./engine.client/client";
 
 class SolarEngine {
 	
 	/* module version info */
-	readonly majorVersion: number = 0;
-	readonly minorversion: number = 0;
-	readonly revisionVersion: number = 2;
-	readonly releaseType: string = "a";
-	
-	/* imported modules */
-	private EngineCore: any = require("./engine.engine/engineCore");
-	private EngineServer: any = require("./engine.server/server");
-	private EngineClient: any = require("./engine.client/client");
-	private Crystal: any = require("./shared/crystalClock");
+	static readonly majorVersion: number = 0;
+	static readonly minorversion: number = 0;
+	static readonly revisionVersion: number = 3;
+	static readonly releaseType: string = "a";
 	
 	/* module variables */
 	private engine: any;
 	private server: any;
 	private client: any;
 	private assetKeys: any = [];
-	private crystal: any;
 	
 	constructor(options?:any) {
 		
@@ -37,11 +38,11 @@ class SolarEngine {
 		
 		console.log("------------------------------");
 		
-		this.engine = new this.EngineCore(options);
+		this.engine = new EngineCore(options);
 		
-		this.server = new this.EngineServer(options.server);
+		this.server = new ControllerCom(options.server);
 		
-		this.client = new this.EngineClient(options.client);
+		this.client = new ClientCom(options.client);
 		
 		console.log("------------------------------");
 		
@@ -55,10 +56,10 @@ class SolarEngine {
 	version(): string {
 		
 		let version = "Solar Engine v" 
-			+ this.majorVersion.toString() + "."
-			+ this.majorVersion.toString() + "."
-			+ this.revisionVersion.toString()
-			+ this.releaseType;
+			+ SolarEngine.majorVersion.toString() + "."
+			+ SolarEngine.majorVersion.toString() + "."
+			+ SolarEngine.revisionVersion.toString()
+			+ SolarEngine.releaseType;
 		
 		return version;
 		
@@ -68,7 +69,7 @@ class SolarEngine {
 	|	EngineCore Functionality.
 	\----------------------------------------------*/
 	
-	loadAsset(assetData: any) {
+	loadAsset(assetData: assetData) {
 		
 		let assetKey = null;
 		
@@ -95,6 +96,12 @@ class SolarEngine {
 	pause(shakey: sha1) {
 		
 		this.engine.pause(shakey);
+		
+	}
+	
+	queryTarget(qryStr: String) {
+		
+		return this.engine.queryTarget(qryStr);
 		
 	}
 	

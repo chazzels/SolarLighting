@@ -1,0 +1,20 @@
+{ 
+	"showName": "sampleShow",
+	"showDescription": "this is a default show used to test functionality."
+	"engineHosts": [
+		"0.0.0.0:8080"
+	],
+	"deskHosts": [
+		"0.0.0.0:8081"
+	],
+	"showAssets": [
+		"library/twinkle.json",
+		"library/lighting.json",
+		"library/chase.json"
+	],
+	"fixtureHostIds": [
+		"12345678901",
+		"12345678902",
+		"12345678903"
+	]
+}
