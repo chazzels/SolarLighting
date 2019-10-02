@@ -1,7 +1,13 @@
 # SolarEngine
-Lighting Control Engine  
-As for now this code repository is changing rapidly and may make breaking changes.
+This project is a personal effort to build from the ground up a light control system/software. The entire stack at this time is written in NodeJS. Due to limitations of NodeJS functionality of the system has been broken into multiple services/applications. 
+
+As for now this code repository is changing rapidly and breaking changes may happen.
 Please comeback for the full release.
+---
+
+## Planned Functionality
+- Show control from real world data/sensors.
+- Pattern/design generation with Canvas API.
 ---
 
 ## Directories
@@ -14,7 +20,7 @@ should not be committed to the source git index.
 
 __src__ -
 source typescript code.
-this is sometimes labelled the `ts` in typescript projects.  
+contains source code for all aspects of the stack.
 
 __dev__ -
 files to test features and create custom shows files.
