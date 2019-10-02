@@ -1,6 +1,7 @@
 /*-----------------------------------------------\
-|		Solid Color Effect
+|	Solid Color Effect
 \-----------------------------------------------*/
+
 var Solid = function SolidConstructor(argContext, argColor) {
 	
 	this.color = argColor ? argColor : "#000";
@@ -15,3 +16,5 @@ var Solid = function SolidConstructor(argContext, argColor) {
 	}
 	
 }
+
+module.exports = Solid;

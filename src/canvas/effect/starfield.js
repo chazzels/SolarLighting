@@ -1,5 +1,5 @@
 /*-----------------------------------------------\
-|		Star Field Effect
+|	Star Field Effect
 \-----------------------------------------------*/
 // TODO: push the stars away from center.
 // TODO: add ability to select direction of movement.
@@ -32,7 +32,9 @@ var StarField = function StarFieldConstructor(argContext, argCount, argColor) {
 			effect.radius = chm;
 		}
 		
+		// iterate through stars and update each one.
 		effect.stars.forEach(function(star) {
+			
 			// check position range and adjust if necassary
 			star[0] += effect.rate;
 			star[1] += effect.rate * (effect.slope * 0.01);
@@ -140,3 +142,5 @@ var StarField = function StarFieldConstructor(argContext, argCount, argColor) {
 	}
 	
 }
+
+module.exports = StarField;
