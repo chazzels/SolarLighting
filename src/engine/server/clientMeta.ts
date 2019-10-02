@@ -4,7 +4,7 @@
 */
 
 import { sha1 } from "./interface/sha1";
-import { fixtureTarget } from "../engine.engine/interface/fixtureTarget";
+import { fixtureTarget } from "../engine/interface/fixtureTarget";
 
 class ClientMeta {
 	
