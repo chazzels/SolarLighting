@@ -28,7 +28,7 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasId) {
 			window.requestAnimationFrame(frame);
 			
 			engine.layers.forEach(function(layer) {
-				layer.draw(ctx);
+				layer.draw(engine.ctx);
 			});
 			
 		})();
