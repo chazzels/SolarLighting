@@ -83,4 +83,4 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasId) {
 	
 }
 
-module.exports = CanvasEngine;
+//module.exports = CanvasEngine;
