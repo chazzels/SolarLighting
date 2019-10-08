@@ -143,4 +143,4 @@ var StarField = function StarFieldConstructor(argContext, argCount, argColor) {
 	
 }
 
-module.exports = StarField;
+//module.exports = StarField;
