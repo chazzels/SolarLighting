@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>canvas testing</title>
+		<style>
+			* {
+				webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				margin: 0;
+			}
+			.simpleFlow {
+				display: block;
+				margin: 0 auto;
+			}
+		</style>
+	</head>
+	
+	<body translate="no">
+		
+		<canvas class="simpleFlow" id="canvas" width="725" height="619" style="width: 725px; height: 619px;"></canvas>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<script src="/_static/SolarLighting/src/canvas/render.js"></script>
+		<script src="/_static/SolarLighting/js/canvas/effect/solid.js"></script>
+		<script src="/_static/SolarLighting/js/canvas/effect/starfield.js"></script>
+		
+		<script id="rendered-js">
+			$(document).ready(function devPageReady() {
+				
+				// scene prep.
+				// configure the html layer for the canvas element
+				let canvas = jQuery('#canvas');
+				canvas.width(window.innerWidth);
+				canvas.attr('width', window.innerWidth);
+				canvas.height(window.innerHeight);
+				canvas.attr('height', window.innerHeight);
+				
+				let ctx = canvas[0].getContext('2d');
+				
+				let engine = new CanvasEngine(ctx);
+				
+				engine.startRender(ctx);
+				
+				// create the effects. 
+				let solid = new Solid(ctx, "#090010");
+				// let stars1 = new Stars(ctx, 300, "red");	
+				// let stars2 = new Stars(ctx, 300, "green");
+				// let stars3 = new Stars(ctx, 300, "blue");
+				let stars4 = new Stars(ctx, 300, "cyan");
+				let stars5 = new Stars(ctx, 300, "yellow");
+				let stars6 = new Stars(ctx, 300, "magenta");
+				
+				// add the effects in layer order.
+				solid.draw(ctx);
+				engine.addLayer(solid);
+				// engine.addLayer(stars1);
+				// engine.addLayer(stars2);
+				// engine.addLayer(stars3);
+				engine.addLayer(stars4);
+				engine.addLayer(stars5);
+				engine.addLayer(stars6);
+				
+			});
+		</script>
+	</body>
+</html>

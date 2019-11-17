@@ -35,7 +35,7 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 				RENDER_RUNNING = false;
 				
 				layers.forEach(function(layer) {
-					layer.draw(ctx);
+					layer.draw(engine.ctx);
 				});
 				
 				RENDER_RUNNING = true;
@@ -99,4 +99,4 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	
 }
 
-module.exports = CanvasEngine;
+//module.exports = CanvasEngine;
