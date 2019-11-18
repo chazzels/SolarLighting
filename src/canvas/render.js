@@ -34,6 +34,12 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 				
 				RENDER_RUNNING = false;
 				
+				// advance frame of the layers.
+				layers.forEach(function(layer) {
+					layer.calc(engine.ctx.canvas);
+				});
+				
+				// render the layers.
 				layers.forEach(function(layer) {
 					layer.draw(engine.ctx);
 				});
@@ -68,9 +74,13 @@ var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 		this.fx = argFx;
 		this.id = layerId++;
 		
-		this.draw = function(ctx) {
+		this.draw = function _layerDraw(ctx) {
 			this.fx.draw(ctx);
 		};
+		
+		this.calc = function _layerCalc(canvas) {
+			this.fx.calc(canvas);
+		}
 		
 		// add the created layer to the stack of layers.
 		layers.push(this);

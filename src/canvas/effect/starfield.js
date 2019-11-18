@@ -18,19 +18,39 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 	this.radius = -1;
 	this.FAST_SAMPLING = false;
 	
-	this.draw = function(ctx) {
+	this.draw = function _effectDraw(ctx) {
 		
 		let effect = this;
-		let cw = ctx.canvas.width, 		//max height
-				ch = ctx.canvas.height,	//max height
-				cwm = Math.floor(cw/2),	//center of the shrink effect width
-				chm = Math.floor(ch/2);	//center of the shrink effect height
 		
-		if(cwm<chm) {
-			effect.radius = cwm;
-		} else {
-			effect.radius = chm;
-		}
+		// iterate through stars and update each one.
+		effect.stars.forEach(function(star) {
+		
+			// render the star.
+			// all styles for star set here.
+			// parameters set above.
+			ctx.beginPath();
+			ctx.lineWidth = 1;
+			ctx.strokeStyle = effect.color;
+			ctx.fillStyle = effect.color;
+			ctx.arc(star[0], star[1], star[2], 0, Math.PI * 2, true);
+			ctx.stroke();
+			ctx.fill();
+			ctx.closePath();
+			
+		});
+		
+	}
+	
+	this.calc = function _effectCalc(canvas) {
+		
+		let effect = this;
+		let cw = canvas.width, 	//max height
+			ch = canvas.height,	//max height
+			cwm = Math.floor(cw/2),	//center of the shrink effect width
+			chm = Math.floor(ch/2);	//center of the shrink effect height
+		
+		// set widest dimension.
+		effect.radius = Math.max(chm, cwm);
 		
 		// iterate through stars and update each one.
 		effect.stars.forEach(function(star) {
@@ -41,27 +61,27 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 			let size = star[2];
 			
 			// range check on x axis / width.
-			if(star[0] > ctx.canvas.width || star[0] < 0) { 
+			if(star[0] > canvas.width || star[0] < 0) { 
 				
-				if(star[0] > ctx.canvas.width + effect.maxSize) {
+				if(star[0] > canvas.width + effect.maxSize) {
 					star[0] = 0-effect.maxSize;
 				}
 				
 				if(star[0] < 0 - effect.maxSize) {
-					star[0] = ctx.canvas.width + effect.maxSize
+					star[0] = canvas.width + effect.maxSize
 				}
 				
 			}
 			
 			// range check on y axis / height;
-			if(star[1] >ctx.canvas.height || star[1] < 0) {
+			if(star[1] > canvas.height || star[1] < 0) {
 				
-				if(star[1] > ctx.canvas.height + effect.maxSize) {
+				if(star[1] > canvas.height + effect.maxSize) {
 					star[1] = 0 - effect.maxSize;
 				}
 				
 				if(star[1] < 0 - effect.maxSize) {
-					star[1] = ctx.canvas.height + effect.maxSize
+					star[1] = canvas.height + effect.maxSize
 				}
 				
 			}
@@ -104,18 +124,6 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 			if(size > effect.maxSize) { size = effect.maxSize; }
 			star[2] = size;
 			
-			// render the star.
-			// all styles for star set here.
-			// parameters set above.
-			ctx.beginPath();
-			ctx.lineWidth = 1;
-			ctx.strokeStyle = effect.color;
-			ctx.fillStyle = effect.color;
-			ctx.arc(star[0], star[1], star[2], 0, Math.PI * 2, true);
-			ctx.stroke();
-			ctx.fill();
-			ctx.closePath();
-			
 		});
 		
 	}
@@ -143,4 +151,4 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 	
 }
 
-module.exports = StarField;
+// module.exports = StarField;

@@ -23,8 +23,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		
 		<script src="/_static/SolarLighting/src/canvas/render.js"></script>
-		<script src="/_static/SolarLighting/js/canvas/effect/solid.js"></script>
-		<script src="/_static/SolarLighting/js/canvas/effect/starfield.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/solid.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/starfield.js"></script>
 		
 		<script id="rendered-js">
 			$(document).ready(function devPageReady() {
@@ -44,13 +44,14 @@
 				engine.startRender(ctx);
 				
 				// create the effects. 
-				let solid = new Solid(ctx, "#090010");
-				// let stars1 = new Stars(ctx, 300, "red");	
-				// let stars2 = new Stars(ctx, 300, "green");
-				// let stars3 = new Stars(ctx, 300, "blue");
-				let stars4 = new Stars(ctx, 300, "cyan");
-				let stars5 = new Stars(ctx, 300, "yellow");
-				let stars6 = new Stars(ctx, 300, "magenta");
+				// let solid = new Solid(ctx, "#090010");
+				let solid = new Solid(ctx, "#000");
+				// let stars1 = new StarField(ctx, 300, "red");	
+				// let stars2 = new StarField(ctx, 300, "green");
+				// let stars3 = new StarField(ctx, 300, "blue");
+				let stars4 = new StarField(ctx, 300, "cyan");
+				let stars5 = new StarField(ctx, 300, "yellow");
+				let stars6 = new StarField(ctx, 300, "magenta");
 				
 				// add the effects in layer order.
 				solid.draw(ctx);

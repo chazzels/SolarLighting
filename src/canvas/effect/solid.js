@@ -6,6 +6,8 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 	this.color = argColor ? argColor : "#000";
 	
+	this.calc = function (canvas) {}
+	
 	this.draw = function(ctx) {
 		
 		ctx.beginPath();
@@ -17,4 +19,4 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 }
 
-module.exports = Solid;
+// module.exports = Solid;
