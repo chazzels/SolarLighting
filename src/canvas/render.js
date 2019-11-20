@@ -6,7 +6,7 @@
 // TODO: develop functionality to adjust order of layers. 
 // TODO: develop color pallette support.
 
-var CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
+const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	
 	let engine = this;
 	let layers = new Array();

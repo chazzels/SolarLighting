@@ -3,8 +3,21 @@
 \-----------------------------------------------*/
 // TODO: push the stars away from center.
 // TODO: add ability to select direction of movement.
+// TODO: finish implementing directional system. 
+// TODO: better way to set options. (map object with external iterface and event handling.)
 
-var StarField = function StarFieldEffectConstructor(argContext, argCount, argColor) {
+const StarField = function StarFieldEffectConstructor(argContext, argCount, argColor) {
+	
+	let effect = new Effect();
+	
+	effect.makeProperty('color', '#eef');
+	effect.makeProperty('count', 10);
+	effect.makeProperty('sizeMin', 1);
+	effect.makeProperty('sizeMax', 3);
+	effect.makeProperty('rate', 0.2);
+	effect.makeProperty('rotation', 200);
+	
+	console.log(effect._propValMap);
 	
 	this.color = argColor ? argColor : "#eef";
 	this.count = typeof argCount === "number" ? argCount : 10;
@@ -12,8 +25,9 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 	this.maxSize = 3;
 	this.minSize = 1;
 	this.rate = 0.2;
-	this.rotation = 120;
+	this.rotation = 200;
 	this.slope = Math.floor(getTanFromDegrees(this.rotation)*100);
+	this.direction = getDirectionFromDegrees(this.rotation);
 	this.feather = 0.5;
 	this.radius = -1;
 	this.FAST_SAMPLING = false;
@@ -56,7 +70,7 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 		effect.stars.forEach(function(star) {
 			
 			// check position range and adjust if necassary
-			star[0] += effect.rate;
+			star[0] += effect.rate * 0;
 			star[1] += effect.rate * (effect.slope * 0.01);
 			let size = star[2];
 			
@@ -145,10 +159,37 @@ var StarField = function StarFieldEffectConstructor(argContext, argCount, argCol
 		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 	}
 	
+	// get the slope from traditional degrees 0-360.
 	function getTanFromDegrees(degrees) {
-		return Math.tan(degrees * Math.PI/180);
+		return Math.tan(Math.floor(degrees) * Math.PI/180);
 	}
+	
+	// returns a number indicating the directiong. 
+	function getDirectionFromDegrees(degrees) {
+		
+		let adjustedDegrees = 
+			Math.abs(degrees) - (Math.floor((Math.abs(degrees) / 360)) * 360);
+		
+		if(adjustedDegrees < 180
+			&& adjustedDegrees > 0) { 
+				return 1;
+		}
+		
+		if(adjustedDegrees > 180 
+			&& adjustedDegrees < 360) {
+				return -1;
+		}
+		
+		return 0;
+		
+	}
+	
+	
+	
+	
 	
 }
 
-// module.exports = StarField;
+if(typeof module.exports === 'undefined') {
+	module.exports = StarField;
+}

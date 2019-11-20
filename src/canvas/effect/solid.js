@@ -19,4 +19,6 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 }
 
-// module.exports = Solid;
+if(typeof module.exports === 'undefined') {
+	module.exports = Solid;
+}
