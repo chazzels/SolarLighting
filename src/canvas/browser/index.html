@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<title>canvas testing</title>
+		<meta charset="UTF-8">
 		<style>
 			* {
 				webkit-box-sizing: border-box;
@@ -65,7 +66,8 @@
 				
 				stars6.setHidden('slope', -290)
 					.updateProperty('rate', 1.2)
-					.updateProperty('radius', 10);
+					.updateProperty('radius', 10)
+					.addColor('red').addColor('orange');
 				
 				// add the effects in layer order.
 				solid.draw(ctx);
@@ -73,7 +75,7 @@
 				// engine.addLayer(stars1);
 				// engine.addLayer(stars2);
 				// engine.addLayer(stars3);
-				engine.addLayer(stars4.renderAPI());
+				// engine.addLayer(stars4.renderAPI());
 				engine.addLayer(stars5.renderAPI());
 				let blah = engine.addLayer(stars6.renderAPI());
 				

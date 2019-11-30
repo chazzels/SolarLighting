@@ -11,6 +11,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	let effect = new Effect();
 	
 	effect.makeProperty('color', '#eef');
+	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
 	effect.makeProperty('count', 10);
 	effect.makeProperty('sizeChangeThreshold', 40);
 	effect.makeProperty('sizeMin', 2);
@@ -54,8 +55,10 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 			ctx.beginPath();
 			
 			ctx.lineWidth = 1;
-			ctx.strokeStyle = effect.prop('color');
-			ctx.fillStyle = effect.prop('color');
+			// ctx.strokeStyle = effect.prop('color');
+			// ctx.fillStyle = effect.prop('color');
+			ctx.strokeStyle = star.color;
+			ctx.fillStyle = star.color;
 			
 			ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2, true);
 			
@@ -174,6 +177,30 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		
 	}
 	
+	function addColor(color) {
+		
+		let colors = effect.prop('colors');
+		
+		colors.push(color);
+		
+		effect.updateProperty('colors', colors);
+		
+		return effectReturnChainObject
+		
+	}
+	
+	function selectColor() {
+		
+		let colors = effect.prop('colors');
+		
+		let selection = getRandomIntInclusive(0, colors.length-1);
+		
+		let result  = colors[selection];
+		
+		return result;
+		
+	}
+	
 	// executed on creation. 
 	// ensures object is never void of data.
 	// fill the stars array with random values for coordinates.
@@ -187,7 +214,8 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 				0-effect.prop('sizeMax'), 
 				argContext.canvas.height+effect.prop('sizeMax')),
 			size: effect.prop('sizeMin'),
-			count: getRandomIntInclusive(0, effect.prop('sizeChangeThreshold'))
+			count: getRandomIntInclusive(0, effect.prop('sizeChangeThreshold')),
+			color: selectColor()
 		}
 		
 	}
@@ -209,7 +237,8 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	var effectReturnChainObject = {
 		renderAPI: effect.renderAPI,
 		updateProperty: updateProperty,
-		setHidden: setHidden
+		setHidden: setHidden,
+		addColor: addColor
 	};
 	
 	return effectReturnChainObject;
