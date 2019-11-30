@@ -31,15 +31,6 @@
 		<script id="rendered-js">
 			$(document).ready(function devPageReady() {
 				
-				
-				
-				let demoEffect = new Effect();
-				console.log(demoEffect);
-				demoEffect.makeProperty('rate', 0, 'number');
-				demoEffect.updateProperty('rate', 10);
-				console.log(demoEffect.getProperty('rate'));
-				
-				
 				// scene prep.
 				// configure the html layer for the canvas element
 				let canvas = jQuery('#canvas');
@@ -60,9 +51,21 @@
 				// let stars1 = new StarField(ctx, 300, "red");	
 				// let stars2 = new StarField(ctx, 300, "green");
 				// let stars3 = new StarField(ctx, 300, "blue");
-				let stars4 = new StarField(ctx, 300, "cyan");
-				let stars5 = new StarField(ctx, 300, "yellow");
+				let stars4 = new StarField(ctx, 400, "cyan");
+				let stars5 = new StarField(ctx, 350, "yellow");
 				let stars6 = new StarField(ctx, 300, "magenta");
+				
+				stars4.setHidden('slope', -174)
+					.updateProperty('rate', 1)
+					.updateProperty('radius', 10);
+				
+				stars5.setHidden('slope', -230)
+					.updateProperty('rate', 1.1)
+					.updateProperty('radius', 10);
+				
+				stars6.setHidden('slope', -290)
+					.updateProperty('rate', 1.2)
+					.updateProperty('radius', 10);
 				
 				// add the effects in layer order.
 				solid.draw(ctx);
@@ -70,9 +73,12 @@
 				// engine.addLayer(stars1);
 				// engine.addLayer(stars2);
 				// engine.addLayer(stars3);
-				engine.addLayer(stars4);
-				engine.addLayer(stars5);
-				engine.addLayer(stars6);
+				engine.addLayer(stars4.renderAPI());
+				engine.addLayer(stars5.renderAPI());
+				let blah = engine.addLayer(stars6.renderAPI());
+				
+				console.log(blah);
+				
 				
 			});
 		</script>

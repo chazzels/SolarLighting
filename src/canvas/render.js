@@ -59,7 +59,11 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	// add a new layer to the top. 
 	engine.addLayer = function addLayerFunc(argEffect) {
 		
-		return new Layer(argEffect);
+		new Layer(argEffect);
+		
+		console.log(argEffect);
+		
+		return argEffect;
 		
 	}
 	
