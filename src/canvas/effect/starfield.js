@@ -26,13 +26,21 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	effect.makeProperty('feather', 0.5);
 	effect.makeProperty('radius', 0);
 	
-	effect.setHiddenCallback('rotation', function() {
+	effect.setHiddenCallback('slope', function() {
 		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
 		console.log('slopeCalc:', effect.prop('rotation'), result);
 		effect.setHidden('slope', result);
 		return result;
 	});
 	effect.linkProperty('rotation', 'slope');
+	
+	// effect.setHiddenCallback('sizeMin', function() {
+	// 	_shuffleStars();
+	// });
+	
+	// effect.setHiddenCallback('sizeMax', function() {
+	// 	_shuffleStars();
+	// });
 	
 	if(typeof argCount !== 'undefined') {
 		effect.updateProperty('count', argCount);

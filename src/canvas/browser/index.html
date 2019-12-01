@@ -49,37 +49,33 @@
 				// create the effects. 
 				// let solid = new Solid(ctx, "#090010");
 				let solid = new Solid(ctx, "#000");
-				// let stars1 = new StarField(ctx, 300, "red");	
-				// let stars2 = new StarField(ctx, 300, "green");
-				// let stars3 = new StarField(ctx, 300, "blue");
-				let stars4 = new StarField(ctx, 400, "cyan");
-				let stars5 = new StarField(ctx, 350, "yellow");
+				let stars4 = new StarField(ctx, 350, "cyan");
+				let stars5 = new StarField(ctx, 450, "yellow");
 				let stars6 = new StarField(ctx, 300, "magenta");
 				
-				stars4.updateProperty('rotation', -40)
+				stars4.updateProperty('rotation', -41)
 					.updateProperty('rate', 1)
 					.updateProperty('radius', 10)
-					.resetColor(['purple']);
+					.resetColor(['#2d334a', '#0c9463', '#78a5a3']);
 				
 				stars5.updateProperty('rotation', -41)
-					.updateProperty('rate', 1.1)
+					.updateProperty('rate', 1.6)
 					.updateProperty('radius', 10)
-					.resetColor(['yellow', 'orange']);
+					.resetColor(['#fab696', '#fbe3b9', '#2d334a']);
 				
-				stars6.updateProperty('rotation', -43)
-					.updateProperty('rate', 1.2)
+				stars6.updateProperty('rotation', -41)
+					.updateProperty('rate', 2)
 					.updateProperty('radius', 10)
-					.resetColor(['darkpurple','darkblue', 'darkpink']);
+					.updateProperty('sizeMin', 2)
+					.updateProperty('sizeMax', 10)
+					.resetColor(['#78a5a3', '#444c5c', '#fab696']);
 				
 				// add the effects in layer order.
-				solid.draw(ctx);
 				engine.addLayer(solid);
-				// engine.addLayer(stars1);
-				// engine.addLayer(stars2);
-				// engine.addLayer(stars3);
-				engine.addLayer(stars4.renderAPI());
+				solid.draw(ctx);
 				engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
+				engine.addLayer(stars4.renderAPI());
 				
 			});
 		</script>

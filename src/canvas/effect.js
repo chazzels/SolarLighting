@@ -50,8 +50,6 @@ const Effect = function EffectConstructor() {
 			
 			hiddenValueMap.set(name, func());
 			
-			console.log('funcSetVal:', name, hiddenValueMap.get(name));
-			
 		}
 		
 	}
@@ -70,22 +68,14 @@ const Effect = function EffectConstructor() {
 			
 			hiddenValueMap.set(name, func());
 			
-			console.log('hiddenSet:', name, func);
-			console.log('hiddenVal:', name, hiddenValueMap.get(name));
-			
 			
 		}
-		
-		console.log(hiddenUpdateFuncMap);
 		
 	}
 	
 	function linkProperty(propertyName, hiddenName) {
 		
 		hiddenUpdateMap.set(propertyName, hiddenName);
-		
-		// DEV
-		console.log(propertyName, hiddenUpdateMap.get(propertyName));
 		
 	}
 	
@@ -121,21 +111,19 @@ const Effect = function EffectConstructor() {
 	
 	function _checkChangeMap(name) {
 		
-		console.log('check:', name);
-		
-		if(hiddenUpdateFuncMap.has(name)) {
+		if(hiddenUpdateMap.has(name)) {
 			
-			let callback = hiddenUpdateFuncMap.get(name);
+			let hiddenName = hiddenUpdateMap.get(name);
 			
-			console.log('returnedFunc:', name, callback);
+			let callback = hiddenUpdateFuncMap.get(hiddenName);
+			
+			console.log('check:', hiddenName, callback);
 			
 			if(typeof callback === 'function') {
 				
-				console.log('activated:', name);
-				
 				hiddenValueMap.set(name, callback());
 				
-				console.log('valueSet:', name, hiddenValueMap.get(name));
+				console.log('checkCall:', name, hiddenName);
 				
 			}
 			
