@@ -55,22 +55,26 @@
 				
 				stars4.updateProperty('rotation', -41)
 					.updateProperty('rate', 1)
-					.updateProperty('radius', 10);
+					.updateProperty('radius', 10)
+					.updateProperty('sizeMin', 1)
+					.updateProperty('sizeMax', 10);
 				
 				stars5.updateProperty('rotation', -41)
 					.updateProperty('rate', 1.6)
 					.updateProperty('radius', 10)
-					.updateProperty('density', 14);
+					.updateProperty('density', 14)
+					.updateProperty('sizeMin', 4)
+					.updateProperty('sizeMax', 10);
 				
 				stars6.updateProperty('rotation', -41)
 					.updateProperty('rate', 2)
 					.updateProperty('radius', 10)
-					.updateProperty('sizeMin', 2)
+					.updateProperty('sizeMin', 4)
 					.updateProperty('sizeMax', 10);
 				
 				// add the effects in layer order.
-				engine.addLayer(solid);
 				solid.draw(ctx);
+				engine.addLayer(solid);
 				engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
 				engine.addLayer(stars4.renderAPI());

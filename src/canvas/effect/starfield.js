@@ -17,13 +17,12 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	
 	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
 	effect.makeProperty('density', 10);
-	effect.makeProperty('sizeChangeThreshold', 40);
+	effect.makeProperty('sizeChangeThreshold', 120);
 	effect.makeProperty('sizeMin', 2);
 	effect.makeProperty('sizeMax', 6);
 	effect.makeProperty('rate', 2);
 	effect.makeProperty('rotation', 20);
-	effect.makeProperty('feather', 0.5);
-	effect.makeProperty('radius', 0);
+	effect.makeProperty('radiusPad', 0);
 	
 	effect.linkProperty('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
@@ -35,7 +34,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	effect.linkProperty('density', 'count');
 	effect.setHiddenCallback('count', function() {
 		let result = argContext.canvas.width*argContext.canvas.height / 10000;
-		result = result * effect.prop('density');
+		result = Math.floor(result) * effect.prop('density');
 		result = Math.floor(result);
 		return result;
 	});
@@ -90,7 +89,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 			chm = Math.floor(ch/2);	//center of the shrink effect height
 		
 		// set widest dimension.
-		effect.setHidden('radius', Math.max(chm, cwm)+effect.prop('radius'));
+		effect.setHidden('radius', Math.max(chm, cwm)+effect.prop('radiusPad'));
 		
 		// iterate through stars and update each one.
 		effect.stars.forEach(function(star) {

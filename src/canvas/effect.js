@@ -1,19 +1,18 @@
 /*-----------------------------------------------\
-|	Effect Base
+|	Effect Framework.
+|	Skeleton to design effects on top off. 
+|	Automates interfacing with the render instead.
 \-----------------------------------------------*/
-// TODO: create interlink between public and hidden propeties so they are updated correctly.
 
 const Effect = function EffectConstructor() {
 	
 	// maps to track effect properties.
 	let propertyValueMap = new Map();
-	let propertyTypeMap = new Map();
-	let propertyChangeMap = new Map();
 	
 	// reserved for values that are calculated and not set by configuration.
-	let hiddenValueMap = new Map();
-	let hiddenUpdateMap = new Map();
-	let hiddenUpdateFuncMap = new Map();
+	let hiddenValueMap = new Map(); 	// holds value of the hidden property
+	let hiddenUpdateMap = new Map();	// triggers updates based on public properties
+	let hiddenUpdateFuncMap = new Map();// holds functions to fire on update.
 	
 	// store the internal funcitons the render uses to generate images.
 	let drawFunction = function _defaultDraw() {};
@@ -42,7 +41,6 @@ const Effect = function EffectConstructor() {
 	function setHidden(name, value, func) {
 		
 		hiddenValueMap.set(name, value);
-		
 		
 		if(typeof func === 'function') {
 			
@@ -83,13 +81,19 @@ const Effect = function EffectConstructor() {
 	|	Effect Property Mangagement.
 	\-----------------------------------------------*/
 	
-	function makeProperty(name, value, type) {
+	function makeProperty(name, value) {
 		
-		propertyValueMap.set(name, value);
+		if(!propertyValueMap.has(name)) {
+			
+			propertyValueMap.set(name, value);
+			
+			_checkChangeMap(name);
+			
+			return true;
+			
+		}
 		
-		propertyTypeMap.set(name, type);
-		
-		_checkChangeMap(name);
+		return false;
 		
 	}
 	
@@ -117,13 +121,9 @@ const Effect = function EffectConstructor() {
 			
 			let callback = hiddenUpdateFuncMap.get(hiddenName);
 			
-			console.log('check:', hiddenName, callback);
-			
 			if(typeof callback === 'function') {
 				
 				hiddenValueMap.set(name, callback());
-				
-				console.log('checkCall:', name, hiddenName, hiddenValueMap.get(name));
 				
 			}
 			
