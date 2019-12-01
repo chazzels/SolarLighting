@@ -49,26 +49,24 @@
 				// create the effects. 
 				// let solid = new Solid(ctx, "#090010");
 				let solid = new Solid(ctx, "#000");
-				let stars4 = new StarField(ctx, 350, "cyan");
-				let stars5 = new StarField(ctx, 450, "yellow");
-				let stars6 = new StarField(ctx, 300, "magenta");
+				let stars4 = new StarField(ctx, 350, ['#2d334a', '#0c9463', '#78a5a3']);
+				let stars5 = new StarField(ctx, 450, ['#fab696', '#fbe3b9', '#2d334a']);
+				let stars6 = new StarField(ctx, 300, ['#78a5a3', '#444c5c', '#fab696']);
 				
 				stars4.updateProperty('rotation', -41)
 					.updateProperty('rate', 1)
-					.updateProperty('radius', 10)
-					.resetColor(['#2d334a', '#0c9463', '#78a5a3']);
+					.updateProperty('radius', 10);
 				
 				stars5.updateProperty('rotation', -41)
 					.updateProperty('rate', 1.6)
 					.updateProperty('radius', 10)
-					.resetColor(['#fab696', '#fbe3b9', '#2d334a']);
+					.updateProperty('density', 14);
 				
 				stars6.updateProperty('rotation', -41)
 					.updateProperty('rate', 2)
 					.updateProperty('radius', 10)
 					.updateProperty('sizeMin', 2)
-					.updateProperty('sizeMax', 10)
-					.resetColor(['#78a5a3', '#444c5c', '#fab696']);
+					.updateProperty('sizeMax', 10);
 				
 				// add the effects in layer order.
 				engine.addLayer(solid);

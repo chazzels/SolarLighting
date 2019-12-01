@@ -6,18 +6,17 @@
 // TODO: better way to set options. (map object with external iterface and event handling.)
 // TODO: make star desnity based instead of count based. (implement max count.)
 
-const StarField = function StarFieldEffectConstructor(argContext, argCount, argColor) {
+const StarField = function StarFieldEffectConstructor(argContext, argDensity, argColor) {
 	
 	let effect = new Effect();
-	
 	
 	effect.setHidden('radius', -1);
 	effect.setHidden('slope', 100);
 	effect.setHidden('firstRun', true);
+	effect.setHidden('count', 100);
 	
 	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
-	effect.makeProperty('density', 10) // per 100x100 pixels.
-	effect.makeProperty('count', 10);
+	effect.makeProperty('density', 10);
 	effect.makeProperty('sizeChangeThreshold', 40);
 	effect.makeProperty('sizeMin', 2);
 	effect.makeProperty('sizeMax', 6);
@@ -26,28 +25,27 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	effect.makeProperty('feather', 0.5);
 	effect.makeProperty('radius', 0);
 	
+	effect.linkProperty('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
 		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
-		console.log('slopeCalc:', effect.prop('rotation'), result);
 		effect.setHidden('slope', result);
 		return result;
 	});
-	effect.linkProperty('rotation', 'slope');
 	
-	// effect.setHiddenCallback('sizeMin', function() {
-	// 	_shuffleStars();
-	// });
+	effect.linkProperty('density', 'count');
+	effect.setHiddenCallback('count', function() {
+		let result = argContext.canvas.width*argContext.canvas.height / 10000;
+		result = result * effect.prop('density');
+		result = Math.floor(result);
+		return result;
+	});
 	
-	// effect.setHiddenCallback('sizeMax', function() {
-	// 	_shuffleStars();
-	// });
-	
-	if(typeof argCount !== 'undefined') {
-		effect.updateProperty('count', argCount);
+	if(typeof argDensity !== 'undefined') {
+		effect.updateProperty('density', argDensity);
 	}
 	
 	if(typeof argColor !== 'undefined') {
-		effect.updateProperty('color', argColor);
+		effect.updateProperty('colors', argColor);
 	}
 	
 	/*-----------------------------------------------\
@@ -202,13 +200,12 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		
 	}
 	
-	
 	// executed on creation. 
 	// ensures object is never void of data.
 	// fill the stars array with random values for coordinates.
 	function _shuffleStars() {
 		
-		for(var index = 0; index < effect.prop('count'); index++) {
+		for(var index = 0; index < effect.hidden('count'); index++) {
 			
 			effect.stars[index] = {
 				x: _getRandomIntInclusive(
@@ -274,9 +271,6 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	effect.setCalc(_effectCalc);
 	
 	_shuffleStars();
-	
-	console.log(effect.stars);
-	console.log('--------------');
 	
 	var effectReturnChainObject = {
 		renderAPI: effect.renderAPI,

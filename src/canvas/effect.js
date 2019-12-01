@@ -123,7 +123,7 @@ const Effect = function EffectConstructor() {
 				
 				hiddenValueMap.set(name, callback());
 				
-				console.log('checkCall:', name, hiddenName);
+				console.log('checkCall:', name, hiddenName, hiddenValueMap.get(name));
 				
 			}
 			
