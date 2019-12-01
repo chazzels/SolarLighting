@@ -25,14 +25,14 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	effect.makeProperty('rotation', 20);
 	effect.makeProperty('radiusPad', 0);
 	
-	effect.linkProperty('rotation', 'slope');
+	effect.bindProperty('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
 		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
 		effect.setHidden('slope', result);
 		return result;
 	});
 	
-	effect.linkProperty('density', 'count');
+	effect.bindProperty('density', 'count');
 	effect.setHiddenCallback('count', function() {
 		let result = argContext.canvas.width*argContext.canvas.height / 10000;
 		result = Math.floor(result) * effect.prop('density');
@@ -69,7 +69,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 			ctx.strokeStyle = star.color;
 			ctx.fillStyle = star.color;
 			
-			ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2, true);
+			ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
 			
 			ctx.stroke();
 			ctx.fill();

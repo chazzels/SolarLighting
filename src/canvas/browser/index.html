@@ -28,7 +28,7 @@
 		<script src="/_static/SolarLighting/src/canvas/frameworkEffect.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/solid.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/starfield.js"></script>
-		
+		<script src="/_static/SolarLighting/src/canvas/effect/circleTunnel.js"></script>
 		
 		<script id="rendered-js">
 			$(document).ready(function devPageReady() {
@@ -53,6 +53,7 @@
 				let stars4 = new StarField(ctx, 350, ['#78a5a3', '#444c5c', '#fab696']);
 				let stars5 = new StarField(ctx, 450, ['#fab696', '#fbe3b9', '#2d334a']);
 				let stars6 = new StarField(ctx, 300, ['#2d334a', '#0c9463', '#78a5a3']);
+				let circle1 = new CircleTunnel(ctx);
 				
 				stars4.updateProperty('rotation', -41)
 					.updateProperty('rate', 1)
@@ -73,12 +74,14 @@
 					.updateProperty('sizeMin', 4)
 					.updateProperty('sizeMax', 10);
 				
+				circle1.updateProperty('count', 100);
+				
 				// add the effects in layer order.
-				solid.draw(ctx);
-				engine.addLayer(solid);
-				engine.addLayer(stars4.renderAPI());
-				engine.addLayer(stars5.renderAPI());
-				engine.addLayer(stars6.renderAPI());
+				engine.addLayer(solid.renderAPI());
+				// engine.addLayer(stars4.renderAPI());
+				// engine.addLayer(stars5.renderAPI());
+				// engine.addLayer(stars6.renderAPI());
+				engine.addLayer(circle1.renderAPI());
 				
 			});
 		</script>

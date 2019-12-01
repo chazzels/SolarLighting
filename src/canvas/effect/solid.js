@@ -4,17 +4,38 @@
 
 var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
-	this.color = argColor ? argColor : "#000";
+	let effect = new Effect();
 	
-	this.calc = function (canvas) {}
+	effect.makeProperty('color', '#000');
+	effect.makeProperty('width', 100);
+	effect.makeProperty('height', 100);
 	
-	this.draw = function(ctx) {
+	function _effectCalc(canvas) {
+		
+		effect.updateProperty('width', canvas.width);
+		
+		effect.updateProperty('height', canvas.height);
+		
+	}
+	
+	function _effectDraw(ctx) {
 		
 		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		ctx.fillStyle = effect.prop('color');
+		ctx.fillRect(0, 0, effect.prop('width'), effect.prop('height'));
 		ctx.closePath();
 		
 	}
+	
+	// binding functions to rendering system stages.
+	effect.setDraw(_effectDraw);
+	effect.setCalc(_effectCalc);
+	
+	var returnChainObject = {
+		renderAPI: effect.renderAPI,
+		updateProperty: effect.updateProperty,
+		resetColor: effect.resetColor
+	}
+	return returnChainObject;
 	
 }

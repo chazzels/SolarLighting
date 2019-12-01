@@ -71,7 +71,7 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	function linkProperty(propertyName, hiddenName) {
+	function bindProperty(propertyName, hiddenName) {
 		
 		hiddenUpdateMap.set(propertyName, hiddenName);
 		
@@ -154,14 +154,15 @@ const Effect = function EffectConstructor() {
 	|	Return Object
 	\-----------------------------------------------*/
 	
-	return {
+	var returnChainObject = {
 		setCalc: setCalc,
 		setDraw: setDraw,
 		setHidden: setHidden,
 		getHidden: getHidden,
 		hidden: getHidden,
 		setHiddenCallback: setHiddenCallback,
-		linkProperty: linkProperty,
+		bindProperty: bindProperty,
+		bindProp:bindProperty,
 		makeProperty: makeProperty,
 		updateProperty: updateProperty,
 		getProperty: getProperty,
@@ -169,5 +170,7 @@ const Effect = function EffectConstructor() {
 		renderAPI: renderAPI,
 		_propValMap: propertyValueMap
 	}
+	
+	return returnChainObject;
 	
 }
