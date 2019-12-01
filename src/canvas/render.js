@@ -45,6 +45,11 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 				});
 				
 				// clear out all styles.
+				engine.ctx.lineWidth = undefined;
+				engine.ctx.strokeStyle = undefined;
+				engine.ctx.fillStyle = undefined;
+				engine.ctx.shadowColor= undefined;
+				engine.ctx.shadowBlur = undefined; 
 				
 				RENDER_RUNNING = true;
 				

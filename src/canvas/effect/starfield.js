@@ -14,6 +14,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	effect.setHidden('slope', 100);
 	effect.setHidden('firstRun', true);
 	effect.setHidden('count', 100);
+	effect.setHidden('stars', {});
 	
 	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
 	effect.makeProperty('density', 10);
@@ -54,8 +55,10 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	// handles the drawing phase of rendering cycle. 
 	function _effectDraw(ctx) {
 		
+		let stars = effect.hidden('stars');
+		
 		// iterate through stars and update each one.
-		effect.stars.forEach(function(star) {
+		stars.forEach(function(star) {
 			
 			// render the star.
 			// all styles for star set here.
@@ -91,8 +94,10 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 		// set widest dimension.
 		effect.setHidden('radius', Math.max(chm, cwm)+effect.prop('radiusPad'));
 		
+		let stars = effect.hidden('stars');
+		
 		// iterate through stars and update each one.
-		effect.stars.forEach(function(star) {
+		stars.forEach(function(star) {
 			
 			// advance size change counter.
 			// controls 
@@ -204,9 +209,11 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	// fill the stars array with random values for coordinates.
 	function _shuffleStars() {
 		
+		let stars = effect.hidden('stars')
+		
 		for(var index = 0; index < effect.hidden('count'); index++) {
 			
-			effect.stars[index] = {
+			stars[index] = {
 				x: _getRandomIntInclusive(
 					0-effect.prop('sizeMax'),
 					argContext.canvas.width+effect.prop('sizeMax')),
@@ -219,6 +226,10 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 			}
 			
 		}
+		
+		effect.setHidden('stars', stars);
+		
+		//console.log(effect.hidden('stars'));
 		
 	}
 	
@@ -236,7 +247,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 		
 		_shuffleStars();
 		
-		return effectReturnChainObject
+		return returnChainObject
 		
 	}
 	
@@ -250,12 +261,12 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	
 	function updateProperty(key, value) {
 		effect.updateProperty(key, value);
-		return effectReturnChainObject;
+		return returnChainObject;
 	}
 	
 	function setHidden(key, value) {
 		effect.setHidden(key, value);
-		return effectReturnChainObject;
+		return returnChainObject;
 	}
 	
 	/*-----------------------------------------------\
@@ -264,6 +275,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	
 	// effect unique memebers
 	effect.stars = new Array(effect.prop('count'));
+	effect.setHidden('stars', new Array(effect.prop('count')));
 	
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);
@@ -271,7 +283,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	
 	_shuffleStars();
 	
-	var effectReturnChainObject = {
+	var returnChainObject = {
 		renderAPI: effect.renderAPI,
 		updateProperty: updateProperty,
 		setHidden: setHidden,
@@ -279,6 +291,6 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 		resetColor: resetColor
 	};
 	
-	return effectReturnChainObject;
+	return returnChainObject;
 	
 }
