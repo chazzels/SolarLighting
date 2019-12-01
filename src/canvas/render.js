@@ -44,6 +44,8 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 					layer.draw(engine.ctx);
 				});
 				
+				// clear out all styles.
+				
 				RENDER_RUNNING = true;
 				
 			})();
@@ -60,8 +62,6 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	engine.addLayer = function addLayerFunc(argEffect) {
 		
 		new Layer(argEffect);
-		
-		console.log(argEffect);
 		
 		return argEffect;
 		

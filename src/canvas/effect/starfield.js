@@ -10,8 +10,13 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	
 	let effect = new Effect();
 	
-	effect.makeProperty('color', '#eef');
+	
+	effect.setHidden('radius', -1);
+	effect.setHidden('slope', 100);
+	effect.setHidden('firstRun', true);
+	
 	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
+	effect.makeProperty('density', 10) // per 100x100 pixels.
 	effect.makeProperty('count', 10);
 	effect.makeProperty('sizeChangeThreshold', 40);
 	effect.makeProperty('sizeMin', 2);
@@ -21,6 +26,14 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 	effect.makeProperty('feather', 0.5);
 	effect.makeProperty('radius', 0);
 	
+	effect.setHiddenCallback('rotation', function() {
+		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
+		console.log('slopeCalc:', effect.prop('rotation'), result);
+		effect.setHidden('slope', result);
+		return result;
+	});
+	effect.linkProperty('rotation', 'slope');
+	
 	if(typeof argCount !== 'undefined') {
 		effect.updateProperty('count', argCount);
 	}
@@ -29,19 +42,9 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		effect.updateProperty('color', argColor);
 	}
 	
-	effect.setHidden('radius', -1);
-	effect.setHidden('slope', Math.floor(getTanFromDegrees(effect.prop('rotation'))*100));
-	effect.setHidden('direction', getDirectionFromDegrees(effect.prop('rotation')));
-	effect.setHidden('firstRun', true);
-	
-	console.log(effect.hidden('slope'));
-	
-	// effect unique memebers
-	effect.stars = new Array(effect.prop('count'));
-	
-	// binding functions to rendering system stages.
-	effect.setDraw(_effectDraw);
-	effect.setCalc(_effectCalc);
+	/*-----------------------------------------------\
+	|	Effect callbacks
+	\-----------------------------------------------*/
 	
 	// handles the drawing phase of rendering cycle. 
 	function _effectDraw(ctx) {
@@ -55,8 +58,6 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 			ctx.beginPath();
 			
 			ctx.lineWidth = 1;
-			// ctx.strokeStyle = effect.prop('color');
-			// ctx.fillStyle = effect.prop('color');
 			ctx.strokeStyle = star.color;
 			ctx.fillStyle = star.color;
 			
@@ -145,20 +146,24 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		
 	}
 	
+	/*-----------------------------------------------\
+	|	Internal functions
+	\-----------------------------------------------*/
+	
 	// development. currently used to generate random positions for stars on creation. 
-	function getRandomIntInclusive(min, max) {
+	function _getRandomIntInclusive(min, max) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 	}
 	
 	// get the slope from traditional degrees 0-360.
-	function getTanFromDegrees(degrees) {
+	function _getTanFromDegrees(degrees) {
 		return Math.tan(Math.floor(degrees) * Math.PI/180);
 	}
 	
 	// returns a number indicating the directiong. 
-	function getDirectionFromDegrees(degrees) {
+	function _getDirectionFromDegrees(degrees) {
 		
 		let adjustedDegrees = 
 			Math.abs(degrees) - (Math.floor((Math.abs(degrees) / 360)) * 360);
@@ -177,6 +182,46 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		
 	}
 	
+	function _selectColor() {
+		
+		let colors = effect.prop('colors');
+		
+		let selection = _getRandomIntInclusive(0, colors.length-1);
+		
+		let result  = colors[selection];
+		
+		return result;
+		
+	}
+	
+	
+	// executed on creation. 
+	// ensures object is never void of data.
+	// fill the stars array with random values for coordinates.
+	function _shuffleStars() {
+		
+		for(var index = 0; index < effect.prop('count'); index++) {
+			
+			effect.stars[index] = {
+				x: _getRandomIntInclusive(
+					0-effect.prop('sizeMax'),
+					argContext.canvas.width+effect.prop('sizeMax')),
+				y: _getRandomIntInclusive(
+					0-effect.prop('sizeMax'), 
+					argContext.canvas.height+effect.prop('sizeMax')),
+				size: effect.prop('sizeMin'),
+				count: _getRandomIntInclusive(0, effect.prop('sizeChangeThreshold')),
+				color: _selectColor()
+			}
+			
+		}
+		
+	}
+	
+	/*-----------------------------------------------\
+	|	Public functions. 
+	\-----------------------------------------------*/
+	
 	function addColor(color) {
 		
 		let colors = effect.prop('colors');
@@ -185,43 +230,19 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		
 		effect.updateProperty('colors', colors);
 		
+		_shuffleStars();
+		
 		return effectReturnChainObject
 		
 	}
 	
-	function selectColor() {
+	function resetColor(colors) {
 		
-		let colors = effect.prop('colors');
+		effect.updateProperty('colors', colors);
 		
-		let selection = getRandomIntInclusive(0, colors.length-1);
-		
-		let result  = colors[selection];
-		
-		return result;
+		_shuffleStars();
 		
 	}
-	
-	// executed on creation. 
-	// ensures object is never void of data.
-	// fill the stars array with random values for coordinates.
-	for(var index = 0; index < effect.prop('count'); index++) {
-		
-		effect.stars[index] = {
-			x: getRandomIntInclusive(
-				0-effect.prop('sizeMax'),
-				argContext.canvas.width+effect.prop('sizeMax')),
-			y: getRandomIntInclusive(
-				0-effect.prop('sizeMax'), 
-				argContext.canvas.height+effect.prop('sizeMax')),
-			size: effect.prop('sizeMin'),
-			count: getRandomIntInclusive(0, effect.prop('sizeChangeThreshold')),
-			color: selectColor()
-		}
-		
-	}
-	
-	console.log('--------------');
-	console.log(effect.stars);
 	
 	function updateProperty(key, value) {
 		effect.updateProperty(key, value);
@@ -233,12 +254,28 @@ const StarField = function StarFieldEffectConstructor(argContext, argCount, argC
 		return effectReturnChainObject;
 	}
 	
+	/*-----------------------------------------------\
+	|	Starfied initialization steps
+	\-----------------------------------------------*/
+	
+	// effect unique memebers
+	effect.stars = new Array(effect.prop('count'));
+	
+	// binding functions to rendering system stages.
+	effect.setDraw(_effectDraw);
+	effect.setCalc(_effectCalc);
+	
+	_shuffleStars();
+	
+	console.log(effect.stars);
+	console.log('--------------');
 	
 	var effectReturnChainObject = {
 		renderAPI: effect.renderAPI,
 		updateProperty: updateProperty,
 		setHidden: setHidden,
-		addColor: addColor
+		addColor: addColor,
+		resetColor: resetColor
 	};
 	
 	return effectReturnChainObject;

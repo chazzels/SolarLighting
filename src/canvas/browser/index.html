@@ -56,18 +56,20 @@
 				let stars5 = new StarField(ctx, 350, "yellow");
 				let stars6 = new StarField(ctx, 300, "magenta");
 				
-				stars4.setHidden('slope', -174)
+				stars4.updateProperty('rotation', -40)
 					.updateProperty('rate', 1)
-					.updateProperty('radius', 10);
+					.updateProperty('radius', 10)
+					.resetColor(['purple']);
 				
-				stars5.setHidden('slope', -230)
+				stars5.updateProperty('rotation', -41)
 					.updateProperty('rate', 1.1)
-					.updateProperty('radius', 10);
+					.updateProperty('radius', 10)
+					.resetColor(['yellow', 'orange']);
 				
-				stars6.setHidden('slope', -290)
+				stars6.updateProperty('rotation', -43)
 					.updateProperty('rate', 1.2)
 					.updateProperty('radius', 10)
-					.addColor('red').addColor('orange');
+					.resetColor(['darkpurple','darkblue', 'darkpink']);
 				
 				// add the effects in layer order.
 				solid.draw(ctx);
@@ -75,12 +77,9 @@
 				// engine.addLayer(stars1);
 				// engine.addLayer(stars2);
 				// engine.addLayer(stars3);
-				// engine.addLayer(stars4.renderAPI());
+				engine.addLayer(stars4.renderAPI());
 				engine.addLayer(stars5.renderAPI());
-				let blah = engine.addLayer(stars6.renderAPI());
-				
-				console.log(blah);
-				
+				engine.addLayer(stars6.renderAPI());
 				
 			});
 		</script>
