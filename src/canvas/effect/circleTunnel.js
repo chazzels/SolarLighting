@@ -6,6 +6,8 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	
 	let effect = new Effect();
 	
+	effect.assignContext(argContext);
+	
 	effect.setHidden('circles', null);
 	effect.setHidden('yOrigin', 0);
 	effect.setHidden('xOrigin', 0);
@@ -121,7 +123,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 		effect.updateProperty('colors', colors);
 		
-		_createCircles(argContext);
+		_createCircles(effect.context);
 		
 	}
 	
@@ -161,8 +163,8 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		// variables used to calculate infomation about the canvas being used.
 		// updated every cycle incase of resize of canvas.
 		// move functionality to the e
-		let cw = argContext.canvas.width, 	//max height
-			ch = argContext.canvas.height,	//max height
+		let cw = effect.context.canvas.width, 	//max height
+			ch = effect.context.canvas.height,	//max height
 			cwm = Math.floor(cw/2),	//center of the shrink effect width
 			chm = Math.floor(ch/2);	//center of the shrink effect height
 		
@@ -170,17 +172,13 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		effect.setHidden('yCenter', chm);
 		
 		// calculate the gap. 
-		let gapResult = Math.max(argContext.canvas.height, argContext.canvas.width);
+		let gapResult = Math.max(effect.context.canvas.height, effect.context.canvas.width);
 		gapResult = Math.floor(gapResult / effect.prop('count'));
 		effect.setHidden('gap', gapResult);
 		
-		_createCircles(argContext);
+		_createCircles(effect.context);
 		
 	});
-	
-	
-	
-	_createCircles(argContext);
 	
 	effect.setDraw(_effectDraw);
 	effect.setCalc(_effectCalc);

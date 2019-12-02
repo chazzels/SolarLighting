@@ -10,6 +10,8 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	
 	let effect = new Effect();
 	
+	effect.assignContext(argContext);
+	
 	effect.setHidden('radius', -1);
 	effect.setHidden('slope', 100);
 	effect.setHidden('firstRun', true);

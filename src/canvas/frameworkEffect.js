@@ -6,6 +6,8 @@
 
 const Effect = function EffectConstructor() {
 	
+	let effectContext;
+	
 	// maps to track effect properties.
 	let propertyValueMap = new Map();
 	
@@ -26,6 +28,15 @@ const Effect = function EffectConstructor() {
 	|	Drawing Managment.
 	\-----------------------------------------------*/
 	
+	function assignContext(assignedContext) {
+		
+		effectContext = assignedContext;
+		
+		returnChainObject.context = assignedContext;
+		
+	}
+	
+	
 	function setDraw(funcArg) {
 		
 		drawFunction = funcArg;
@@ -41,6 +52,8 @@ const Effect = function EffectConstructor() {
 	function setCreate(funcArg) {
 		
 		createFunction = funcArg;
+		
+		createFunction(effectContext);
 		
 	}
 	
@@ -244,6 +257,8 @@ const Effect = function EffectConstructor() {
 	\-----------------------------------------------*/
 	
 	var returnChainObject = {
+		assignContext: assignContext,
+		context: effectContext,
 		setCalc: setCalc,
 		setDraw: setDraw,
 		setCreate: setCreate,
