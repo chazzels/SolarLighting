@@ -14,9 +14,13 @@ const Effect = function EffectConstructor() {
 	let hiddenUpdateMap = new Map();	// triggers updates based on public properties
 	let hiddenUpdateFuncMap = new Map();// holds functions to fire on update.
 	
+	let frameworkValueMap = new Map();
+	frameworkValueMap.set('color', ['#000']);
+	
 	// store the internal funcitons the render uses to generate images.
 	let drawFunction = function _defaultDraw() {};
 	let calcFunction = function _defaultCalc() {};
+	let createFunction = function _defaultCreate() {};
 	
 	/*-----------------------------------------------\
 	|	Drawing Managment.
@@ -31,6 +35,12 @@ const Effect = function EffectConstructor() {
 	function setCalc(funcArg) {
 		
 		calcFunction = funcArg;
+		
+	}
+	
+	function setCreate(funcArg) {
+		
+		createFunction = funcArg;
 		
 	}
 	
@@ -65,7 +75,6 @@ const Effect = function EffectConstructor() {
 			hiddenUpdateFuncMap.set(name, func);
 			
 			hiddenValueMap.set(name, func());
-			
 			
 		}
 		
@@ -152,6 +161,72 @@ const Effect = function EffectConstructor() {
 	}
 	
 	/*-----------------------------------------------\
+	|	Color Interface
+	\-----------------------------------------------*/
+	
+	function resetColors(colorArray) {
+		
+		frameworkValueMap.set('colors', colorArray);
+		
+		createFunction();
+		
+	}
+	
+	function addColor(color) {
+		
+		let colors = frameworkValueMap.get('color');
+		
+		colors.push(color);
+		
+		frameworkValueMap.set('color', colors);
+		
+		createFunction();
+		
+	}
+	
+	let _colorNextIndex = 0;
+	function nextColor() {
+		
+		let colors = frameworkValueMap.get('colors');
+		
+		_colorNextIndex++;
+		
+		if(_colorNextIndex > colors.length-1) {
+			
+			_colorNextIndex = 0;
+			
+		}
+		
+		let result = colors[_colorNextIndex];
+		
+		return result;
+		
+	}
+	
+	
+	function selectColor() {
+		
+		let colors = frameworkValueMap.get('colors');
+		
+		let selection = _getRandomIntInclusive(0, colors.length-1);
+		
+		let result  = colors[selection];
+		
+		return result;
+		
+	}
+	
+	/*-----------------------------------------------\
+	|	Internal functions.
+	\-----------------------------------------------*/
+	
+	function _getRandomIntInclusive(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+	}
+	
+	/*-----------------------------------------------\
 	|	Render Interface.
 	\-----------------------------------------------*/
 	
@@ -171,6 +246,7 @@ const Effect = function EffectConstructor() {
 	var returnChainObject = {
 		setCalc: setCalc,
 		setDraw: setDraw,
+		setCreate: setCreate,
 		setHidden: setHidden,
 		getHidden: getHidden,
 		hidden: getHidden,
@@ -181,6 +257,10 @@ const Effect = function EffectConstructor() {
 		updateProperty: updateProperty,
 		getProperty: getProperty,
 		prop: getProperty,
+		addColor: addColor,
+		resetColors: resetColors,
+		nextColor: nextColor,
+		selectColor: selectColor,
 		renderAPI: renderAPI,
 		_propValMap: propertyValueMap
 	}
