@@ -16,6 +16,8 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	effect.makeProperty('size', 10);
 	effect.makeProperty('rate', 3);
 	effect.makeProperty('count', 3);
+	effect.makeProperty('maxShift', 0.2);
+	effect.makeProperty('shiftChance', 0.01)
 	effect.makeProperty('xOffset', 0);
 	effect.makeProperty('yOffset', 0);
 	
@@ -70,12 +72,20 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		for(var i = 0; i < circles.length; i++) {
 			
 			circles[i].x += effect.prop('xOffset');
+			circles[i].x += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.prop('maxShift')*Math.random());
+			// circles[i].x = Math.floor(circles[i].x);
 			
 			circles[i].y += effect.prop('yOffset');
+			circles[i].y += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.prop('maxShift')*Math.random());
+			// circles[i].y = Math.floor(circles[i].y);
 			
 			circles[i].size += effect.prop('rate');
 			
 			if(circles[i].size > Math.max(cw, ch)) {
+				
+				circles[i].x = effect.hidden('xOrigin');
+				
+				circles[i].y = effect.hidden('yOrigin');
 				
 				circles[i].size = 0;
 				
@@ -160,26 +170,19 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	effect.bindProperty('count', 'circles');
 	effect.setHiddenCallback('circles', function() {
 		
-		// variables used to calculate infomation about the canvas being used.
-		// updated every cycle incase of resize of canvas.
-		// move functionality to the e
-		let cw = effect.context.canvas.width, 	//max height
-			ch = effect.context.canvas.height,	//max height
-			cwm = Math.floor(cw/2),	//center of the shrink effect width
-			chm = Math.floor(ch/2);	//center of the shrink effect height
-		
-		effect.setHidden('xCenter', cwm);
-		effect.setHidden('yCenter', chm);
+		effect.setHidden('xCenter', Math.floor(effect.context.canvas.width/2));
+		effect.setHidden('yCenter', Math.floor(effect.context.canvas.height/2));
 		
 		// calculate the gap. 
 		let gapResult = Math.max(effect.context.canvas.height, effect.context.canvas.width);
 		gapResult = Math.floor(gapResult / effect.prop('count'));
-		effect.setHidden('gap', gapResult);
+		effect.setHidden('gap', gapResult*1.5);
 		
 		_createCircles(effect.context);
 		
 	});
 	
+	// bind the life cycle functions to the effect framework.
 	effect.setDraw(_effectDraw);
 	effect.setCalc(_effectCalc);
 	effect.setCreate(_createCircles)

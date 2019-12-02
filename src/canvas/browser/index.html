@@ -78,16 +78,18 @@
 					.updateProperty('sizeMax', 10);
 				
 				circle1.updateProperty('count', 10)
-					.updateProperty('count', 32)
-					.updateProperty('rate', 0.4)
-					.resetColors(['#000', '#111', '#222']);
+					.updateProperty('count', 100)
+					.updateProperty('rate', 1)
+					.resetColors(['#000', '#111', '#222'])
+					.resetColors(['#f6d365', '#e15249', '#c83660', '#3a1f5d', '#913', '#606'])
+					.resetColors(['#2d334a', '#0c9463', '#78a5a3']);
 				
 				// add the effects in layer order.
 				engine.addLayer(solid.renderAPI());
 				engine.addLayer(circle1.renderAPI());
-				engine.addLayer(stars4.renderAPI());
-				engine.addLayer(stars5.renderAPI());
-				engine.addLayer(stars6.renderAPI());
+				// engine.addLayer(stars4.renderAPI());
+				// engine.addLayer(stars5.renderAPI());
+				// engine.addLayer(stars6.renderAPI());
 				
 				
 			});

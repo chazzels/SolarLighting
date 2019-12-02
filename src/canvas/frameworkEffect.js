@@ -34,6 +34,8 @@ const Effect = function EffectConstructor() {
 		
 		returnChainObject.context = assignedContext;
 		
+		return returnChainObject;
+		
 	}
 	
 	
@@ -41,11 +43,15 @@ const Effect = function EffectConstructor() {
 		
 		drawFunction = funcArg;
 		
+		return returnChainObject;
+		
 	}
 	
 	function setCalc(funcArg) {
 		
 		calcFunction = funcArg;
+		
+		return returnChainObject;
 		
 	}
 	
@@ -54,6 +60,8 @@ const Effect = function EffectConstructor() {
 		createFunction = funcArg;
 		
 		createFunction(effectContext);
+		
+		return returnChainObject;
 		
 	}
 	
@@ -125,11 +133,9 @@ const Effect = function EffectConstructor() {
 			
 			_checkChangeMap(name);
 			
-			return true;
-			
 		}
 		
-		return false;
+		return returnChainObject;
 		
 	}
 	
@@ -141,29 +147,9 @@ const Effect = function EffectConstructor() {
 			
 			_checkChangeMap(name);
 			
-			return true;
-			
 		} 
 		
-		return false;
-		
-	}
-	
-	function _checkChangeMap(name) {
-		
-		if(hiddenUpdateMap.has(name)) {
-			
-			let hiddenName = hiddenUpdateMap.get(name);
-			
-			let callback = hiddenUpdateFuncMap.get(hiddenName);
-			
-			if(typeof callback === 'function') {
-				
-				hiddenValueMap.set(name, callback());
-				
-			}
-			
-		}
+		return returnChainObject;
 		
 	}
 	
@@ -183,6 +169,8 @@ const Effect = function EffectConstructor() {
 		
 		createFunction();
 		
+		return returnChainObject;
+		
 	}
 	
 	function addColor(color) {
@@ -194,6 +182,8 @@ const Effect = function EffectConstructor() {
 		frameworkValueMap.set('color', colors);
 		
 		createFunction();
+		
+		return returnChainObject;
 		
 	}
 	
@@ -237,6 +227,24 @@ const Effect = function EffectConstructor() {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+	}
+	
+	function _checkChangeMap(name) {
+		
+		if(hiddenUpdateMap.has(name)) {
+			
+			let hiddenName = hiddenUpdateMap.get(name);
+			
+			let callback = hiddenUpdateFuncMap.get(hiddenName);
+			
+			if(typeof callback === 'function') {
+				
+				hiddenValueMap.set(name, callback());
+				
+			}
+			
+		}
+		
 	}
 	
 	/*-----------------------------------------------\
