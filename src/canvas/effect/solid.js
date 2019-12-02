@@ -33,8 +33,7 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
-		updateProperty: effect.updateProperty,
-		resetColor: effect.resetColor
+		updateProperty: effect.updateProperty
 	}
 	return returnChainObject;
 	

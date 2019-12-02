@@ -71,6 +71,20 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
+	function getHiddenCallback(hiddenName) {
+		
+		let callback = hiddenUpdateFuncMap.get(hiddenName);
+		
+		if(typeof callback === 'function') {
+			
+			return callback;
+			
+		}
+		
+		return false;
+		
+	}
+	
 	function bindProperty(propertyName, hiddenName) {
 		
 		hiddenUpdateMap.set(propertyName, hiddenName);

@@ -10,6 +10,9 @@
 				box-sizing: border-box;
 				margin: 0;
 			}
+			body {
+				overflow: hidden;
+			}
 			.simpleFlow {
 				display: block;
 				margin: 0 auto;
@@ -45,8 +48,6 @@
 				
 				let engine = new CanvasEngine(ctx);
 				
-				engine.startRender(ctx);
-				
 				// create the effects. 
 				// let solid = new Solid(ctx, "#090010");
 				let solid = new Solid(ctx, "#000");
@@ -54,6 +55,8 @@
 				let stars5 = new StarField(ctx, 450, ['#fab696', '#fbe3b9', '#2d334a']);
 				let stars6 = new StarField(ctx, 300, ['#2d334a', '#0c9463', '#78a5a3']);
 				let circle1 = new CircleTunnel(ctx);
+				
+				engine.startRender(ctx);
 				
 				stars4.updateProperty('rotation', -41)
 					.updateProperty('rate', 1)
@@ -74,14 +77,18 @@
 					.updateProperty('sizeMin', 4)
 					.updateProperty('sizeMax', 10);
 				
-				circle1.updateProperty('count', 100);
+				circle1.updateProperty('count', 10)
+					.updateProperty('count', 32)
+					.updateProperty('rate', 0.4)
+					.resetColor(['#000', '#111', '#222']);
 				
 				// add the effects in layer order.
 				engine.addLayer(solid.renderAPI());
-				// engine.addLayer(stars4.renderAPI());
-				// engine.addLayer(stars5.renderAPI());
-				// engine.addLayer(stars6.renderAPI());
 				engine.addLayer(circle1.renderAPI());
+				engine.addLayer(stars4.renderAPI());
+				engine.addLayer(stars5.renderAPI());
+				engine.addLayer(stars6.renderAPI());
+				
 				
 			});
 		</script>

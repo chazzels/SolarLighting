@@ -9,28 +9,20 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	effect.setHidden('circles', null);
 	effect.setHidden('yOrigin', 0);
 	effect.setHidden('xOrigin', 0);
+	effect.setHidden('gap', 100);
 	
 	effect.makeProperty('colors', ['#2d334a', '#0c9463', '#78a5a3']);
 	effect.makeProperty('size', 10);
 	effect.makeProperty('rate', 3);
-	effect.makeProperty('gap', 40);
 	effect.makeProperty('count', 3);
 	effect.makeProperty('xOffset', 0);
 	effect.makeProperty('yOffset', 0);
-	
-	effect.bindProperty('count', 'circles');
-	effect.setHidden('circles', function() {
-		
-		_createCircles(argContext);
-		
-	});
-	
 	
 	function _effectDraw(ctx) {
 		
 		let circles = effect.hidden('circles');
 		
-		for(var i = 1; i < circles.length-1; i++) {
+		for(var i =  circles.length-1; i > 0; i--) {
 			
 			ctx.beginPath();
 			
@@ -68,28 +60,59 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		effect.setHidden('xOrigin', cwm);
 		effect.setHidden('yOrigin', chm);
 		
-		
 		let circles = effect.hidden('circles');
 		
-		circles.forEach(function(circle) {
+		let sortFlag = false;
+		
+		for(var i = 0; i < circles.length; i++) {
 			
-			circle.x += effect.prop('xOffset');
+			circles[i].x += effect.prop('xOffset');
 			
-			circle.y += effect.prop('yOffset');
+			circles[i].y += effect.prop('yOffset');
 			
-			circle.size += effect.prop('rate');
+			circles[i].size += effect.prop('rate');
 			
-			if(circle.size > Math.max(cw, ch)) {
+			if(circles[i].size > Math.max(cw, ch)) {
 				
-				circle.size = 0;
+				circles[i].size = 0;
+				
+				sortFlag = true;
 				
 			}
 			
-		});
+		}
 		
-		circles = circles.reverse();
+		if(sortFlag) {
+			
+			circles = _sortCircles(circles);
+			
+		}
 		
 		effect.setHidden('circles', circles);
+		
+	}
+	
+	function _sortCircles(circles) {
+		
+		circles.sort(function(a,b) {
+			
+			let aSize = Math.floor(a.size);
+			
+			let bSize = Math.floor(b.size);
+			
+			if(aSize < bSize) {
+				return -1;
+			}
+			
+			if(aSize > bSize) {
+				return 1;
+			}
+			
+			return 0;
+			
+		});
+		
+		return circles;
 		
 	}
 	
@@ -124,12 +147,23 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 			
 		}
 		
-		let result = colors[_colorNextIndex]
-		
-		console.log(result);
+		let result = colors[_colorNextIndex];
 		
 		return result;
 		
+	}
+	
+	function resetColor(colors) {
+		
+		effect.updateProperty('colors', colors);
+		
+		_createCircles(argContext);
+		
+	}
+	
+	function updateProperty(key, value) {
+		effect.updateProperty(key, value);
+		return returnChainObject;
 	}
 	
 	function _createCircles(ctx) {
@@ -153,11 +187,11 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 		for(var index = 0; index < effect.prop('count'); index++) {
 			
-			sizeOffset += effect.prop('gap');
+			sizeOffset += effect.hidden('gap');
 			
 			circles[index] = {
-				x: effect.hidden('xOrigin'),
-				y: effect.hidden('yOrigin'),
+				x: effect.hidden('xCenter'),
+				y: effect.hidden('yCenter'),
 				size: sizeOffset,
 				color: _nextColor()
 			}
@@ -166,19 +200,31 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 		effect.setHidden('circles', circles);
 		
-		console.log(effect.hidden('circles'));
-		
 	}
+	
+	effect.bindProperty('count', 'circles');
+	effect.setHiddenCallback('circles', function() {
+		
+		// calculate the gap. 
+		let gapResult = Math.max(argContext.canvas.height, argContext.canvas.width);
+		gapResult = Math.floor(gapResult / effect.prop('count'));
+		effect.setHidden('gap', gapResult);
+		
+		_createCircles(argContext);
+		
+	});
+	
+	
+	
+	_createCircles(argContext);
 	
 	effect.setDraw(_effectDraw);
 	effect.setCalc(_effectCalc);
 	
-	_createCircles(argContext);
-	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
-		updateProperty: effect.updateProperty,
-		resetColor: effect.resetColor
+		updateProperty: updateProperty,
+		resetColor: resetColor
 	}
 	return returnChainObject;
 	
