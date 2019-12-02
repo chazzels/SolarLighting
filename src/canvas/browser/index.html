@@ -51,45 +51,50 @@
 				// create the effects. 
 				// let solid = new Solid(ctx, "#090010");
 				let solid = new Solid(ctx, "#000");
-				let stars4 = new StarField(ctx, 350, ['#78a5a3', '#444c5c', '#fab696']);
-				let stars5 = new StarField(ctx, 450, ['#fab696', '#fbe3b9', '#2d334a']);
-				let stars6 = new StarField(ctx, 300, ['#2d334a', '#0c9463', '#78a5a3']);
+				let stars4 = new StarField(ctx);
+				let stars5 = new StarField(ctx);
+				let stars6 = new StarField(ctx);
 				let circle1 = new CircleTunnel(ctx);
 				
 				engine.startRender(ctx);
 				
-				stars4.updateProperty('rotation', -41)
-					.updateProperty('rate', 1)
-					.updateProperty('radius', 10)
-					.updateProperty('sizeMin', 1)
-					.updateProperty('sizeMax', 10);
+				stars4.updateParameter('rotation', -41)
+					.resetColors(['#78a5a3', '#444c5c', '#fab696'])
+					.updateParameter('rate', 1)
+					.updateParameter('radius', 10)
+					.updateParameter('sizeMin', 3)
+					.updateParameter('sizeMax', 10);
 				
-				stars5.updateProperty('rotation', -41)
-					.updateProperty('rate', 1.6)
-					.updateProperty('radius', 10)
-					.updateProperty('density', 14)
-					.updateProperty('sizeMin', 4)
-					.updateProperty('sizeMax', 10);
+				stars5.updateParameter('rotation', -41)
+					.resetColors(['#fab696', '#fbe3b9', '#2d334a'])
+					.updateParameter('rate', 1.6)
+					.updateParameter('radius', 10)
+					.updateParameter('density', 14)
+					.updateParameter('sizeMin', 4)
+					.updateParameter('sizeMax', 10);
 				
-				stars6.updateProperty('rotation', -41)
-					.updateProperty('rate', 2)
-					.updateProperty('radius', 10)
-					.updateProperty('sizeMin', 4)
-					.updateProperty('sizeMax', 10);
+				stars6.updateParameter('rotation', -41)
+					.resetColors(['#2d334a', '#0c9463', '#78a5a3'])
+					.updateParameter('rate', 2)
+					.updateParameter('count', 350)
+					.updateParameter('radius', 10)
+					.updateParameter('sizeMin', 2)
+					.updateParameter('sizeMax', 6);
 				
-				circle1.updateProperty('count', 10)
-					.updateProperty('count', 100)
-					.updateProperty('rate', 1)
+				circle1.updateParameter('count', 10)
+					.updateParameter('count', 14)
+					.updateParameter('rate', 1)
 					.resetColors(['#000', '#111', '#222'])
-					.resetColors(['#f6d365', '#e15249', '#c83660', '#3a1f5d', '#913', '#606'])
-					.resetColors(['#2d334a', '#0c9463', '#78a5a3']);
+					.resetColors(['#1d4d4f' ,'#357376', '#6ba8a9']);
+					// .resetColors(['#f6d365', '#e15249', '#c83660', '#3a1f5d', '#913', '#606'])
+					// .resetColors(['#2d334a', '#0c9463', '#78a5a3']);
 				
 				// add the effects in layer order.
 				engine.addLayer(solid.renderAPI());
 				engine.addLayer(circle1.renderAPI());
-				// engine.addLayer(stars4.renderAPI());
+				engine.addLayer(stars4.renderAPI());
 				// engine.addLayer(stars5.renderAPI());
-				// engine.addLayer(stars6.renderAPI());
+				engine.addLayer(stars6.renderAPI());
 				
 				
 			});

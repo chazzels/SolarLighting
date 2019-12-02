@@ -3,16 +3,18 @@
 |	Skeleton to design effects on top off. 
 |	Automates interfacing with the render instead.
 \-----------------------------------------------*/
+// TODO: convert the hidden value update system to a EventEmitter.
+// TODO: document functions.
 
 const Effect = function EffectConstructor() {
 	
 	let effectContext;
 	
 	// maps to track effect properties.
-	let propertyValueMap = new Map();
+	let ParameterValueMap = new Map();
 	
 	// reserved for values that are calculated and not set by configuration.
-	let hiddenValueMap = new Map(); 	// holds value of the hidden property
+	let hiddenValueMap = new Map(); 	// holds value of the hidden Parameter
 	let hiddenUpdateMap = new Map();	// triggers updates based on public properties
 	let hiddenUpdateFuncMap = new Map();// holds functions to fire on update.
 	
@@ -115,21 +117,22 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	function bindProperty(propertyName, hiddenName) {
+	function bindParameter(ParameterName, hiddenName) {
 		
-		hiddenUpdateMap.set(propertyName, hiddenName);
+		hiddenUpdateMap.set(ParameterName, hiddenName);
 		
 	}
 	
 	/*-----------------------------------------------\
-	|	Effect Property Mangagement.
+	|	Effect Parameter Mangagement.
 	\-----------------------------------------------*/
 	
-	function makeProperty(name, value) {
+	// create a parameter
+	function makeParameter(name, value) {
 		
-		if(!propertyValueMap.has(name)) {
+		if(!ParameterValueMap.has(name)) {
 			
-			propertyValueMap.set(name, value);
+			ParameterValueMap.set(name, value);
 			
 			_checkChangeMap(name);
 			
@@ -139,11 +142,12 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	function updateProperty(name, value) {
+	// update parameter
+	function updateParameter(name, value) {
 		
-		if(propertyValueMap.has(name)) {
+		if(ParameterValueMap.has(name)) {
 			
-			propertyValueMap.set(name, value);
+			ParameterValueMap.set(name, value);
 			
 			_checkChangeMap(name);
 			
@@ -153,9 +157,10 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	function getProperty(name) {
+	// get a public parameter. 
+	function getParameter(name) {
 		
-		return propertyValueMap.get(name);
+		return ParameterValueMap.get(name);
 		
 	}
 	
@@ -214,6 +219,8 @@ const Effect = function EffectConstructor() {
 		let selection = _getRandomIntInclusive(0, colors.length-1);
 		
 		let result  = colors[selection];
+		
+		// console.log(result);
 		
 		return result;
 		
@@ -274,18 +281,18 @@ const Effect = function EffectConstructor() {
 		getHidden: getHidden,
 		hidden: getHidden,
 		setHiddenCallback: setHiddenCallback,
-		bindProperty: bindProperty,
-		bindProp:bindProperty,
-		makeProperty: makeProperty,
-		updateProperty: updateProperty,
-		getProperty: getProperty,
-		prop: getProperty,
+		bindParameter: bindParameter,
+		bindProp:bindParameter,
+		makeParameter: makeParameter,
+		updateParameter: updateParameter,
+		getParameter: getParameter,
+		prop: getParameter,
 		addColor: addColor,
 		resetColors: resetColors,
 		nextColor: nextColor,
 		selectColor: selectColor,
 		renderAPI: renderAPI,
-		_propValMap: propertyValueMap
+		_propValMap: ParameterValueMap
 	}
 	
 	return returnChainObject;

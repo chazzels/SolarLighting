@@ -6,7 +6,7 @@
 // TODO: better way to set options. (map object with external iterface and event handling.)
 // TODO: make star desnity based instead of count based. (implement max count.)
 
-const StarField = function StarFieldEffectConstructor(argContext, argDensity, argColor) {
+const StarField = function StarFieldEffectConstructor(argContext) {
 	
 	let effect = new Effect();
 	
@@ -18,37 +18,30 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	effect.setHidden('count', 100);
 	effect.setHidden('stars', {});
 	
-	effect.makeProperty('colors', new Array('#700', '#e22', '#e52'));
-	effect.makeProperty('density', 10);
-	effect.makeProperty('sizeChangeThreshold', 120);
-	effect.makeProperty('sizeMin', 2);
-	effect.makeProperty('sizeMax', 6);
-	effect.makeProperty('rate', 2);
-	effect.makeProperty('rotation', 20);
-	effect.makeProperty('radiusPad', 0);
+	effect.makeParameter('density', 10);
+	effect.makeParameter('sizeChangeThreshold', 120);
+	effect.makeParameter('sizeMin', 2);
+	effect.makeParameter('sizeMax', 6);
+	effect.makeParameter('rate', 2);
+	effect.makeParameter('rotation', 20);
+	effect.makeParameter('radiusPad', 0);
 	
-	effect.bindProperty('rotation', 'slope');
+	effect.resetColors(['#700', '#e22', '#e52']);
+	
+	effect.bindParameter('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
 		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
 		effect.setHidden('slope', result);
 		return result;
 	});
 	
-	effect.bindProperty('density', 'count');
+	effect.bindParameter('density', 'count');
 	effect.setHiddenCallback('count', function() {
 		let result = argContext.canvas.width*argContext.canvas.height / 10000;
 		result = Math.floor(result) * effect.prop('density');
 		result = Math.floor(result);
 		return result;
 	});
-	
-	if(typeof argDensity !== 'undefined') {
-		effect.updateProperty('density', argDensity);
-	}
-	
-	if(typeof argColor !== 'undefined') {
-		effect.updateProperty('colors', argColor);
-	}
 	
 	/*-----------------------------------------------\
 	|	Effect callbacks
@@ -194,18 +187,6 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 		
 	}
 	
-	function _selectColor() {
-		
-		let colors = effect.prop('colors');
-		
-		let selection = _getRandomIntInclusive(0, colors.length-1);
-		
-		let result  = colors[selection];
-		
-		return result;
-		
-	}
-	
 	// executed on creation. 
 	// ensures object is never void of data.
 	// fill the stars array with random values for coordinates.
@@ -224,7 +205,7 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 					argContext.canvas.height+effect.prop('sizeMax')),
 				size: effect.prop('sizeMin'),
 				count: _getRandomIntInclusive(0, effect.prop('sizeChangeThreshold')),
-				color: _selectColor()
+				color: effect.selectColor()
 			}
 			
 		}
@@ -233,42 +214,6 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 		
 		//console.log(effect.hidden('stars'));
 		
-	}
-	
-	/*-----------------------------------------------\
-	|	Public functions. 
-	\-----------------------------------------------*/
-	
-	function addColor(color) {
-		
-		let colors = effect.prop('colors');
-		
-		colors.push(color);
-		
-		effect.updateProperty('colors', colors);
-		
-		_shuffleStars();
-		
-		return returnChainObject
-		
-	}
-	
-	function resetColor(colors) {
-		
-		effect.updateProperty('colors', colors);
-		
-		_shuffleStars();
-		
-	}
-	
-	function updateProperty(key, value) {
-		effect.updateProperty(key, value);
-		return returnChainObject;
-	}
-	
-	function setHidden(key, value) {
-		effect.setHidden(key, value);
-		return returnChainObject;
 	}
 	
 	/*-----------------------------------------------\
@@ -282,15 +227,16 @@ const StarField = function StarFieldEffectConstructor(argContext, argDensity, ar
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);
 	effect.setCalc(_effectCalc);
+	effect.setCreate(_shuffleStars);
 	
 	_shuffleStars();
 	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
-		updateProperty: updateProperty,
-		setHidden: setHidden,
-		addColor: addColor,
-		resetColor: resetColor
+		updateParameter: effect.updateParameter,
+		setHidden: effect.setHidden,
+		addColor: effect.addColor,
+		resetColors: effect.resetColors
 	};
 	
 	return returnChainObject;

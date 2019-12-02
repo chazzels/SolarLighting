@@ -6,15 +6,15 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 	let effect = new Effect();
 	
-	effect.makeProperty('color', '#000');
-	effect.makeProperty('width', 100);
-	effect.makeProperty('height', 100);
+	effect.makeParameter('color', '#000');
+	effect.makeParameter('width', 100);
+	effect.makeParameter('height', 100);
 	
 	function _effectCalc(canvas) {
 		
-		effect.updateProperty('width', canvas.width);
+		effect.updateParameter('width', canvas.width);
 		
-		effect.updateProperty('height', canvas.height);
+		effect.updateParameter('height', canvas.height);
 		
 	}
 	
@@ -33,7 +33,7 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
-		updateProperty: effect.updateProperty
+		updateParameter: effect.updateParameter
 	}
 	return returnChainObject;
 	

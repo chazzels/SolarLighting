@@ -13,13 +13,13 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	effect.setHidden('xOrigin', 0);
 	effect.setHidden('gap', 100);
 	
-	effect.makeProperty('size', 10);
-	effect.makeProperty('rate', 3);
-	effect.makeProperty('count', 3);
-	effect.makeProperty('maxShift', 0.2);
-	effect.makeProperty('shiftChance', 0.01)
-	effect.makeProperty('xOffset', 0);
-	effect.makeProperty('yOffset', 0);
+	effect.makeParameter('size', 10);
+	effect.makeParameter('rate', 3);
+	effect.makeParameter('count', 3);
+	effect.makeParameter('maxShift', 0.2);
+	effect.makeParameter('shiftChance', 0.01)
+	effect.makeParameter('xOffset', 0);
+	effect.makeParameter('yOffset', 0);
 	
 	effect.resetColors(['#2d334a', '#0c9463', '#78a5a3'])
 	
@@ -129,19 +129,6 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 	}
 	
-	function resetColor(colors) {
-		
-		effect.updateProperty('colors', colors);
-		
-		_createCircles(effect.context);
-		
-	}
-	
-	function updateProperty(key, value) {
-		effect.updateProperty(key, value);
-		return returnChainObject;
-	}
-	
 	function _createCircles(ctx) {
 		
 		effect.setHidden('circles', new Array(effect.prop('count')));
@@ -167,16 +154,17 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 	}
 	
-	effect.bindProperty('count', 'circles');
+	// reset the circles hidden parameter when the count Parameter changes.
+	effect.bindParameter('count', 'circles');
 	effect.setHiddenCallback('circles', function() {
 		
 		effect.setHidden('xCenter', Math.floor(effect.context.canvas.width/2));
 		effect.setHidden('yCenter', Math.floor(effect.context.canvas.height/2));
 		
 		// calculate the gap. 
-		let gapResult = Math.max(effect.context.canvas.height, effect.context.canvas.width);
+		let gapResult = Math.max(effect.context.canvas.height*1.2, effect.context.canvas.width*1.2);
 		gapResult = Math.floor(gapResult / effect.prop('count'));
-		effect.setHidden('gap', gapResult*1.5);
+		effect.setHidden('gap', gapResult);
 		
 		_createCircles(effect.context);
 		
@@ -189,7 +177,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
-		updateProperty: updateProperty,
+		updateParameter: effect.updateParameter,
 		resetColors: effect.resetColors
 	}
 	return returnChainObject;
