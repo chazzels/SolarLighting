@@ -12,6 +12,9 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 	effect.makeParameter('rows', 10);
 	effect.makeParameter('columns', 10);
 	
+	effect.makeHidden('xPos', new Int32Array());
+	effect.makeHidden('yPos', new Int32Array());
+	
 	function _effectCalc(canvas) {
 		
 		effect.updateParameter('width', canvas.width);
@@ -29,9 +32,36 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 		
 	}
 	
+	function _effectCreate() {
+		
+		let width = effect.ctx.canvas.width;
+		let height = effect.ctx.canvas.height;
+		
+		let xP = effect.hidden('xPos');
+		let yP = effect.hidden('yPos');
+		let rows = effect.parameter('rows');
+		let columns = effect.parameter('columns');
+		
+		let index = 0;
+		for(var c = 0; c < columns; c++) {
+			for(var r = 0; r < rows; r++) {
+				
+				index++;
+				
+				
+				
+			}
+		}
+		
+		effect.updateHidden('xPos', xP);
+		effect.updateHidden('yPos', yP);
+		
+	}
+	
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);
 	effect.setCalc(_effectCalc);
+	effect.setCreate(_effectCreate);
 	
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,

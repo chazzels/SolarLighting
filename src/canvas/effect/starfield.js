@@ -5,6 +5,7 @@
 // TODO: finish implementing directional system. 
 // TODO: better way to set options. (map object with external iterface and event handling.)
 // TODO: make star desnity based instead of count based. (implement max count.)
+// TODO: upadte to make clumping of stars vs random scatter. less size change at center.
 
 const StarField = function StarFieldEffectConstructor(argContext) {
 	
@@ -16,7 +17,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	effect.makeHidden('slope', 100);
 	effect.makeHidden('firstRun', true);
 	effect.makeHidden('count', 100);
-	//effect.makeHidden('stars', {});
+	effect.makeHidden('stars', null);
 	
 	effect.makeParameter('density', 10);
 	effect.makeParameter('sizeChangeThreshold', 120);
@@ -220,7 +221,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	
 	// effect unique memebers
 	effect.stars = new Array(effect.prop('count'));
-	effect.makeHidden('stars', new Array(effect.prop('count')));
+	effect.updateHidden('stars', new Array(effect.prop('count')));
 	
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);
