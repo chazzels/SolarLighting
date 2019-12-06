@@ -73,6 +73,81 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	}
 	
 	/*-----------------------------------------------\
+	|	application development zone.
+	\-----------------------------------------------*/
+	
+	engine.createSampleProfile = function _createSampleProfileFunc(argRows, argColumns, argWidth, argHeight) {
+		
+		let cWidth = engine.ctx.canvas.width;
+		let cHeight = engine.ctx.canvas.height;
+		
+		let widthGap = Math.floor(cWidth/argColumns) - argWidth;
+		let heightGap = Math.floor(cHeight/argRows) - argHeight;
+		
+		let xPos = new Int32Array(argRows * argColumns);
+		let yPos = new Int32Array(argRows * argColumns);
+		
+		let index = 0
+		for(var c = 0; c < argColumns; c++) {
+			for(var r = 0; r < argRows; r++) {
+				
+				index++;
+				console.log(index, ":", Math.ceil(r*widthGap), Math.ceil(c*heightGap))
+				xPos[index] = Math.ceil(r*widthGap);
+				
+				yPos[index] = Math.ceil(c*heightGap);
+				
+			}
+		}
+		
+		return {
+			width: argWidth,
+			height: argHeight,
+			length: xPos.length,
+			xPos: xPos,
+			yPos: yPos
+		}
+		
+	}
+	
+	engine._sample = function _sampleCanvasFunc(sx, sy, sw, sh) {
+		
+		let idata = argCanvasContext.getImageData(sx, sy, sw, sh);
+		
+		let maxColor = new Uint8ClampedArray(4);;
+		
+		let curMax = 0;
+		
+		let tempMax = 0;
+		
+		console.log('loops', Math.floor(idata.data.length/4));
+		
+		for(var p = 0; p < Math.floor(idata.data.length/4); p++) {
+			
+			tempMax = idata.data[p*4]
+				+ idata.data[p*4+1]
+				+ idata.data[p*4+2]
+				+ idata.data[p*4+3];
+			
+			if(tempMax > curMax) {
+				
+				curMax = tempMax;
+				
+				maxColor[0] = idata.data[p*4];
+				maxColor[1] = idata.data[p*4+1];
+				maxColor[2] = idata.data[p*4+2];
+				maxColor[3] = idata.data[p*4+3];
+				
+			}
+			
+			
+		}
+		
+		return maxColor;
+		
+	}
+	
+	/*-----------------------------------------------\
 	|	Internal Object Constructor
 	\-----------------------------------------------*/
 	

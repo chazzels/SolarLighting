@@ -12,17 +12,38 @@
 			}
 			body {
 				overflow: hidden;
+				height: 100vh;
+				background-color: #444;
 			}
+			.contentCenter {
+				width: 250px;
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+			
 			.simpleFlow {
 				display: block;
-				margin: 0 auto;
+			}
+			.browserDriver {
+				//min-height: 250px;
+				width: 100%;
+				margin-top: 10px;
+				background-color: #333;
 			}
 		</style>
 	</head>
 	
 	<body translate="no">
 		
-		<canvas class="simpleFlow" id="canvas" width="725" height="619" style="width: 725px; height: 619px;"></canvas>
+		<div class="contentCenter">
+			
+			<canvas class="simpleFlow" id="canvas" width="250" height="250" style="width: 725px; height: 619px;"></canvas>
+			
+			<canvas class="browserDriver" id="canvas2" width="250" height="250"></canvas>
+			
+		</div>
 		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		
@@ -34,15 +55,43 @@
 		<script src="/_static/SolarLighting/src/canvas/effect/circleTunnel.js"></script>
 		
 		<script id="rendered-js">
+			var blah;
+			function setBKG() {
+				
+				let d = blah._sample(20,20,5,5);
+				
+				jQuery(document.body).css('background-color', 'rgba('+d[0]+','+d[1]+','+d[2]+','+d[3]+')');
+				
+			}
+			
+			$(document).ready(function sampleReady() {
+				
+				let canvas = jQuery('#canvas2');
+				canvas.width(250);
+				canvas.attr('width', 250);
+				canvas.height(250);
+				canvas.attr('height', 250);
+				
+				let ctx = canvas[0].getContext('2d');
+				let engine = new CanvasEngine(ctx);
+				
+				let solid = new Solid(ctx, "#000");
+				
+				engine.startRender(ctx);
+				engine.addLayer(solid.renderAPI());
+				
+			});
+			
+			
 			$(document).ready(function devPageReady() {
 				
 				// scene prep.
 				// configure the html layer for the canvas element
 				let canvas = jQuery('#canvas');
-				canvas.width(window.innerWidth);
-				canvas.attr('width', window.innerWidth);
-				canvas.height(window.innerHeight);
-				canvas.attr('height', window.innerHeight);
+				canvas.width(250);
+				canvas.attr('width', 250);
+				canvas.height(250);
+				canvas.attr('height', 250);
 				
 				let ctx = canvas[0].getContext('2d');
 				
@@ -84,8 +133,8 @@
 				circle1.updateParameter('count', 10)
 					.updateParameter('count', 14)
 					.updateParameter('rate', 1)
-					.resetColors(['#000', '#111', '#222'])
-					.resetColors(['#1d4d4f' ,'#357376', '#6ba8a9']);
+					.resetColors(['#000', '#111', '#222']);
+					// .resetColors(['#1d4d4f' ,'#357376', '#6ba8a9'])
 					// .resetColors(['#f6d365', '#e15249', '#c83660', '#3a1f5d', '#913', '#606'])
 					// .resetColors(['#2d334a', '#0c9463', '#78a5a3']);
 				
@@ -96,6 +145,13 @@
 				// engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
 				
+				
+				blah = engine;
+				
+				setTimeout(function() {
+					console.log(engine._sample(20,20,5,5));
+					console.log(engine.createSampleProfile(5,5,3,3));
+				}, 1000);
 				
 			});
 		</script>
