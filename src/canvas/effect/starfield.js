@@ -12,11 +12,11 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	
 	effect.assignContext(argContext);
 	
-	effect.setHidden('radius', -1);
-	effect.setHidden('slope', 100);
-	effect.setHidden('firstRun', true);
-	effect.setHidden('count', 100);
-	effect.setHidden('stars', {});
+	effect.makeHidden('radius', -1);
+	effect.makeHidden('slope', 100);
+	effect.makeHidden('firstRun', true);
+	effect.makeHidden('count', 100);
+	//effect.makeHidden('stars', {});
 	
 	effect.makeParameter('density', 10);
 	effect.makeParameter('sizeChangeThreshold', 120);
@@ -31,7 +31,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	effect.bindParameter('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
 		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
-		effect.setHidden('slope', result);
+		effect.updateHidden('slope', result);
 		return result;
 	});
 	
@@ -87,7 +87,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			chm = Math.floor(ch/2);	//center of the shrink effect height
 		
 		// set widest dimension.
-		effect.setHidden('radius', Math.max(chm, cwm)+effect.prop('radiusPad'));
+		effect.updateHidden('radius', Math.max(chm, cwm)+effect.prop('radiusPad'));
 		
 		let stars = effect.hidden('stars');
 		
@@ -210,9 +210,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			
 		}
 		
-		effect.setHidden('stars', stars);
-		
-		//console.log(effect.hidden('stars'));
+		effect.updateHidden('stars', stars);
 		
 	}
 	
@@ -222,7 +220,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	
 	// effect unique memebers
 	effect.stars = new Array(effect.prop('count'));
-	effect.setHidden('stars', new Array(effect.prop('count')));
+	effect.makeHidden('stars', new Array(effect.prop('count')));
 	
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);
@@ -234,7 +232,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	var returnChainObject = {
 		renderAPI: effect.renderAPI,
 		updateParameter: effect.updateParameter,
-		setHidden: effect.setHidden,
+		updateHidden: effect.updateHidden,
 		addColor: effect.addColor,
 		resetColors: effect.resetColors
 	};

@@ -92,7 +92,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 			for(var r = 0; r < argRows; r++) {
 				
 				index++;
-				console.log(index, ":", Math.ceil(r*widthGap), Math.ceil(c*heightGap))
+				
 				xPos[index] = Math.ceil(r*widthGap);
 				
 				yPos[index] = Math.ceil(c*heightGap);
@@ -112,6 +112,8 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	
 	engine._sample = function _sampleCanvasFunc(sx, sy, sw, sh) {
 		
+		let start = Date.now();
+		
 		let idata = argCanvasContext.getImageData(sx, sy, sw, sh);
 		
 		let maxColor = new Uint8ClampedArray(4);;
@@ -119,8 +121,6 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 		let curMax = 0;
 		
 		let tempMax = 0;
-		
-		console.log('loops', Math.floor(idata.data.length/4));
 		
 		for(var p = 0; p < Math.floor(idata.data.length/4); p++) {
 			
@@ -143,6 +143,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 			
 		}
 		
+		console.log('sampleTime:', Date.now()-start,'ms');
 		return maxColor;
 		
 	}

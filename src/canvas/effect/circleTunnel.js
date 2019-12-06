@@ -8,10 +8,12 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	
 	effect.assignContext(argContext);
 	
-	effect.setHidden('circles', null);
-	effect.setHidden('yOrigin', 0);
-	effect.setHidden('xOrigin', 0);
-	effect.setHidden('gap', 100);
+	effect.makeHidden('circles', null);
+	effect.makeHidden('xOrigin', 0);
+	effect.makeHidden('yOrigin', 0);
+	effect.makeHidden('xCenter', 0);
+	effect.makeHidden('yCenter', 0);
+	effect.makeHidden('gap', 100);
 	
 	effect.makeParameter('size', 10);
 	effect.makeParameter('rate', 3);
@@ -62,8 +64,8 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 			cwm = Math.floor(cw/2),	//center of the shrink effect width
 			chm = Math.floor(ch/2);	//center of the shrink effect height
 		
-		effect.setHidden('xOrigin', cwm);
-		effect.setHidden('yOrigin', chm);
+		effect.updateHidden('xOrigin', cwm);
+		effect.updateHidden('yOrigin', chm);
 		
 		let circles = effect.hidden('circles');
 		
@@ -101,7 +103,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 			
 		}
 		
-		effect.setHidden('circles', circles);
+		effect.updateHidden('circles', circles);
 		
 	}
 	
@@ -131,7 +133,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	
 	function _createCircles(ctx) {
 		
-		effect.setHidden('circles', new Array(effect.prop('count')));
+		effect.updateHidden('circles', new Array(effect.prop('count')));
 		
 		let circles = effect.hidden('circles');
 		
@@ -150,7 +152,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 			
 		}
 		
-		effect.setHidden('circles', circles);
+		effect.updateHidden('circles', circles);
 		
 	}
 	
@@ -158,13 +160,13 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	effect.bindParameter('count', 'circles');
 	effect.setHiddenCallback('circles', function() {
 		
-		effect.setHidden('xCenter', Math.floor(effect.context.canvas.width/2));
-		effect.setHidden('yCenter', Math.floor(effect.context.canvas.height/2));
+		effect.updateHidden('xCenter', Math.floor(effect.context.canvas.width/2));
+		effect.updateHidden('yCenter', Math.floor(effect.context.canvas.height/2));
 		
 		// calculate the gap. 
 		let gapResult = Math.max(effect.context.canvas.height*1.2, effect.context.canvas.width*1.2);
 		gapResult = Math.floor(gapResult / effect.prop('count'));
-		effect.setHidden('gap', gapResult);
+		effect.updateHidden('gap', gapResult);
 		
 		_createCircles(effect.context);
 		

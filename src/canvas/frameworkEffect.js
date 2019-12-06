@@ -11,7 +11,7 @@ const Effect = function EffectConstructor() {
 	let effectContext;
 	
 	// maps to track effect properties.
-	let ParameterValueMap = new Map();
+	let parameterValueMap = new Map();
 	
 	// reserved for values that are calculated and not set by configuration.
 	let hiddenValueMap = new Map(); 	// holds value of the hidden Parameter
@@ -71,17 +71,43 @@ const Effect = function EffectConstructor() {
 	|	Hidden Properties.
 	\-----------------------------------------------*/
 	
-	function setHidden(name, value, func) {
+	function makeHidden(name, value, func) {
 		
-		hiddenValueMap.set(name, value);
+		if(!hiddenValueMap.has(name)) {
+			
+			hiddenValueMap.set(name, value);
+			
+			if(typeof func === 'function') {
+				
+				hiddenUpdateFuncMap.set(name, func);
+				
+				hiddenValueMap.set(name, func());
+				
+			}
+			
+		} else { console.log(name, '!!!  make failed !!!'); }
 		
-		if(typeof func === 'function') {
+		return returnChainObject;
+		
+	}
+	
+	function updateHidden(name, value) {
+		
+		if(hiddenValueMap.has(name)) {
 			
-			hiddenUpdateFuncMap.set(name, func);
+			hiddenValueMap.set(name, value);
 			
-			hiddenValueMap.set(name, func());
+			if(typeof func === 'function') {
+				
+				hiddenUpdateFuncMap.set(name, func);
+				
+				hiddenValueMap.set(name, func());
+				
+			}
 			
-		}
+		} else { console.log(name, '!!! update failed !!!'); }
+		
+		return returnChainObject;
 		
 	}
 	
@@ -101,6 +127,8 @@ const Effect = function EffectConstructor() {
 			
 		}
 		
+		return returnChainObject;
+		
 	}
 	
 	function getHiddenCallback(hiddenName) {
@@ -117,6 +145,9 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
+	
+	// link a public parameter to a hidden one. 
+	// updates the hidden parameter when parameter is changed.
 	function bindParameter(ParameterName, hiddenName) {
 		
 		hiddenUpdateMap.set(ParameterName, hiddenName);
@@ -127,12 +158,12 @@ const Effect = function EffectConstructor() {
 	|	Effect Parameter Mangagement.
 	\-----------------------------------------------*/
 	
-	// create a parameter
+	// create a public parameter to be changed as needed.
 	function makeParameter(name, value) {
 		
-		if(!ParameterValueMap.has(name)) {
+		if(!parameterValueMap.has(name)) {
 			
-			ParameterValueMap.set(name, value);
+			parameterValueMap.set(name, value);
 			
 			_checkChangeMap(name);
 			
@@ -142,12 +173,12 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	// update parameter
+	// update a public parameter. 
 	function updateParameter(name, value) {
 		
-		if(ParameterValueMap.has(name)) {
+		if(parameterValueMap.has(name)) {
 			
-			ParameterValueMap.set(name, value);
+			parameterValueMap.set(name, value);
 			
 			_checkChangeMap(name);
 			
@@ -160,7 +191,7 @@ const Effect = function EffectConstructor() {
 	// get a public parameter. 
 	function getParameter(name) {
 		
-		return ParameterValueMap.get(name);
+		return parameterValueMap.get(name);
 		
 	}
 	
@@ -192,6 +223,8 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
+	
+	// picks the next color in order set when the effect color palette is created.
 	let _colorNextIndex = 0;
 	function nextColor() {
 		
@@ -211,7 +244,7 @@ const Effect = function EffectConstructor() {
 		
 	}
 	
-	
+	// picks a random color from  the color palette set to the effect.
 	function selectColor() {
 		
 		let colors = frameworkValueMap.get('colors');
@@ -219,8 +252,6 @@ const Effect = function EffectConstructor() {
 		let selection = _getRandomIntInclusive(0, colors.length-1);
 		
 		let result  = colors[selection];
-		
-		// console.log(result);
 		
 		return result;
 		
@@ -277,7 +308,8 @@ const Effect = function EffectConstructor() {
 		setCalc: setCalc,
 		setDraw: setDraw,
 		setCreate: setCreate,
-		setHidden: setHidden,
+		makeHidden: makeHidden,
+		updateHidden: updateHidden,
 		getHidden: getHidden,
 		hidden: getHidden,
 		setHiddenCallback: setHiddenCallback,
@@ -292,7 +324,7 @@ const Effect = function EffectConstructor() {
 		nextColor: nextColor,
 		selectColor: selectColor,
 		renderAPI: renderAPI,
-		_propValMap: ParameterValueMap
+		_propValMap: parameterValueMap
 	}
 	
 	return returnChainObject;
