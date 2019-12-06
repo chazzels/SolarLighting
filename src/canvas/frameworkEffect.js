@@ -318,7 +318,7 @@ const Effect = function EffectConstructor() {
 		makeParameter: makeParameter,
 		updateParameter: updateParameter,
 		getParameter: getParameter,
-		prop: getParameter,
+		parameter: getParameter,
 		addColor: addColor,
 		resetColors: resetColors,
 		nextColor: nextColor,

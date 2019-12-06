@@ -21,8 +21,8 @@ var Solid = function SolidEffectConstructor(argContext, argColor) {
 	function _effectDraw(ctx) {
 		
 		ctx.beginPath();
-		ctx.fillStyle = effect.prop('color');
-		ctx.fillRect(0, 0, effect.prop('width'), effect.prop('height'));
+		ctx.fillStyle = effect.parameter('color');
+		ctx.fillRect(0, 0, effect.parameter('width'), effect.parameter('height'));
 		ctx.closePath();
 		
 	}

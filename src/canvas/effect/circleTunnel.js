@@ -73,15 +73,15 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 		for(var i = 0; i < circles.length; i++) {
 			
-			circles[i].x += effect.prop('xOffset');
-			circles[i].x += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.prop('maxShift')*Math.random());
+			circles[i].x += effect.parameter('xOffset');
+			circles[i].x += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.parameter('maxShift')*Math.random());
 			// circles[i].x = Math.floor(circles[i].x);
 			
-			circles[i].y += effect.prop('yOffset');
-			circles[i].y += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.prop('maxShift')*Math.random());
+			circles[i].y += effect.parameter('yOffset');
+			circles[i].y += ((Math.random() >= 0.99)*-1)+((Math.random() >= 0.99)*1)*(effect.parameter('maxShift')*Math.random());
 			// circles[i].y = Math.floor(circles[i].y);
 			
-			circles[i].size += effect.prop('rate');
+			circles[i].size += effect.parameter('rate');
 			
 			if(circles[i].size > Math.max(cw, ch)) {
 				
@@ -133,13 +133,13 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 	
 	function _createCircles(ctx) {
 		
-		effect.updateHidden('circles', new Array(effect.prop('count')));
+		effect.updateHidden('circles', new Array(effect.parameter('count')));
 		
 		let circles = effect.hidden('circles');
 		
 		let sizeOffset = 0;
 		
-		for(var index = 0; index < effect.prop('count'); index++) {
+		for(var index = 0; index < effect.parameter('count'); index++) {
 			
 			sizeOffset += effect.hidden('gap');
 			
@@ -165,7 +165,7 @@ var CircleTunnel = function CircleTunnelEffectConstructor(argContext) {
 		
 		// calculate the gap. 
 		let gapResult = Math.max(effect.context.canvas.height*1.2, effect.context.canvas.width*1.2);
-		gapResult = Math.floor(gapResult / effect.prop('count'));
+		gapResult = Math.floor(gapResult / effect.parameter('count'));
 		effect.updateHidden('gap', gapResult);
 		
 		_createCircles(effect.context);

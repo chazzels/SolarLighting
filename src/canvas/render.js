@@ -13,6 +13,8 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	let layerId = 1000;
 	let RENDER_RUNNING = false;
 	
+	engine.ctx = argCanvasContext;
+	
 	/*-----------------------------------------------\
 	|	Public Object Methods
 	\-----------------------------------------------*/
@@ -21,8 +23,6 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	engine.startRender = function startRenderFunc() {
 		
 		if(!RENDER_RUNNING) {
-			
-			engine.ctx = argCanvasContext;
 			
 			// this will need handling for server side execution.
 			_normalizeRequestFrame();

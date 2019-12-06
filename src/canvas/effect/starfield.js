@@ -31,7 +31,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	
 	effect.bindParameter('rotation', 'slope');
 	effect.setHiddenCallback('slope', function() {
-		let result = Math.floor(_getTanFromDegrees(effect.prop('rotation'))*100);
+		let result = Math.floor(_getTanFromDegrees(effect.parameter('rotation'))*100);
 		effect.updateHidden('slope', result);
 		return result;
 	});
@@ -39,7 +39,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	effect.bindParameter('density', 'count');
 	effect.setHiddenCallback('count', function() {
 		let result = argContext.canvas.width*argContext.canvas.height / 10000;
-		result = Math.floor(result) * effect.prop('density');
+		result = Math.floor(result) * effect.parameter('density');
 		result = Math.floor(result);
 		return result;
 	});
@@ -88,7 +88,7 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			chm = Math.floor(ch/2);	//center of the shrink effect height
 		
 		// set widest dimension.
-		effect.updateHidden('radius', Math.max(chm, cwm)+effect.prop('radiusPad'));
+		effect.updateHidden('radius', Math.max(chm, cwm)+effect.parameter('radiusPad'));
 		
 		let stars = effect.hidden('stars');
 		
@@ -98,24 +98,24 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			// advance size change counter.
 			// controls 
 			star.count++;
-			if(star.count > effect.prop('sizeChangeThreshold')) {
+			if(star.count > effect.parameter('sizeChangeThreshold')) {
 				star.count = 0;
 			}
 			
 			// check position range and adjust if necassary.
 			// more logic needed for direction control.
-			star.x += effect.prop('rate');
-			star.y += effect.prop('rate') * (effect.hidden('slope') * 0.01);
+			star.x += effect.parameter('rate');
+			star.y += effect.parameter('rate') * (effect.hidden('slope') * 0.01);
 			
 			// range check on x axis / width.
 			if(star.x > canvas.width || star.x < 0) { 
 				
-				if(star.x > canvas.width + effect.prop('sizeMax')) {
-					star.x = 0-effect.prop('sizeMax');
+				if(star.x > canvas.width + effect.parameter('sizeMax')) {
+					star.x = 0-effect.parameter('sizeMax');
 				}
 				
-				if(star.x < 0 - effect.prop('sizeMax')) {
-					star.x = canvas.width + effect.prop('sizeMax');
+				if(star.x < 0 - effect.parameter('sizeMax')) {
+					star.x = canvas.width + effect.parameter('sizeMax');
 				}
 				
 			}
@@ -123,12 +123,12 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			// range check on y axis / height;
 			if(star.y > canvas.height || star.y < 0) {
 				
-				if(star.y > canvas.height + effect.prop('sizeMax')) {
-					star.y = 0 - effect.prop('sizeMax');
+				if(star.y > canvas.height + effect.parameter('sizeMax')) {
+					star.y = 0 - effect.parameter('sizeMax');
 				}
 				
-				if(star.y < 0 - effect.prop('sizeMax')) {
-					star.y = canvas.height + effect.prop('sizeMax')
+				if(star.y < 0 - effect.parameter('sizeMax')) {
+					star.y = canvas.height + effect.parameter('sizeMax')
 				}
 				
 			}
@@ -137,13 +137,13 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			if(star.count === 0 || effect.hidden('firstRun')) {
 				// slower radius based sizing
 				let delta = Math.sqrt(Math.pow(star.x-cwm, 2) + Math.pow(star.y-chm,2));
-				star.size = Math.floor((delta/effect.hidden('radius'))*effect.prop('sizeMax'));
+				star.size = Math.floor((delta/effect.hidden('radius'))*effect.parameter('sizeMax'));
 			}
 			
 			// range check the size of the stars.
 			// then store the size to the star object.
-			if(star.size < effect.prop('sizeMin')) { star.size = effect.prop('sizeMin'); }
-			if(star.size > effect.prop('sizeMax')) { star.size = effect.prop('sizeMax'); }
+			if(star.size < effect.parameter('sizeMin')) { star.size = effect.parameter('sizeMin'); }
+			if(star.size > effect.parameter('sizeMax')) { star.size = effect.parameter('sizeMax'); }
 			
 			star.x = Math.floor(star.x);
 			star.y = Math.floor(star.y);
@@ -199,13 +199,13 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 			
 			stars[index] = {
 				x: _getRandomIntInclusive(
-					0-effect.prop('sizeMax'),
-					argContext.canvas.width+effect.prop('sizeMax')),
+					0-effect.parameter('sizeMax'),
+					argContext.canvas.width+effect.parameter('sizeMax')),
 				y: _getRandomIntInclusive(
-					0-effect.prop('sizeMax'), 
-					argContext.canvas.height+effect.prop('sizeMax')),
-				size: effect.prop('sizeMin'),
-				count: _getRandomIntInclusive(0, effect.prop('sizeChangeThreshold')),
+					0-effect.parameter('sizeMax'), 
+					argContext.canvas.height+effect.parameter('sizeMax')),
+				size: effect.parameter('sizeMin'),
+				count: _getRandomIntInclusive(0, effect.parameter('sizeChangeThreshold')),
 				color: effect.selectColor()
 			}
 			
@@ -220,8 +220,8 @@ const StarField = function StarFieldEffectConstructor(argContext) {
 	\-----------------------------------------------*/
 	
 	// effect unique memebers
-	effect.stars = new Array(effect.prop('count'));
-	effect.updateHidden('stars', new Array(effect.prop('count')));
+	effect.stars = new Array(effect.parameter('count'));
+	effect.updateHidden('stars', new Array(effect.parameter('count')));
 	
 	// binding functions to rendering system stages.
 	effect.setDraw(_effectDraw);

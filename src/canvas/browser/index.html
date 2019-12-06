@@ -53,6 +53,7 @@
 		<script src="/_static/SolarLighting/src/canvas/effect/solid.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/starfield.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/circleTunnel.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/grid.js"></script>
 		
 		<script id="rendered-js">
 			var blah;
@@ -64,6 +65,7 @@
 				
 			}
 			
+			//testing sampling code.
 			$(document).ready(function sampleReady() {
 				
 				let canvas = jQuery('#canvas2');
@@ -76,6 +78,7 @@
 				let engine = new CanvasEngine(ctx);
 				
 				let solid = new Solid(ctx, "#000");
+				let grid = new Grid(ctx);
 				
 				engine.startRender(ctx);
 				engine.addLayer(solid.renderAPI());
