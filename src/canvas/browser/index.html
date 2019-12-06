@@ -80,8 +80,21 @@
 				let solid = new Solid(ctx, "#000");
 				let grid = new Grid(ctx);
 				
+				
+				setTimeout(function () {
+					let contxt = jQuery('#canvas')[0].getContext('2d');
+					let profile = grid.profile(contxt, 10, 10, 5, 5);
+					console.log(profile);
+				setInterval(function () {
+					
+					grid.sample(contxt, profile);
+					
+				}, 16);
+				}, 1000);
+				
 				engine.startRender(ctx);
 				engine.addLayer(solid.renderAPI());
+				engine.addLayer(grid.renderAPI());
 				
 			});
 			
@@ -114,24 +127,24 @@
 					.resetColors(['#78a5a3', '#444c5c', '#fab696'])
 					.updateParameter('rate', 1)
 					.updateParameter('radius', 10)
-					.updateParameter('sizeMin', 3)
-					.updateParameter('sizeMax', 10);
+					.updateParameter('sizeMin', 8)
+					.updateParameter('sizeMax', 12);
 				
 				stars5.updateParameter('rotation', -41)
 					.resetColors(['#fab696', '#fbe3b9', '#2d334a'])
 					.updateParameter('rate', 1.6)
 					.updateParameter('radius', 10)
 					.updateParameter('density', 14)
-					.updateParameter('sizeMin', 4)
-					.updateParameter('sizeMax', 10);
+					.updateParameter('sizeMin', 8)
+					.updateParameter('sizeMax', 12);
 				
 				stars6.updateParameter('rotation', -41)
 					.resetColors(['#2d334a', '#0c9463', '#78a5a3'])
 					.updateParameter('rate', 2)
-					.updateParameter('count', 350)
+					.updateParameter('count', 500)
 					.updateParameter('radius', 10)
 					.updateParameter('sizeMin', 2)
-					.updateParameter('sizeMax', 6);
+					.updateParameter('sizeMax', 12);
 				
 				circle1.updateParameter('count', 10)
 					.updateParameter('count', 14)
@@ -147,14 +160,6 @@
 				engine.addLayer(stars4.renderAPI());
 				// engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
-				
-				
-				blah = engine;
-				
-				setTimeout(function() {
-					console.log(engine._sample(20,20,5,5));
-					console.log(engine.createSampleProfile(5,5,3,3));
-				}, 1000);
 				
 			});
 		</script>
