@@ -19,6 +19,8 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 	
 	effect.makeHidden('xPos', new Int32Array());
 	effect.makeHidden('yPos', new Int32Array());
+	effect.makeHidden('gapWidth', 1);
+	effect.makeHidden('gapHeight', 1);
 	
 	function _effectCalc(canvas) {
 		
@@ -32,7 +34,6 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 		
 		let hexColor = '#fff';
 		let tempColor = new Array(4);
-		
 		
 		for(var i = 0; i < effect.parameter('profile').length; i++) {
 			
@@ -93,11 +94,13 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 	
 	function _createSampleProfile(context, argRows, argColumns, argWidth, argHeight) {
 		
-		let cWidth = context.canvas.width;
-		let cHeight = context.canvas.height;
+		let cWidth = context.canvas.width-argWidth/2;
+		let cHeight = context.canvas.height-argHeight/2;
 		
-		let widthGap = Math.floor(cWidth/argColumns) - argWidth;
-		let heightGap = Math.floor(cHeight/argRows) - argHeight;
+		effect.updateHidden('gapWidth', Math.floor( ((cWidth-argWidth)/(argColumns-1))) );
+		effect.updateHidden('gapHeight', Math.floor( ((cHeight-argHeight)/(argRows-1))) );
+		
+		let firstLineGap = Math.floor(1);
 		
 		let xPos = new Int32Array(argRows * argColumns);
 		let yPos = new Int32Array(argRows * argColumns);
@@ -108,9 +111,9 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 				
 				index++;
 				
-				xPos[index] = Math.ceil(r*widthGap);
+				xPos[index] = Math.floor(r*effect.hidden('gapWidth'));
 				
-				yPos[index] = Math.ceil(c*heightGap);
+				yPos[index] = Math.floor(c*effect.hidden('gapHeight'));
 				
 			}
 		}
