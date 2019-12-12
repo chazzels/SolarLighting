@@ -3,7 +3,7 @@
 |	Probes html canvas for image data.
 \-----------------------------------------------*/
 
-var CanvasSampler = function CanvasSamplerConstructor(argContext, argColor) {
+var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	
 	let effect = new Effect();
 	
@@ -24,6 +24,12 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext, argColor) {
 		
 	}
 	
+	function getResults() {
+		
+		return effect.parameter('lastSample');
+		
+	}
+	
 	// draw debugging sqaures on the canvas to see sampling areas.
 	function showSampleAreas(argColor) {
 		
@@ -36,6 +42,44 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext, argColor) {
 		
 		// push a sample point to the profile.
 		// update lengths and other parameters.
+		
+	}
+	
+	// create a grid profile with equally spaced sample points in a gird layout. 
+	// overwrites the existing profile. 
+	function createSampleGrid(context, argRows, argColumns) {
+		
+		let cWidth = context.canvas.width;
+		let cHeight = context.canvas.height;
+		let gapWidth = Math.floor(((cWidth)/(argColumns)));
+		let gapHeight = Math.floor(((cHeight)/(argRows)));
+		let xPos = new Int32Array(argRows * argColumns);
+		let yPos = new Int32Array(argRows * argColumns);
+		
+		let index = 0
+		for(var c = 0; c < argColumns; c++) {
+			for(var r = 0; r < argRows; r++) {
+				
+				index++;
+				
+				xPos[index] = Math.floor(r*gapWidth);
+				
+				yPos[index] = Math.floor(c*gapHeight);
+				
+			}
+		}
+		
+		var profileData = {
+			columns: argColumns,
+			rows: argRows,
+			length: xPos.length,
+			xPos: xPos,
+			yPos: yPos
+		}
+		
+		effect.updateParameter('profile', profileData);
+		
+		return profileData;
 		
 	}
 	
@@ -132,45 +176,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext, argColor) {
 	|	Migrated Code 
 	\-----------------------------------------------*/
 	
-	// create a grid profile with equally spaced sample points in a gird layout. 
-	// overwrites the existing profile. 
-	function _createGridProfile(context, argRows, argColumns, argWidth, argHeight) {
-		
-		let cWidth = context.canvas.width-argWidth/2;
-		let cHeight = context.canvas.height-argHeight/2;
-		
-		let gapWidth = Math.floor( ((cWidth-argWidth)/(argColumns-1)));
-		let gapHeight = Math.floor( ((cHeight-argHeight)/(argRows-1)));
-		
-		let xPos = new Int32Array(argRows * argColumns);
-		let yPos = new Int32Array(argRows * argColumns);
-		
-		let index = 0
-		for(var c = 0; c < argColumns; c++) {
-			for(var r = 0; r < argRows; r++) {
-				
-				index++;
-				
-				xPos[index] = Math.floor(r*gapWidth);
-				
-				yPos[index] = Math.floor(c*gapHeight);
-				
-			}
-		}
-		
-		var profileData = {
-			width: argWidth,
-			height: argHeight,
-			length: xPos.length,
-			xPos: xPos,
-			yPos: yPos
-		}
-		
-		effect.updateParameter('profile', profileData);
-		
-		return profileData;
-		
-	}
+	
 	
 	/*-----------------------------------------------\
 	|	Return Object
@@ -180,6 +186,8 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext, argColor) {
 	// might not be needed for this module.
 	var returnChainObject = {
 		sample: sample,
+		getResults: getResults,
+		createSampleGrid: createSampleGrid,
 		addSamplePoint: {}
 	}
 	

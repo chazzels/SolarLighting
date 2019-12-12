@@ -22,6 +22,9 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 	effect.makeHidden('gapWidth', 1);
 	effect.makeHidden('gapHeight', 1);
 	
+	effect.makeParameter('drawWidth', 5);
+	effect.makeParameter('drawHeight', 5);
+	
 	function _effectCalc(canvas) {
 		
 		effect.updateParameter('width', canvas.width);
@@ -104,6 +107,7 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 		
 		let xPos = new Int32Array(argRows * argColumns);
 		let yPos = new Int32Array(argRows * argColumns);
+		let colors = new Array(argRows * argColumns);
 		
 		let index = 0
 		for(var c = 0; c < argColumns; c++) {
@@ -115,8 +119,12 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 				
 				yPos[index] = Math.floor(c*effect.hidden('gapHeight'));
 				
+				colors[index] = '#fff';
+				
 			}
 		}
+		
+		effect.updateParameter('colors', colors);
 		
 		var profileData = {
 			width: argWidth,
@@ -143,8 +151,8 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 				context,
 				profile.xPos[i],
 				profile.yPos[i],
-				profile.width,
-				profile.height);
+				5,
+				5);
 			
 			colorSamples[i] = sample;
 			
@@ -183,7 +191,6 @@ var Grid = function GridEffectConstructor(argContext, argColor) {
 				maxColor[3] = idata.data[p*4+3];
 				
 			}
-			
 			
 		}
 		

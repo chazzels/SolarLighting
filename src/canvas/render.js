@@ -9,11 +9,11 @@
 const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	
 	let engine = this;
-	let layers = new Array();
-	let layerId = 1000;
-	let RENDER_RUNNING = false;
-	
 	engine.ctx = argCanvasContext;
+	
+	let sampler = new CanvasSampler(engine.ctx);
+	let layers = new Array();
+	let RENDER_RUNNING = false;
 	
 	/*-----------------------------------------------\
 	|	Public Object Methods
@@ -24,7 +24,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 		
 		if(!RENDER_RUNNING) {
 			
-			// this will need handling for server side execution.
+			// TODO: this will need handling for server side execution.
 			_normalizeRequestFrame();
 			
 			// IIFE to start
@@ -32,24 +32,23 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 				
 				window.requestAnimationFrame(frame);
 				
-				RENDER_RUNNING = false;
-				
 				// advance frame of the layers.
 				layers.forEach(function(layer) {
+					
 					layer.calc(engine.ctx.canvas);
+					
 				});
 				
 				// render the layers.
 				layers.forEach(function(layer) {
+					
 					layer.draw(engine.ctx);
+					
+					_clearCanvasStyles(engine.ctx);
+					
 				});
 				
-				// clear out all styles.
-				engine.ctx.lineWidth = undefined;
-				engine.ctx.strokeStyle = undefined;
-				engine.ctx.fillStyle = undefined;
-				engine.ctx.shadowColor= undefined;
-				engine.ctx.shadowBlur = undefined; 
+				sampler.sample();
 				
 				RENDER_RUNNING = true;
 				
@@ -87,7 +86,6 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	let Layer = function LayerConstructor(argFx) {
 		
 		this.fx = argFx;
-		this.id = layerId++;
 		
 		this.draw = function _layerDraw(ctx) {
 			this.fx.draw(ctx);
@@ -105,6 +103,17 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	/*-----------------------------------------------\
 	|	Utility Functions
 	\-----------------------------------------------*/
+	
+	function _clearCanvasStyles(context) {
+		
+		// clear out all styles.
+		context.lineWidth = undefined;
+		context.strokeStyle = undefined;
+		context.fillStyle = undefined;
+		context.shadowColor= undefined;
+		context.shadowBlur = undefined; 
+		
+	}
 	
 	// normalize the animation frame interface.
 	function _normalizeRequestFrame() {

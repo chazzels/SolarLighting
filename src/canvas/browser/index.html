@@ -49,6 +49,8 @@
 		
 		<!-- IMPORT THE RENDER AND EFFECTS. -->
 		<script src="/_static/SolarLighting/src/canvas/render.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/sampler.js"></script>
+		
 		<script src="/_static/SolarLighting/src/canvas/frameworkEffect.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/solid.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/effect/starfield.js"></script>
@@ -56,14 +58,6 @@
 		<script src="/_static/SolarLighting/src/canvas/effect/grid.js"></script>
 		
 		<script id="rendered-js">
-			var blah;
-			function setBKG() {
-				
-				let d = blah._sample(20,20,5,5);
-				
-				jQuery(document.body).css('background-color', 'rgba('+d[0]+','+d[1]+','+d[2]+','+d[3]+')');
-				
-			}
 			
 			//testing sampling code.
 			$(document).ready(function sampleReady() {
@@ -80,18 +74,16 @@
 				let solid = new Solid(ctx, "#000");
 				let grid = new Grid(ctx);
 				
+				// setting up a system to developed sample.
 				let contxt = jQuery('#canvas')[0].getContext('2d');
-				let profile = grid.profile(contxt, 8, 8, 10, 10);
-				console.log(profile);
+				let profile = grid.profile(contxt, 10, 10);
 				setInterval(function () {
-					
 					grid.sample(contxt, profile);
-					
-				}, 16);
+				}, 40);
 				
-				engine.startRender(ctx);
 				engine.addLayer(solid.renderAPI());
 				engine.addLayer(grid.renderAPI());
+				engine.startRender(ctx);
 				
 			});
 			
@@ -117,8 +109,6 @@
 				let stars5 = new StarField(ctx);
 				let stars6 = new StarField(ctx);
 				let circle1 = new CircleTunnel(ctx);
-				
-				engine.startRender(ctx);
 				
 				stars4.updateParameter('rotation', -20)
 					.resetColors(['#78a5a3', '#444c5c', '#fab696'])
@@ -157,6 +147,8 @@
 				engine.addLayer(stars4.renderAPI());
 				engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
+				
+				engine.startRender(ctx);
 				
 			});
 		</script>
