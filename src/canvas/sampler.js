@@ -7,11 +7,11 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	
 	let effect = new Effect();
 	
-	effect.makeParameter('profile', null);
-	effect.makeParameter('sampleWidth', 5);
-	effect.makeParameter('sampleHeight', 5);
-	effect.makeParameter('lastSample', null);
-	effect.makeParameter('sampleAreaBorder', 'red');
+	effect.makeParameter('profile', null)
+		.makeParameter('sampleWidth', 5)
+		.makeParameter('sampleHeight', 5)
+		.makeParameter('lastSample', null)
+		.makeParameter('sampleAreaBorder', 'red');
 	
 	/*-----------------------------------------------\
 	|	Public Functions
@@ -24,6 +24,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 	}
 	
+	// get the latest sampling resutls.
 	function getResults() {
 		
 		return effect.parameter('lastSample');
@@ -42,6 +43,16 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 		// push a sample point to the profile.
 		// update lengths and other parameters.
+		let profile = effect.parameter('profile');
+		
+		if(profile === null) {
+			
+			console.log('profile is not set. exitting.');
+			return false;
+			
+		}
+		
+		// code to modify array.
 		
 	}
 	
@@ -113,7 +124,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 		for(var i = 0; i < profile.length; i++) {
 			
-			let sample = _getCanvasData(
+			colorSamples[i] = _getCanvasData(
 				context,
 				profile.xPos[i],
 				profile.yPos[i],
@@ -121,24 +132,21 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 				profile.height
 			);
 			
-			colorSamples[i] = sample;
-			
 		}
 		
 		return colorSamples;
 		
 	}
 	
-	// sample a position on the canvas.
+	// sample an area on the canvas.
 	function _getCanvasData(context, sx, sy, sw, sh) {
 		
 		let idata = context.getImageData(sx, sy, sw, sh);
 		
 		let maxColor = new Uint8ClampedArray(4);
 		
-		let curMax = 0;
-		
-		let tempMax = 0;
+		let curMax = 0,
+			tempMax = 0;
 		
 		for(var p = 0; p < Math.floor(idata.data.length/4); p++) {
 			
@@ -158,17 +166,11 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 				
 			}
 			
-			
 		}
 		
 		return maxColor;
 		
 	}
-	
-	
-	
-	
-	
 	
 	
 	
@@ -188,7 +190,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		sample: sample,
 		getResults: getResults,
 		createSampleGrid: createSampleGrid,
-		addSamplePoint: {}
+		addSamplePoint: {},
 	}
 	
 	return returnChainObject;

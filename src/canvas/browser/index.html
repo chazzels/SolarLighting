@@ -72,17 +72,8 @@
 				let engine = new CanvasEngine(ctx);
 				
 				let solid = new Solid(ctx, "#000");
-				let grid = new Grid(ctx);
-				
-				// setting up a system to developed sample.
-				let contxt = jQuery('#canvas')[0].getContext('2d');
-				let profile = grid.profile(contxt, 10, 10);
-				setInterval(function () {
-					grid.sample(contxt, profile);
-				}, 40);
 				
 				engine.addLayer(solid.renderAPI());
-				engine.addLayer(grid.renderAPI());
 				engine.startRender(ctx);
 				
 			});
@@ -99,7 +90,6 @@
 				canvas.attr('height', 250);
 				
 				let ctx = canvas[0].getContext('2d');
-				
 				let engine = new CanvasEngine(ctx);
 				
 				// create the effects. 

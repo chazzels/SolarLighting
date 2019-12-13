@@ -20,7 +20,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	\-----------------------------------------------*/
 	
 	// start the rendering on the canvas.
-	engine.startRender = function startRenderFunc() {
+	function startRender() {
 		
 		if(!RENDER_RUNNING) {
 			
@@ -63,7 +63,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 	}
 	
 	// add a new layer to the top. 
-	engine.addLayer = function addLayerFunc(argEffect) {
+	function addLayer(argEffect) {
 		
 		new Layer(argEffect);
 		
@@ -131,6 +131,17 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 		
 	}
 	
+	/*-----------------------------------------------\
+	|	Return Object
+	\-----------------------------------------------*/
+	
+	var returnObject =  {
+		startRender: startRender,
+		start: startRender,
+		addLayer: addLayer,
+		sampler: sampler
+	}
+	
+	return returnObject;
+	
 }
-
-//module.exports = CanvasEngine;
