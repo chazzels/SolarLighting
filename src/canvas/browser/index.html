@@ -48,7 +48,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		
 		<!-- IMPORT THE RENDER AND EFFECTS. -->
-		<script src="/_static/SolarLighting/src/canvas/render.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/core.js"></script>
 		<script src="/_static/SolarLighting/src/canvas/sampler.js"></script>
 		
 		<script src="/_static/SolarLighting/src/canvas/frameworkEffect.js"></script>
@@ -69,7 +69,7 @@
 				canvas.attr('height', 250);
 				
 				let ctx = canvas[0].getContext('2d');
-				let engine = new CanvasEngine(ctx);
+				let engine = new CanvasCore(ctx);
 				
 				let solid = new Solid(ctx, "#000");
 				
@@ -90,7 +90,7 @@
 				canvas.attr('height', 250);
 				
 				let ctx = canvas[0].getContext('2d');
-				let engine = new CanvasEngine(ctx);
+				let engine = new CanvasCore(ctx);
 				
 				// create the effects. 
 				// let solid = new Solid(ctx, "#090010");
