@@ -8,9 +8,10 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	let effect = new Effect();
 	
 	effect.makeParameter('profile', null)
-		.makeParameter('sampleWidth', 5)
-		.makeParameter('sampleHeight', 5)
-		.makeParameter('lastSample', null)
+		.makeParameter('mode', 'brightest')
+		.makeParameter('width', 5)
+		.makeParameter('height', 5)
+		.makeParameter('sample', null)
 		.makeParameter('sampleAreaBorder', 'red');
 	
 	/*-----------------------------------------------\
@@ -27,14 +28,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	// get the latest sampling resutls.
 	function getResults() {
 		
-		return effect.parameter('lastSample');
-		
-	}
-	
-	// draw debugging sqaures on the canvas to see sampling areas.
-	function showSampleAreas(argColor) {
-		
-		// TODO: add function to draw on the canvas.
+		return effect.parameter('sample');
 		
 	}
 	
@@ -52,8 +46,6 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 			
 		}
 		
-		// code to modify array.
-		
 	}
 	
 	// create a grid profile with equally spaced sample points in a gird layout. 
@@ -66,8 +58,8 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		let gapHeight = Math.floor(((cHeight)/(argRows)));
 		let xPos = new Int32Array(argRows * argColumns);
 		let yPos = new Int32Array(argRows * argColumns);
-		
 		let index = 0
+		
 		for(var c = 0; c < argColumns; c++) {
 			for(var r = 0; r < argRows; r++) {
 				
@@ -80,9 +72,7 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 			}
 		}
 		
-		var profileData = {
-			columns: argColumns,
-			rows: argRows,
+		let profileData = {
 			length: xPos.length,
 			xPos: xPos,
 			yPos: yPos
@@ -90,7 +80,37 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 		effect.updateParameter('profile', profileData);
 		
-		return profileData;
+		return
+		
+	}
+	
+	// draw debugging sqaures on the canvas to see sampling areas.
+	function showSampleAreas(context) {
+		
+		// TODO: add function to draw on the canvas.
+		let sample = effect.parameter('sample'),
+			profile = effect.parameter('profile');
+		
+		for(let i = 0; i < sample.length; i++) {
+			
+			sample[i];
+			
+			context.beginPath();
+			
+			context.lineWidth = 1;
+			context.strokeStyle = effect.parameter('sampleAreaBorder');
+			
+			context.rect(
+				profile.xPos[i],
+				profile.yPos[i], 
+				effect.parameter('height'), 
+				effect.parameter('width'));
+			
+			context.stroke();
+			
+			context.closePath();
+			
+		}
 		
 	}
 	
@@ -105,15 +125,11 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 		if(profile !== null) {
 			
-			let sample = _sampleCanvasWithProfile(context, profile);
-			
-			effect.updateParameter('lastSample', sample);
-			
-			return sample;
+			effect.updateParameter('sample', _sampleCanvasWithProfile(context, profile));
 			
 		}
 		
-		return false;
+		return
 		
 	}
 	
@@ -124,12 +140,12 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 		for(var i = 0; i < profile.length; i++) {
 			
-			colorSamples[i] = _getCanvasData(
+			colorSamples[i] = _getCanvasImageData(
 				context,
 				profile.xPos[i],
 				profile.yPos[i],
-				profile.width,
-				profile.height
+				effect.parameter('width'),
+				effect.parameter('height')
 			);
 			
 		}
@@ -139,31 +155,42 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	}
 	
 	// sample an area on the canvas.
-	function _getCanvasData(context, sx, sy, sw, sh) {
+	function _getCanvasImageData(context, sx, sy, sw, sh) {
 		
-		let idata = context.getImageData(sx, sy, sw, sh);
+		let imageData = context.getImageData(sx, sy, sw, sh);
 		
-		let maxColor = new Uint8ClampedArray(4);
+		if(effect.parameter('mode') === 'brightest') {
+			return _pixelBrightest(imageData);
+		}
 		
-		let curMax = 0,
+		if(effect.parameter('mode') === 'major') {
+			return _pixelMajor(imageData);
+		}
+		
+		return false;
+		
+	}
+	
+	// returns the brightest combined value from canvas image data.
+	function _pixelBrightest(imageData) {
+		
+		let maxColor = new Uint8ClampedArray(4),
+			curMax = 0,
 			tempMax = 0;
 		
-		for(var p = 0; p < Math.floor(idata.data.length/4); p++) {
+		for(var p = 0; p < Math.floor(imageData.data.length/4); p++) {
 			
-			tempMax = idata.data[p*4]
-				+ idata.data[p*4+1]
-				+ idata.data[p*4+2]
-				+ idata.data[p*4+3];
+			tempMax = imageData.data[p*4]
+				+ imageData.data[p*4+1]
+				+ imageData.data[p*4+2]
+				+ imageData.data[p*4+3];
 			
 			if(tempMax > curMax) {
-				
 				curMax = tempMax;
-				
-				maxColor[0] = idata.data[p*4];
-				maxColor[1] = idata.data[p*4+1];
-				maxColor[2] = idata.data[p*4+2];
-				maxColor[3] = idata.data[p*4+3];
-				
+				maxColor[0] = imageData.data[p*4];
+				maxColor[1] = imageData.data[p*4+1];
+				maxColor[2] = imageData.data[p*4+2];
+				maxColor[3] = imageData.data[p*4+3];
 			}
 			
 		}
@@ -172,7 +199,40 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 		
 	}
 	
-	
+	// returns the value that appears the most.
+	// NOT DONE. IN PRGORESS.
+	function _pixelMajor(imageData) {
+		
+		let topValues = new Array(10),
+			curValue = "",
+			arrayMatch = -1,
+			lowestCount = 0;;
+		
+		
+		for(let p = 0; p < imageData.data.length; p=p+4) {
+			
+			curValue = imageData.data[p].toString().padStart(2, '0')
+				+ imageData.data[p+1].toString().padStart(2, '0')
+				+ imageData.data[p+2].toString().padStart(2, '0')
+				+ imageData.data[p+3].toString().padStart(2, '0');
+			
+			//console.log(curValue);
+			
+			arrayMatch = curValue.indexOf(curValue);
+			
+			if(lowestCount <= 0) {
+				
+			}
+			
+			for(let i = 0; i < topValues.length; i++) {
+				
+				
+				
+			}
+			
+		}
+		
+	}
 	
 	/*-----------------------------------------------\
 	|	Migrated Code 
@@ -187,10 +247,12 @@ var CanvasSampler = function CanvasSamplerConstructor(argContext) {
 	// return object to chain commands.
 	// might not be needed for this module.
 	var returnChainObject = {
+		effect: effect,
 		sample: sample,
 		getResults: getResults,
 		createSampleGrid: createSampleGrid,
 		addSamplePoint: {},
+		showSampleAreas: showSampleAreas
 	}
 	
 	return returnChainObject;

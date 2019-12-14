@@ -58,6 +58,7 @@
 		<script src="/_static/SolarLighting/src/canvas/effect/grid.js"></script>
 		
 		<script id="rendered-js">
+			var samplingCtx, drawCtx;
 			
 			//testing sampling code.
 			$(document).ready(function sampleReady() {
@@ -71,9 +72,12 @@
 				let ctx = canvas[0].getContext('2d');
 				let engine = new CanvasCore(ctx);
 				
+				samplingCtx = ctx;
+				
 				let solid = new Solid(ctx, "#000");
 				
 				engine.addLayer(solid.renderAPI());
+				
 				engine.startRender(ctx);
 				
 			});
@@ -137,6 +141,8 @@
 				engine.addLayer(stars4.renderAPI());
 				engine.addLayer(stars5.renderAPI());
 				engine.addLayer(stars6.renderAPI());
+				
+				engine.sampler.createSampleGrid(ctx, 10, 10);
 				
 				engine.startRender(ctx);
 				

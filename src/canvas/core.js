@@ -6,7 +6,7 @@
 // TODO: develop functionality to adjust order of layers. 
 // TODO: develop color pallette support.
 
-const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
+const CanvasCore = function CanvasEngineConstructor(argCanvasContext) {
 	
 	let engine = this;
 	engine.ctx = argCanvasContext;
@@ -48,7 +48,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 					
 				});
 				
-				sampler.sample();
+				sampler.sample(engine.ctx);
 				
 				RENDER_RUNNING = true;
 				
@@ -56,7 +56,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 			
 		} else {
 			
-			console.log("CanvasRender already running!!!");
+			console.log("CanvasCore already running!!!");
 			
 		}
 		
@@ -124,9 +124,7 @@ const CanvasEngine = function CanvasEngineConstructor(argCanvasContext) {
 				window.mozRequestAnimationFrame ||
 				window.msRequestAnimationFrame ||
 				window.oRequestAnimationFrame ||
-				function(f) {
-					window.setTimeout(f, 1e3 / 60);
-				}
+				function(f) { window.setTimeout(f, 1e3 / 60); }
 		}();
 		
 	}
