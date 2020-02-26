@@ -14,9 +14,13 @@ import { AssetStore } from "./ext/assetStore";
 import { AssetPlayhead } from "./ext/assetPlayhead";
 import { AssetRank } from "./ext/assetRank";
 
+import { Logger } from "../../shared/logger";
+
 import * as Crypto from "crypto";
 
 class AssetManager {
+	
+	static log:any;
 	
 	activeManifest: any = [];
 	
@@ -30,8 +34,8 @@ class AssetManager {
 	
 	constructor(options: any, perf: any) {
 		
-		console.log('MANAGER::STARTING');
-		console.group();
+		AssetManager.log = new Logger("ASSET_MGMT");
+		AssetManager.log.c("STARTING");
 		
 		this._store = new AssetStore(options.store, perf);
 		
@@ -39,7 +43,6 @@ class AssetManager {
 		
 		this._rank = new AssetRank(options.rank, perf);
 		
-		console.groupEnd();
 	}
 	
 	/*----------------------------------------------\
@@ -250,8 +253,6 @@ class AssetManager {
 		
 		let shaSum = Crypto.createHash('sha1');
 		
-		let shaReturn = '0';
-		
 		let shaIn = assetData.assetName.toString() 
 			+ '==' + assetData.cueTimeline.length.toString()
 			+ 'x' + assetData.cueTrack.length.toString()
@@ -262,7 +263,7 @@ class AssetManager {
 		shaSum.update(shaIn);
 		
 		/* save a hex value of the sha1 */
-		shaReturn = shaSum.digest('hex');
+		let shaReturn = shaSum.digest('hex');
 		
 		return {
 			hex: shaReturn,

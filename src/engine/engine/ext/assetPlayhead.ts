@@ -8,10 +8,11 @@ import { playheadObject } from "../interface/playheadObject";
 
 import { PlayheadLogic } from "./playheadLogic";
 
+import { Logger } from "../../../shared/logger";
+
 class AssetPlayhead {
 	
-	/* module flags */
-	private readonly VERBOSE: boolean = false;
+	static log:any;
 	
 	/* module varaibles */
 	private _playheads: any = new Map();
@@ -37,21 +38,19 @@ class AssetPlayhead {
 	
 	constructor(options: any, perf: any) {
 		
+		AssetPlayhead.log = new Logger("ASSET_PLAYHEAD");
+		AssetPlayhead.log.c("STARTING");
+		
 		if(options && options.hasOwnProperty("verbose")) {
 			
-			this.VERBOSE = options.verbose;
+			AssetPlayhead.log.setVerbose();
 			
 		}
-		
-		console.log("PLAYHEAD::STARTING");
-		console.group();
 		
 		this._logic = new PlayheadLogic(options, this._playheads, this._playheadsMeta);
 		
 		this.perf = perf;
 		perf.registerParameter(this.PLAYUPDATE);
-		
-		console.groupEnd();
 		
 	}
 	
@@ -71,8 +70,15 @@ class AssetPlayhead {
 	/* @param {any} assetTimeline - an assets cue timing data. */
 	loadTimeline(shakey: sha1, asset: any) {
 		
-		let nextCueMode = asset.cueTimeline[1].cueMode || "END";
+		// check the next cue mode or default to END if none present.
+		let nextCueMode = asset.cueTimeline[1].cueMode || this.MODE_END;
 		
+		// REQUIRES.
+		// asset.cueTimeline
+		// asset.assetMode
+		
+		// create a playhead.
+		// defaults state to paused.
 		let playhead = {
 			index: 0,
 			indexMax: asset.cueTimeline.length-1,
@@ -84,21 +90,15 @@ class AssetPlayhead {
 			assetMode: asset.assetMode
 		};
 		
-		let meta = asset.cueTimeline;
-		
 		this._playheads.set(shakey, playhead);
 		
-		this._playheadsMeta.set(shakey, meta);
+		this._playheadsMeta.set(shakey, asset.cueTimeline);
 		
 		this._playheadKeys.push(shakey);
 		
 		this._totalAssets++;
 		
-		if(this.VERBOSE) {
-			
-			console.log("PLAYHEAD::LOAD:", shakey.hex);
-			
-		}
+		AssetPlayhead.log.v("LOAD:", shakey.hex);
 		
 	}
 	
@@ -118,9 +118,11 @@ class AssetPlayhead {
 			
 		}
 		
-		if(playheadStatus && metaStatus && this.VERBOSE) {
+		
+		
+		if(playheadStatus && metaStatus) {
 			
-			console.log("PLAYHEAD::DUMP:", shakey.hex);
+			AssetPlayhead.log.v("DUMP:", shakey.hex);
 			
 		}
 		
@@ -180,19 +182,11 @@ class AssetPlayhead {
 			
 			playhead.state = this.STATE_PLAY;
 			
-			if(this.VERBOSE) {
-				
-				console.log("PLAYHEAD::PLAYED:", shakey.hex);
-				
-			}
+			AssetPlayhead.log.v("PLAYED:", shakey.hex);
 			
 		} else {
 			
-			if(this.VERBOSE) {
-				
-				console.log("PLAYHEAD::PLAY_STATE_UNEXPECTED:", playhead.state);
-				
-			}
+			AssetPlayhead.log.v("PLAY_STATE_UNEXPECTED:", playhead.state);
 			
 		}
 		
@@ -210,11 +204,7 @@ class AssetPlayhead {
 			
 		}
 		
-		if(this.VERBOSE) {
-			
-			console.log("PLAYHEAD::PAUSED:", shakey.hex);
-			
-		}
+		AssetPlayhead.log.v("PAUSED:", shakey.hex);
 		
 	}
 	
@@ -293,7 +283,7 @@ class AssetPlayhead {
 		
 		} else {
 			
-			console.log("PLAYHEAD::MODE_UNKNOWN:", playhead.nextCueMode, shakey.hex);
+			AssetPlayhead.log.v("MODE_UNKNOWN:", playhead.nextCueMode, shakey.hex);
 			
 		}
 		

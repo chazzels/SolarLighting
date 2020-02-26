@@ -4,17 +4,19 @@
 *	TODO: add functionality to halt processig and clock for a debug scearios.
 */
 
+
+// importing types.
 import { sha1 } from "./interface/sha1";
 import { map } from "../../shared/interface/map";
 import { assetData } from "./interface/assetData";
 import { fixtureTarget } from "./interface/fixtureTarget";
 import { crystalObject } from "../../shared/interface/crystalObject";
 
+// import engine modules.
 import { AssetManager } from "./assetManager";
 import { StyleRender } from "./styleRender";
 import { StyleCache } from "./styleCache";
 import { StyleCompositor } from "./styleCompositor";
-//import { FixtureMeta } from "./fixtureMeta";
 
 import { SimplePerf } from "../../shared/simplePerf";
 import { MiniKernel } from "../kernel/kernel";
@@ -22,6 +24,8 @@ import { MiniKernel } from "../kernel/kernel";
 import { Logger } from "../../shared/logger";
 
 class EngineCore {
+	
+	static log:any;
 	
 	/* imported modules member objects. */
 	static simplePerf: any;
@@ -48,25 +52,24 @@ class EngineCore {
 	
 	constructor(options?: any) {
 		
-		console.log("ENGINE_CORE::STARTING");
-		
-		console.group();
-		
 		if(options === undefined || options === null) {
 			
 			options = {};
 			
 		}
 		
-		// performance module initialization.
-		EngineCore.simplePerf = new SimplePerf(options.perf);
-		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
-		// EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
-		
 		// mini kernel initialization.
 		EngineCore.kernel = new MiniKernel(40);
 		EngineCore.kernel.addRoutine(this.generateStyles);
 		EngineCore.kernel.sort();
+		
+		EngineCore.log = new Logger("ENGINE_CORE");
+		EngineCore.log.c("STARTING");
+		
+		// performance module initialization.
+		EngineCore.simplePerf = new SimplePerf(options.perf);
+		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
+		// EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
 		
 		// internal modules.
@@ -78,10 +81,6 @@ class EngineCore {
 		
 		EngineCore.styleRender =
 			new StyleRender(options, EngineCore.simplePerf);
-		
-		//EngineCore.fixtureMeta = new FixtureMeta(options);
-		
-		console.groupEnd();
 		
 	}
 	
@@ -118,12 +117,6 @@ class EngineCore {
 	read(shakey: sha1) {
 		
 		return EngineCore.styleCache.read(shakey);
-		
-	}
-	
-	registerFixture(key: any, deviceId: any) {
-		
-		EngineCore.fixtureMeta.registerFixture(key, deviceId);
 		
 	}
 	

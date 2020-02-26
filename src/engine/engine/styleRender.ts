@@ -6,7 +6,11 @@
 
 import { sha1 } from "./interface/sha1";
 
+import { Logger } from "../../shared/logger";
+
 class StyleRender {
+	
+	static log:any;
 	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
@@ -25,14 +29,12 @@ class StyleRender {
 	
 	constructor(options: any, perf: any) {
 		
-		console.log("RENDER::STARTING");
-		console.group();
+		StyleRender.log = new Logger("RENDER");
+		StyleRender.log.c("STARTING");
 		
 		/* performance parameters declarations */
 		this.perf = perf;
 		perf.registerParameter(this.ASSETCALC);
-		
-		console.groupEnd();
 		
 	}
 	

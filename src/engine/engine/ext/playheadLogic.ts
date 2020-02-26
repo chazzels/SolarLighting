@@ -17,9 +17,9 @@ class PlayheadLogic {
 	/* module constants */
 	private readonly STATUS_PAUSED: string = "PAUSE";
 	private readonly STATE_PLAY: string = "PLAY";
-	private readonly MODE_HOLD: string = "HOLD";
-	private readonly MODE_FOLLOW: string = "FOLLOW";
-	private readonly MODE_END: string = "END";
+	private readonly CUE_MODE_HOLD: string = "HOLD";
+	private readonly CUE_MODE_FOLLOW: string = "FOLLOW";
+	private readonly CUE_MODE_END: string = "END";
 	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
 	private readonly ASSET_MODE_END: string = "END";
 	
@@ -63,7 +63,7 @@ class PlayheadLogic {
 					
 				} else if(playhead.assetMode === this.ASSET_MODE_END) {
 					
-					playhead.nextCueMode = this.MODE_END;
+					playhead.nextCueMode = this.CUE_MODE_END;
 					
 				} else {
 					
@@ -138,7 +138,7 @@ class PlayheadLogic {
 			
 		} else {
 			
-			playhead.nextCueMode = this.MODE_END;
+			playhead.nextCueMode = this.CUE_MODE_END;
 			
 		}
 		
