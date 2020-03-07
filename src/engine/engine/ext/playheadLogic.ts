@@ -5,10 +5,11 @@
 import { sha1 } from "../interface/sha1";
 import { playheadObject } from "../interface/playheadObject"
 
+import { Logger } from "../../../shared/logger";
+
 class PlayheadLogic {
 	
-	/* module flags */
-	private readonly VERBOSE: boolean = false;
+	static log:any;
 	
 	/* module varaibles */
 	private _playheads: any;
@@ -25,9 +26,14 @@ class PlayheadLogic {
 	
 	constructor(options: any, playheadStore: any, playheadMetaStore: any) {
 		
+		// setup the logging handling. 
+		PlayheadLogic.log = new Logger("PLAYHEAD_LOGIC");
+		PlayheadLogic.log.c("STARTING");
+		
+		// check if debugging option is set. 
 		if(options && options.hasOwnProperty("verbose")) {
 			
-			this.VERBOSE = options.verbose;
+			PlayheadLogic.log.setVerbose();
 			
 		}
 		
@@ -67,17 +73,13 @@ class PlayheadLogic {
 					
 				} else {
 					
-					console.log("PLAYHEAD::ASSET_MODE_UNKNOWN:", playhead.assetMode);
+					PlayheadLogic.log.c("ASSET_MODE_UNKNOWN:", playhead.assetMode);
 					
 				}
 				
 			}
 			
-			if(this.VERBOSE) {
-				
-				console.log("PLAYHEAD::ADVANCING: ", shakey.hex);
-				
-			}
+			PlayheadLogic.log.v("ADVANCING:", shakey.hex);
 			
 		} else if(playhead.index >= playhead.indexMax) {
 			/* determines if the playhead is at the end */
@@ -90,11 +92,7 @@ class PlayheadLogic {
 				
 				playhead.state = this.STATUS_PAUSED;
 				
-				if(this.VERBOSE) {
-					
-					console.log("PLAYHEAD::END_OF_ASSET: ", shakey.hex);
-					
-				}
+				PlayheadLogic.log.v("END_OF_ASSET:", shakey.hex);
 				
 			}
 		
@@ -112,11 +110,7 @@ class PlayheadLogic {
 			
 			playhead.state = this.STATUS_PAUSED;
 			
-			if(this.VERBOSE) {
-				
-				console.log("PLAYHEAD::HELD: ", shakey.hex);
-				
-			}
+			PlayheadLogic.log.v("HELD:", shakey.hex);
 			
 		}
 	
@@ -142,11 +136,7 @@ class PlayheadLogic {
 			
 		}
 		
-		if(this.VERBOSE) {
-			
-			console.log("PLAYHEAD::END:", shakey.hex);
-			
-		}
+		PlayheadLogic.log.v("END:", shakey.hex);
 		
 	}
 
