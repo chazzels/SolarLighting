@@ -12,17 +12,17 @@ class PlayheadLogic {
 	static log:any;
 	
 	/* module varaibles */
-	private _playheads: any;
-	private _playheadsMeta: any;
+	static playheads:any;
+	static meta:any;
 	
 	/* module constants */
-	private readonly STATUS_PAUSED: string = "PAUSE";
-	private readonly STATE_PLAY: string = "PLAY";
-	private readonly CUE_MODE_HOLD: string = "HOLD";
-	private readonly CUE_MODE_FOLLOW: string = "FOLLOW";
-	private readonly CUE_MODE_END: string = "END";
-	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
-	private readonly ASSET_MODE_END: string = "END";
+	static readonly STATUS_PAUSED: string = "PAUSE";
+	static readonly STATE_PLAY: string = "PLAY";
+	static readonly CUE_MODE_HOLD: string = "HOLD";
+	static readonly CUE_MODE_FOLLOW: string = "FOLLOW";
+	static readonly CUE_MODE_END: string = "END";
+	static readonly ASSET_MODE_REPEAT: string = "REPEAT";
+	static readonly ASSET_MODE_END: string = "END";
 	
 	constructor(options: any, playheadStore: any, playheadMetaStore: any) {
 		
@@ -37,9 +37,9 @@ class PlayheadLogic {
 			
 		}
 		
-		this._playheads = playheadStore;
+		PlayheadLogic.playheads = playheadStore;
 		
-		this._playheadsMeta = playheadMetaStore;
+		PlayheadLogic.meta = playheadMetaStore;
 		
 	}
 	
@@ -53,7 +53,7 @@ class PlayheadLogic {
 			
 			playhead.current = 0;
 			
-			let meta = this._playheadsMeta.get(shakey);
+			let meta = PlayheadLogic.meta.get(shakey);
 			
 			if(playhead.index + 1 < meta.length - 1) {
 				
@@ -61,15 +61,15 @@ class PlayheadLogic {
 				
 			} else {
 				
-				if(playhead.assetMode === this.ASSET_MODE_REPEAT) {
+				if(playhead.assetMode === PlayheadLogic.ASSET_MODE_REPEAT) {
 					
 					playhead.index = 0;
 					
 					playhead.nextCueMode = meta[0].cueMode;
 					
-				} else if(playhead.assetMode === this.ASSET_MODE_END) {
+				} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
 					
-					playhead.nextCueMode = this.CUE_MODE_END;
+					playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
 					
 				} else {
 					
@@ -88,9 +88,9 @@ class PlayheadLogic {
 			
 			playhead.current = 0;
 			
-			if(playhead.state === this.STATE_PLAY) {
+			if(playhead.state === PlayheadLogic.STATE_PLAY) {
 				
-				playhead.state = this.STATUS_PAUSED;
+				playhead.state = PlayheadLogic.STATUS_PAUSED;
 				
 				PlayheadLogic.log.v("END_OF_ASSET:", shakey.hex);
 				
@@ -106,9 +106,9 @@ class PlayheadLogic {
 		
 		playhead.current = 0;
 		
-		if(playhead.state === this.STATE_PLAY) {
+		if(playhead.state === PlayheadLogic.STATE_PLAY) {
 			
-			playhead.state = this.STATUS_PAUSED;
+			playhead.state = PlayheadLogic.STATUS_PAUSED;
 			
 			PlayheadLogic.log.v("HELD:", shakey.hex);
 			
@@ -122,9 +122,9 @@ class PlayheadLogic {
 		
 		playhead.current = 0;
 		
-		playhead.state = this.STATUS_PAUSED;
+		playhead.state = PlayheadLogic.STATUS_PAUSED;
 		
-		let meta = this._playheadsMeta.get(shakey);
+		let meta = PlayheadLogic.meta.get(shakey);
 		
 		if(meta.length >= 1) {
 			
@@ -132,7 +132,7 @@ class PlayheadLogic {
 			
 		} else {
 			
-			playhead.nextCueMode = this.CUE_MODE_END;
+			playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
 			
 		}
 		
