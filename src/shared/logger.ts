@@ -80,6 +80,14 @@ class Logger {
 		
 	}
 	
+	public t(logMessage:String, logData?:any) {
+		
+		if(typeof logData === "undefined") { logData = ""; }
+		
+		console.trace(this.prefix+"::Trace", logMessage, logData);
+		
+	}
+	
 }
 
 export { Logger };
