@@ -1,7 +1,7 @@
 {	
-	"assetName": "sampleCuelist",
-	"assetMode": "REPEAT",
-	"cueTimeline": [
+	"name": "sampleCuelist",
+	"mode": "REPEAT",
+	"timeline": [
 		{
 			"cueName": "cue01",
 			"cueMode": "FOLLOW",
@@ -15,7 +15,7 @@
 			"timeMultipler": 1
 		}
 	],
-	"cueTrack": [
+	"track": [
 		{
 			"red": 1024,
 			"green": 1024,
@@ -27,7 +27,7 @@
 			"blue": 0
 		}
 	],
-	"cueTrackMeta": {
+	"meta": {
 		"trackName": "master",
 		"trackTarget": ".center.wash"
 	}
