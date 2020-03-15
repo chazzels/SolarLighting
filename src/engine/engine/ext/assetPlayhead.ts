@@ -97,9 +97,9 @@ class AssetPlayhead {
 		
 		AssetPlayhead.playheadKeys.push(shakey);
 		
-		AssetPlayhead.totalAssets++;
+		AssetPlayhead.totalAssets = AssetPlayhead.playheads.size;
 		
-		AssetPlayhead.log.v("LOAD:", shakey.hex);
+		AssetPlayhead.log.v("LOAD", shakey.hex);
 		
 	}
 	
