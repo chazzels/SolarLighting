@@ -1,5 +1,6 @@
 /*
 *	module for all playhead state logic.
+*	Handles all logic of a playhead advancing.
 */
 
 import { sha1 } from "../interface/sha1";

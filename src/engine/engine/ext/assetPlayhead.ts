@@ -7,7 +7,6 @@ import { sha1 } from "../interface/sha1";
 import { playheadObject } from "../interface/playheadObject";
 
 import { PlayheadLogic } from "./playheadLogic";
-
 import { Logger } from "../../../shared/logger";
 
 class AssetPlayhead {
@@ -15,26 +14,26 @@ class AssetPlayhead {
 	static log:any;
 	
 	/* module varaibles */
-	private _playheads: any = new Map();
-	private _playheadsMeta: any = new Map();
-	private _playheadKeys: any = [];
-	private _totalAssets: number = 0;
-	private _playheadIndex: number;
-	private _logic: any;
-	private _activeManifest: any = [];
-	private perf: any;
+	static playheads: any = new Map();
+	static playheadsMeta: any = new Map();
+	static playheadKeys: any = [];
+	static totalAssets: number = 0;
+	static playheadIndex: number;
+	static logic: any;
+	static activeManifest: any = [];
+	static perf: any;
 	
 	/* module constants */
-	private readonly STATUS_PAUSED: string = "PAUSE";
-	private readonly STATE_PLAY: string = "PLAY";
-	private readonly MODE_HOLD: string = "HOLD";
-	private readonly MODE_FOLLOW: string = "FOLLOW";
-	private readonly MODE_END: string = "END";
-	private readonly ASSET_MODE_REPEAT: string = "REPEAT";
-	private readonly ASSET_MODE_END: string = "END";
+	static readonly STATUS_PAUSED: string = "PAUSE";
+	static readonly STATE_PLAY: string = "PLAY";
+	static readonly MODE_HOLD: string = "HOLD";
+	static readonly MODE_FOLLOW: string = "FOLLOW";
+	static readonly MODE_END: string = "END";
+	static readonly ASSET_MODE_REPEAT: string = "REPEAT";
+	static readonly ASSET_MODE_END: string = "END";
 	
 	/* performance variables */
-	private readonly PLAYUPDATE: string = "PlayheadUpdate";
+	static readonly PLAYUPDATE: string = "PlayheadUpdate";
 	
 	constructor(options: any, perf: any) {
 		
@@ -47,31 +46,33 @@ class AssetPlayhead {
 			
 		}
 		
-		this._logic = new PlayheadLogic(options, this._playheads, this._playheadsMeta);
+		// add in the extend logic module. 
+		// handles all logic for advancing a playhead to the next cue.
+		AssetPlayhead.logic = new PlayheadLogic(options, AssetPlayhead.playheads, AssetPlayhead.playheadsMeta);
 		
-		this.perf = perf;
-		perf.registerParameter(this.PLAYUPDATE);
+		AssetPlayhead.perf = perf;
+		perf.registerParameter(AssetPlayhead.PLAYUPDATE);
 		
 	}
 	
 	/* update the playheads values. */
 	update() {
 			
-		this.tick();
+		AssetPlayhead.tick();
 		
-		return this._activeManifest;
+		return AssetPlayhead.activeManifest;
 		
 	}
 	
 	/* debug: playheader current. */
 	
-	/* load a timeline in and create a new playhead for it. */
+	/* load a asset timeline in and create a new playhead for it. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	/* @param {any} assetTimeline - an assets cue timing data. */
 	loadTimeline(shakey: sha1, asset: any) {
 		
 		// check the next cue mode or default to END if none present.
-		let nextCueMode = asset.cueTimeline[1].cueMode || this.MODE_END;
+		let nextCueMode = asset.cueTimeline[1].cueMode || AssetPlayhead.MODE_END;
 		
 		// REQUIRES.
 		// asset.cueTimeline
@@ -85,18 +86,18 @@ class AssetPlayhead {
 			timing: parseInt(asset.cueTimeline[0].timing),
 			current: 0,
 			last: Date.now(),
-			state: this.STATUS_PAUSED,
+			state: AssetPlayhead.STATUS_PAUSED,
 			nextCueMode: nextCueMode,
 			assetMode: asset.assetMode
 		};
 		
-		this._playheads.set(shakey, playhead);
+		AssetPlayhead.playheads.set(shakey, playhead);
 		
-		this._playheadsMeta.set(shakey, asset.cueTimeline);
+		AssetPlayhead.playheadsMeta.set(shakey, asset.cueTimeline);
 		
-		this._playheadKeys.push(shakey);
+		AssetPlayhead.playheadKeys.push(shakey);
 		
-		this._totalAssets++;
+		AssetPlayhead.totalAssets++;
 		
 		AssetPlayhead.log.v("LOAD:", shakey.hex);
 		
@@ -106,15 +107,15 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpTimeline(shakey: sha1) {
 		
-		let playheadStatus: boolean = this._playheads.delete(shakey);
+		let playheadStatus: boolean = AssetPlayhead.playheads.delete(shakey);
 		
-		let metaStatus: boolean = this._playheadsMeta.delete(shakey);
+		let metaStatus: boolean = AssetPlayhead.playheadsMeta.delete(shakey);
 		
-		let keyIndex = this._playheadKeys.indexOf(shakey);
+		let keyIndex = AssetPlayhead.playheadKeys.indexOf(shakey);
 		
 		if(keyIndex !== -1) {
 			
-			this._playheadKeys.splice(keyIndex, 1);
+			AssetPlayhead.playheadKeys.splice(keyIndex, 1);
 			
 		}
 		
@@ -132,7 +133,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getPlayhead(shakey: sha1) : playheadObject {
 		
-		return this._playheads.get(shakey);
+		return AssetPlayhead.playheads.get(shakey);
 		
 	}
 	
@@ -140,7 +141,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getProgress(shakey: sha1) {
 		
-		let playhead = this._playheads.get(shakey);
+		let playhead = AssetPlayhead.playheads.get(shakey);
 		
 		let val = playhead.current / playhead.timing;
 		
@@ -156,7 +157,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getIndex(shakey: sha1) : number {
 		
-		let playhead = this._playheads.get(shakey);
+		let playhead = AssetPlayhead.playheads.get(shakey);
 		
 		if(typeof playhead !== 'undefined') {
 			
@@ -174,13 +175,13 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	play(shakey: sha1) {
 		
-		let playhead = this._playheads.get(shakey);
+		let playhead = AssetPlayhead.playheads.get(shakey);
 		
-		if(playhead.state === this.STATUS_PAUSED) {
+		if(playhead.state === AssetPlayhead.STATUS_PAUSED) {
 			
 			playhead.last = Date.now();
 			
-			playhead.state = this.STATE_PLAY;
+			playhead.state = AssetPlayhead.STATE_PLAY;
 			
 			AssetPlayhead.log.v("PLAYED:", shakey.hex);
 			
@@ -196,11 +197,11 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	pause(shakey: sha1) {
 		
-		let playhead = this._playheads.get(shakey);
+		let playhead = AssetPlayhead.playheads.get(shakey);
 		
-		if(playhead.state === this.STATE_PLAY) {
+		if(playhead.state === AssetPlayhead.STATE_PLAY) {
 			
-			playhead.state = this.STATUS_PAUSED;
+			playhead.state = AssetPlayhead.STATUS_PAUSED;
 			
 		}
 		
@@ -211,17 +212,17 @@ class AssetPlayhead {
 	/* one loop of the asset playhead system. */
 	/* calculates the current time of a playhead. */
 	/* also determines if a playhead needs to be advanced. */
-	private tick() {
+	static tick() {
 		
-		let keysLength = this._playheadKeys.length;
+		let keysLength = AssetPlayhead.playheadKeys.length;
 		
-		this._activeManifest = [];
+		AssetPlayhead.activeManifest = [];
 		
 		for(let i = 0; i < keysLength; i++) {
 			
-			this._updatePlayhead(this._playheadKeys[i]);
+			AssetPlayhead.updatePlayhead(AssetPlayhead.playheadKeys[i]);
 			
-			this.perf.hit(this.PLAYUPDATE);
+			AssetPlayhead.perf.hit(AssetPlayhead.PLAYUPDATE);
 			
 		}
 		
@@ -230,19 +231,20 @@ class AssetPlayhead {
 	}
 	
 	/* update a playhead based on the sha1 key passed in. */
+	/* determines if the playhead needs to be advanced. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
-	private _updatePlayhead(shakey: sha1) {
+	static updatePlayhead(shakey: sha1) {
 		
-		let playhead = this._playheads.get(shakey);
+		let playhead = AssetPlayhead.playheads.get(shakey);
 		
 		let now = Date.now();
 		
 		let diff = now - playhead.last;
 		
 		// Check the playhead is in the play state
-		if(playhead.state === this.STATE_PLAY) {
+		if(playhead.state === AssetPlayhead.STATE_PLAY) {
 			
-			this._activeManifest.push(shakey);
+			AssetPlayhead.activeManifest.push(shakey);
 			
 			// add ms time difference to the current ms counter.
 			playhead.current += diff;
@@ -251,7 +253,7 @@ class AssetPlayhead {
 			if(playhead.current >= playhead.timing) {
 				
 				// ... then trigger advance playhead logic..
-				this._advancePlayhead(playhead, shakey);
+				AssetPlayhead.advancePlayhead(playhead, shakey);
 				
 			}
 			
@@ -267,19 +269,19 @@ class AssetPlayhead {
 	/* routes to playhead logic module based on next cues mode. */
 	/* @param {playheadObject} playhead - asset playhead. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
-	private _advancePlayhead(playhead: playheadObject, shakey: sha1) {
+	static advancePlayhead(playhead: playheadObject, shakey: sha1) {
 		
-		if(playhead.nextCueMode === this.MODE_FOLLOW) {
+		if(playhead.nextCueMode === AssetPlayhead.MODE_FOLLOW) {
 			
-			this._logic.modeFollow(playhead, shakey);
+			AssetPlayhead.logic.modeFollow(playhead, shakey);
 			
-		} else if(playhead.nextCueMode === this.MODE_HOLD) {
+		} else if(playhead.nextCueMode === AssetPlayhead.MODE_HOLD) {
 			
-			this._logic.modeHold(playhead, shakey);
+			AssetPlayhead.logic.modeHold(playhead, shakey);
 			
-		} else if(playhead.nextCueMode === this.MODE_END) {
+		} else if(playhead.nextCueMode === AssetPlayhead.MODE_END) {
 			
-			this._logic.modeEnd(playhead, shakey);
+			AssetPlayhead.logic.modeEnd(playhead, shakey);
 		
 		} else {
 			
