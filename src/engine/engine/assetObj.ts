@@ -74,7 +74,7 @@ class Asset {
 		Asset.count++;
 		
 		/* set the key. */
-		this.shakey = this.generateShaKey();
+		this.generateShaKey();
 		
 		return this;
 		
@@ -86,10 +86,12 @@ class Asset {
 		
 	}
 	
-	private generateShaKey():sha1 {
+	// generates a key for the 
+	private generateShaKey() {
 		
 		let shaSum = Crypto.createHash('sha1');
 		
+		/* create the input string for the SHA1 creation.*/
 		let shaIn = this.name + '=='
 			+ this.timeline.length.toString() + 'xx'
 			+ this.track.length.toString() + '::'
@@ -97,8 +99,6 @@ class Asset {
 			+ Date.now().toString() + '##'
 			+ Asset.lastShortKey;
 			
-		
-		
 		/* generate sha1 from input string */
 		shaSum.update(shaIn);
 		
@@ -113,10 +113,7 @@ class Asset {
 		// update the last short key. 
 		Asset.lastShortKey = shaReturn.short;
 		
-		console.log(shaIn, shaReturn.short);
-		
-		return shaReturn;
-		
+		this.shakey = shaReturn;
 		
 	}
 	

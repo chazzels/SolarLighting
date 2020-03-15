@@ -39,7 +39,7 @@ class AssetPlayhead {
 		AssetPlayhead.log.c("STARTING");
 		
 		if(options && options.hasOwnProperty("verbose")) {
-			if(options.vebose) {
+			if(options.verbose) {
 				AssetPlayhead.log.setVerbose();
 			}
 		}
