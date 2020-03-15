@@ -14,11 +14,9 @@ class AssetPlayhead {
 	static log:any;
 	
 	/* module varaibles */
-	static playheads: any = new Map();
-	static playheadsMeta: any = new Map();
-	static playheadKeys: any = [];
-	static totalAssets: number = 0;
-	static playheadIndex: number;
+	static heads: any = new Map();
+	static meta: any = new Map();
+	static keys: any = [];
 	static logic: any;
 	static activeManifest: any = [];
 	static perf: any;
@@ -41,14 +39,14 @@ class AssetPlayhead {
 		AssetPlayhead.log.c("STARTING");
 		
 		if(options && options.hasOwnProperty("verbose")) {
-			
-			AssetPlayhead.log.setVerbose();
-			
+			if(options.vebose) {
+				AssetPlayhead.log.setVerbose();
+			}
 		}
 		
 		// add in the extend logic module. 
 		// handles all logic for advancing a playhead to the next cue.
-		AssetPlayhead.logic = new PlayheadLogic(options, AssetPlayhead.playheads, AssetPlayhead.playheadsMeta);
+		AssetPlayhead.logic = new PlayheadLogic(options, AssetPlayhead.heads, AssetPlayhead.meta);
 		
 		AssetPlayhead.perf = perf;
 		perf.registerParameter(AssetPlayhead.PLAYUPDATE);
@@ -91,13 +89,11 @@ class AssetPlayhead {
 			assetMode: asset.assetMode
 		};
 		
-		AssetPlayhead.playheads.set(shakey, playhead);
+		AssetPlayhead.heads.set(shakey, playhead);
 		
-		AssetPlayhead.playheadsMeta.set(shakey, asset.cueTimeline);
+		AssetPlayhead.meta.set(shakey, asset.cueTimeline);
 		
-		AssetPlayhead.playheadKeys.push(shakey);
-		
-		AssetPlayhead.totalAssets = AssetPlayhead.playheads.size;
+		AssetPlayhead.keys.push(shakey);
 		
 		AssetPlayhead.log.v("LOAD", shakey.hex);
 		
@@ -107,15 +103,15 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	dumpTimeline(shakey: sha1) {
 		
-		let playheadStatus: boolean = AssetPlayhead.playheads.delete(shakey);
+		let playheadStatus: boolean = AssetPlayhead.heads.delete(shakey);
 		
-		let metaStatus: boolean = AssetPlayhead.playheadsMeta.delete(shakey);
+		let metaStatus: boolean = AssetPlayhead.meta.delete(shakey);
 		
-		let keyIndex = AssetPlayhead.playheadKeys.indexOf(shakey);
+		let keyIndex = AssetPlayhead.keys.indexOf(shakey);
 		
 		if(keyIndex !== -1) {
 			
-			AssetPlayhead.playheadKeys.splice(keyIndex, 1);
+			AssetPlayhead.keys.splice(keyIndex, 1);
 			
 		}
 		
@@ -133,7 +129,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getPlayhead(shakey: sha1) : playheadObject {
 		
-		return AssetPlayhead.playheads.get(shakey);
+		return AssetPlayhead.heads.get(shakey);
 		
 	}
 	
@@ -141,7 +137,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getProgress(shakey: sha1) {
 		
-		let playhead = AssetPlayhead.playheads.get(shakey);
+		let playhead = AssetPlayhead.heads.get(shakey);
 		
 		let val = playhead.current / playhead.timing;
 		
@@ -157,7 +153,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	getIndex(shakey: sha1) : number {
 		
-		let playhead = AssetPlayhead.playheads.get(shakey);
+		let playhead = AssetPlayhead.heads.get(shakey);
 		
 		if(typeof playhead !== 'undefined') {
 			
@@ -175,7 +171,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	play(shakey: sha1) {
 		
-		let playhead = AssetPlayhead.playheads.get(shakey);
+		let playhead = AssetPlayhead.heads.get(shakey);
 		
 		if(playhead.state === AssetPlayhead.STATUS_PAUSED) {
 			
@@ -197,7 +193,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	pause(shakey: sha1) {
 		
-		let playhead = AssetPlayhead.playheads.get(shakey);
+		let playhead = AssetPlayhead.heads.get(shakey);
 		
 		if(playhead.state === AssetPlayhead.STATE_PLAY) {
 			
@@ -214,13 +210,13 @@ class AssetPlayhead {
 	/* also determines if a playhead needs to be advanced. */
 	static tick() {
 		
-		let keysLength = AssetPlayhead.playheadKeys.length;
+		let keysLength = AssetPlayhead.keys.length;
 		
 		AssetPlayhead.activeManifest = [];
 		
 		for(let i = 0; i < keysLength; i++) {
 			
-			AssetPlayhead.updatePlayhead(AssetPlayhead.playheadKeys[i]);
+			AssetPlayhead.updatePlayhead(AssetPlayhead.keys[i]);
 			
 			AssetPlayhead.perf.hit(AssetPlayhead.PLAYUPDATE);
 			
@@ -235,7 +231,7 @@ class AssetPlayhead {
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	static updatePlayhead(shakey: sha1) {
 		
-		let playhead = AssetPlayhead.playheads.get(shakey);
+		let playhead = AssetPlayhead.heads.get(shakey);
 		
 		let now = Date.now();
 		
