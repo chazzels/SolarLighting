@@ -69,11 +69,11 @@ class SolarEngine {
 	|	EngineCore Functionality.
 	\----------------------------------------------*/
 	
-	loadAsset(assetData: assetData) {
+	loadAsset(assetData: assetData, shaOverride:string) {
 		
 		let assetKey = null;
 		
-		assetKey = this.engine.loadAsset(assetData);
+		assetKey = this.engine.loadAsset(assetData, shaOverride);
 		
 		this.assetKeys.push(assetKey)
 		

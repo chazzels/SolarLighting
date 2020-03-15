@@ -86,9 +86,9 @@ class EngineCore {
 	
 	/* load asset data into the engine. */
 	/* returns an sha1 key for referencing the asset later. */
-	loadAsset(assetData: assetData) {
+	loadAsset(assetData: assetData, shaOverride?:string) {
 		
-		return EngineCore.assetManger.loadAsset(assetData);
+		return EngineCore.assetManger.loadAsset(assetData, shaOverride);
 		
 	}
 	
@@ -152,7 +152,8 @@ class EngineCore {
 				
 				// set with new generated style from the style render.
 				EngineCore.currentAssetState = 
-					EngineCore.styleRender.update(EngineCore.assetObj);
+					EngineCore.styleRender.update(EngineCore.assetObj,
+						EngineCore.currentAssetKey);
 				
 				// send the generated style to the style cache.
 				// last rendered style can be fetched from here.

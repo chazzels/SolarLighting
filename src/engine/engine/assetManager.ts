@@ -64,15 +64,23 @@ class AssetManager {
 	/* advance internal asset count by one. store data in modules. */
 	/* return the new sha1 key */
 	/* @param {any} assetDate - json object containing valid asset data structure. */
-	loadAsset(assetData: any) {
+	loadAsset(assetData: any, shaOverride?:any) {
 		
 		// DEV 
 		new Asset(assetData);
 		
-		let shakey: sha1;
+		let shakey:sha1;
 		
 		// generate unique sha1 key to reference data fragments.
 		shakey = this.generateAssetSHA1(assetData);
+		
+		if(typeof shaOverride !== "undefined") {
+			AssetManager.log.c("SHA_OVERRIDE", shaOverride);
+			shakey = {
+				hex: shaOverride,
+				short: shaOverride.substring(0,10)
+			}
+		}
 		
 		// advance the count of assets loaded.
 		this._assetCount++;	

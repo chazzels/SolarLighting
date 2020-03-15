@@ -12,6 +12,8 @@ class StyleRender {
 	
 	static log:any;
 	
+	static readonly ASSETDATADUMP:string = "DEVELOPMENTDATADUMP"
+	
 	/* module flags */
 	private readonly VERBOSE: boolean = false;
 	private readonly DEBUG: boolean = false;
@@ -31,6 +33,7 @@ class StyleRender {
 		
 		StyleRender.log = new Logger("RENDER");
 		StyleRender.log.c("STARTING");
+		StyleRender.log.setVerbose();
 		
 		/* performance parameters declarations */
 		this.perf = perf;
@@ -40,14 +43,14 @@ class StyleRender {
 	
 	/* update the assetObj passed in. */
 	/* return the updated cue value form the passed in asset data. */
-	update(assetObj: any) {
+	update(assetObj: any, key?:any) {
 		
-		return this.updateAsset(assetObj);
+		return this.updateAsset(assetObj, key);
 		
 	}
 	
 	/* using asset data passed in current state will be calculated. */
-	private updateAsset(assetObj: any) {
+	private updateAsset(assetObj:any, key?:any) {
 		
 		let playhead = assetObj.playhead,
 			cue = assetObj.cue,
@@ -55,6 +58,11 @@ class StyleRender {
 			progress = assetObj.progress;
 		
 		let calcCue = this.calcCue(prevCue, cue, progress);
+		
+		// if the 
+		if(key.hex === StyleRender.ASSETDATADUMP) {
+			StyleRender.log.v("CALCDUMP", calcCue);
+		}
 		
 		return calcCue;
 		
