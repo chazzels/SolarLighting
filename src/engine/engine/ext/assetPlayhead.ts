@@ -14,26 +14,26 @@ class AssetPlayhead {
 	static log:any;
 	
 	/* module varaibles */
-	static heads: any = new Map();
-	static meta: any = new Map();
-	static keys: any = [];
-	static logic: any;
-	static activeManifest: any = [];
-	static perf: any;
+	static heads:any = new Map();
+	static meta:any = new Map();
+	static keys:any = [];
+	static logic:any;
+	static activeManifest:any = [];
+	static perf:any;
 	
 	/* module constants */
-	static readonly STATUS_PAUSED: string = "PAUSE";
-	static readonly STATE_PLAY: string = "PLAY";
-	static readonly MODE_HOLD: string = "HOLD";
-	static readonly MODE_FOLLOW: string = "FOLLOW";
-	static readonly MODE_END: string = "END";
-	static readonly ASSET_MODE_REPEAT: string = "REPEAT";
-	static readonly ASSET_MODE_END: string = "END";
+	static readonly STATUS_PAUSED:string = "PAUSE";
+	static readonly STATE_PLAY:string = "PLAY";
+	static readonly MODE_HOLD:string = "HOLD";
+	static readonly MODE_FOLLOW:string = "FOLLOW";
+	static readonly MODE_END:string = "END";
+	static readonly ASSET_MODE_REPEAT:string = "REPEAT";
+	static readonly ASSET_MODE_END:string = "END";
 	
 	/* performance variables */
-	static readonly PLAYUPDATE: string = "PlayheadUpdate";
+	static readonly PLAYUPDATE:string = "PlayheadUpdate";
 	
-	constructor(options: any, perf: any) {
+	constructor(options:any, perf:any) {
 		
 		AssetPlayhead.log = new Logger("ASSET_PLAYHEAD");
 		AssetPlayhead.log.c("STARTING");
@@ -67,10 +67,10 @@ class AssetPlayhead {
 	/* load a asset timeline in and create a new playhead for it. */
 	/* @param {string} shakey - sha1 key used to reference an asset. */
 	/* @param {any} assetTimeline - an assets cue timing data. */
-	loadTimeline(shakey: sha1, asset: any) {
+	loadTimeline(shakey:sha1, asset: any) {
 		
 		// check the next cue mode or default to END if none present.
-		let nextCueMode = asset.cueTimeline[1].cueMode || AssetPlayhead.MODE_END;
+		let nextCueMode = asset.timeline[1].cueMode || AssetPlayhead.MODE_END;
 		
 		// REQUIRES.
 		// asset.cueTimeline
@@ -80,18 +80,18 @@ class AssetPlayhead {
 		// defaults state to paused.
 		let playhead = {
 			index: 0,
-			indexMax: asset.cueTimeline.length-1,
-			timing: parseInt(asset.cueTimeline[0].timing),
+			indexMax: asset.timeline.length-1,
+			timing: parseInt(asset.timeline[0].timing),
 			current: 0,
 			last: Date.now(),
 			state: AssetPlayhead.STATUS_PAUSED,
 			nextCueMode: nextCueMode,
-			assetMode: asset.assetMode
+			assetMode: asset.mode
 		};
 		
 		AssetPlayhead.heads.set(shakey, playhead);
 		
-		AssetPlayhead.meta.set(shakey, asset.cueTimeline);
+		AssetPlayhead.meta.set(shakey, asset.timeline);
 		
 		AssetPlayhead.keys.push(shakey);
 		

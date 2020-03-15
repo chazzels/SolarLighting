@@ -46,11 +46,11 @@ class AssetStore {
 	/* @param {any} assetData - an assets cue style data. */
 	loadTrack(shakey: sha1, assetData: assetData) {
 		
-		this._tracks.set(shakey, assetData.cueTrack);
+		this._tracks.set(shakey, assetData.track);
 		
-		this._totalTracks + assetData.cueTrack.length;
+		this._totalTracks + assetData.track.length;
 		
-		this._tracksMeta.set(shakey, assetData.cueTrackMeta);
+		this._tracksMeta.set(shakey, assetData.meta);
 		
 		this.perf.hit(this.STOREWRITE);
 		

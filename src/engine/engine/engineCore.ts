@@ -69,7 +69,7 @@ class EngineCore {
 		// performance module initialization.
 		EngineCore.simplePerf = new SimplePerf(options.perf);
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
-		// EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
+		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
 		
 		
 		// internal modules.

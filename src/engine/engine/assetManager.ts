@@ -14,6 +14,8 @@ import { AssetStore } from "./ext/assetStore";
 import { AssetPlayhead } from "./ext/assetPlayhead";
 import { AssetRank } from "./ext/assetRank";
 
+import { Asset } from "./assetObj";
+
 import { Logger } from "../../shared/logger";
 
 import * as Crypto from "crypto";
@@ -64,6 +66,9 @@ class AssetManager {
 	/* @param {any} assetDate - json object containing valid asset data structure. */
 	loadAsset(assetData: any) {
 		
+		// DEV 
+		new Asset(assetData);
+		
 		let shakey: sha1;
 		
 		// generate unique sha1 key to reference data fragments.
@@ -73,7 +78,7 @@ class AssetManager {
 		this._assetCount++;	
 		
 		// pair the sha1 key to the assets name in a map.
-		this._assetNames.set(shakey, assetData.assetName);
+		this._assetNames.set(shakey, assetData.name);
 		
 		// add the sha1 key the arry of sha1 keys
 		this._assetKeys.push(shakey);
@@ -85,7 +90,7 @@ class AssetManager {
 		this._playhead.loadTimeline(shakey, assetData);
 		
 		// DEV: do a sample query based on the load asset targets.
-		this.queryTarget(assetData.cueTrackMeta.trackTarget);
+		this.queryTarget(assetData.meta.trackTarget);
 		
 		// return the sha1 key object as a refence to the asset.
 		return shakey;
@@ -253,10 +258,10 @@ class AssetManager {
 		
 		let shaSum = Crypto.createHash('sha1');
 		
-		let shaIn = assetData.assetName.toString() 
-			+ '==' + assetData.cueTimeline.length.toString()
-			+ 'x' + assetData.cueTrack.length.toString()
-			+ ':' + assetData.cueTrackMeta.toString()
+		let shaIn = assetData.name.toString() 
+			+ '==' + assetData.timeline.length.toString()
+			+ 'x' + assetData.track.length.toString()
+			+ ':' + assetData.meta.toString()
 			+ '@' + this._assetCount.toString();
 		
 		/* generate sha1 from input string */

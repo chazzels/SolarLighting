@@ -44,6 +44,8 @@ class PlayheadLogic {
 		
 	}
 	
+	// a cue in follow mode will immediately start after the previous cue has 
+	// finished.
 	modeFollow(playhead: playheadObject, shakey: sha1) {
 		
 		if(playhead.index + 1 <= playhead.indexMax 
@@ -101,8 +103,10 @@ class PlayheadLogic {
 	
 	}
 	
+	// a cue hold mode will wait for a fire event before starting.
 	modeHold(playhead: playheadObject, shakey: sha1) {
 		
+		// advance the index.
 		playhead.index++;
 		
 		playhead.current = 0;
@@ -117,6 +121,7 @@ class PlayheadLogic {
 	
 	}
 	
+	// a cue in end mode is the last
 	modeEnd(playhead: playheadObject, shakey: sha1) {
 		
 		playhead.index = 0;
