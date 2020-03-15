@@ -48,15 +48,15 @@ class PlayheadLogic {
 	// finished.
 	modeFollow(playhead: playheadObject, shakey: sha1) {
 		
+		/* determines if current playhead index is a valid number. */
 		if(playhead.index + 1 <= playhead.indexMax 
 			&& playhead.index >= 0) {
-			/* determines if current playhead index is a valid number. */
 			
 			playhead.index++;
 			
 			playhead.current = 0;
 			
-			PlayheadLogic.log.v("ADVANCING:", shakey.hex);
+			PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 			
 			let meta = PlayheadLogic.meta.get(shakey);
 			
@@ -88,8 +88,8 @@ class PlayheadLogic {
 				
 			}
 			
+		/* determines if the playhead is at the end */
 		} else if(playhead.index >= playhead.indexMax) {
-			/* determines if the playhead is at the end */
 			
 			playhead.index = playhead.indexMax;
 			
@@ -125,7 +125,7 @@ class PlayheadLogic {
 	
 	}
 	
-	// a cue in end mode is the last
+	// a cue in end mode is the last of the cuelist.
 	modeEnd(playhead: playheadObject, shakey: sha1) {
 		
 		playhead.index = 0;
