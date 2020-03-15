@@ -86,8 +86,10 @@ class Asset {
 		
 	}
 	
-	// generates a key for the 
-	private generateShaKey() {
+	// generates a key for the asset. 
+	// this only needs to be called once by the constructor.
+	// calling this function again can cause problems with asset mapping.
+	private generateShaKey():sha1 {
 		
 		let shaSum = Crypto.createHash('sha1');
 		
@@ -113,7 +115,10 @@ class Asset {
 		// update the last short key. 
 		Asset.lastShortKey = shaReturn.short;
 		
+		/* update the current assets key. */
 		this.shakey = shaReturn;
+		
+		return shaReturn;
 		
 	}
 	

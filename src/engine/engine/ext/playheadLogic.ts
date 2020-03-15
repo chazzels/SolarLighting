@@ -56,6 +56,8 @@ class PlayheadLogic {
 			
 			playhead.current = 0;
 			
+			PlayheadLogic.log.v("ADVANCING:", shakey.hex);
+			
 			let meta = PlayheadLogic.meta.get(shakey);
 			
 			if(playhead.index + 1 < meta.length - 1) {
@@ -70,19 +72,21 @@ class PlayheadLogic {
 					
 					playhead.nextCueMode = meta[0].cueMode;
 					
+					PlayheadLogic.log.v("REPEAT", shakey.hex);
+					
 				} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
 					
 					playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
 					
+					PlayheadLogic.log.v("END", shakey.hex);
+					
 				} else {
 					
-					PlayheadLogic.log.c("ASSET_MODE_UNKNOWN:", playhead.assetMode);
+					PlayheadLogic.log.c("MODE_UNKNOWN:", playhead.assetMode);
 					
 				}
 				
 			}
-			
-			PlayheadLogic.log.v("ADVANCING:", shakey.hex);
 			
 		} else if(playhead.index >= playhead.indexMax) {
 			/* determines if the playhead is at the end */
