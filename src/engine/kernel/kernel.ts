@@ -58,9 +58,9 @@ class MiniKernel {
 		
 		// initialize the logging module.
 		// this logging instance is only for the kernal itself.
-		MiniKernel.log = new Logger("KERNEL");
+		MiniKernel.log = new Logger("MINIKERNEL");
 		MiniKernel.log.c("STARTING");
-		MiniKernel.log.setVerbose();
+		// MiniKernel.log.setVerbose();
 		// MiniKernel.log.setDebug();
 		MiniKernel.log.v("LoggingModule", "STARTED");
 		

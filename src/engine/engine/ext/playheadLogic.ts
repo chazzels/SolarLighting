@@ -33,9 +33,9 @@ class PlayheadLogic {
 		
 		// check if debugging option is set. 
 		if(options && options.hasOwnProperty("verbose")) {
-			
-			PlayheadLogic.log.setVerbose();
-			
+			if(options.vebose) {
+				PlayheadLogic.log.setVerbose();
+			}
 		}
 		
 		PlayheadLogic.playheads = playheadStore;

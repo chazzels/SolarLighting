@@ -32,9 +32,9 @@ class AssetStore {
 		AssetStore.log.c("STARTING");
 		
 		if(options && options.hasOwnProperty("verbose")) {
-				
-			AssetStore.log.setVerbose();
-			
+			if(options.vebose) {
+				AssetStore.log.setVerbose();
+			}
 		}
 		
 		this.perf = perf;
