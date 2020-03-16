@@ -19,21 +19,21 @@ class Asset {
 	static readonly STATE_PAUSED:string = "PAUSE";
 	static readonly STATE_PLAY:string = "PLAY";
 	
+	/* constants for assset modes. */
+	static readonly ASSET_REPEAT:string = "REPEAT";
+	static readonly ASSET_END:string = "END";
+	
 	/* constants for cue modes. */
 	static readonly CUE_HOLD:string = "HOLD";
 	static readonly CUE_FOLLOW:string = "FOLLOW";
 	static readonly CUE_END:string = "END";
-	
-	/* constants for assset modes. */
-	static readonly ASSET_REPEAT:string = "REPEAT";
-	static readonly ASSET_END:string = "END";
 	
 	/* default values for all playheads. */
 	private current:number = 0;
 	private cueCount:number = 1;
 	private last:number = Date.now();
 	
-	/* must be set in the constructor first. */
+	/* properties must be set in the constructor first. */
 	private timeline:any;
 	private track:any[];
 	private meta:any;
@@ -46,8 +46,8 @@ class Asset {
 	private nextCueMode:string = "HOLD";
 	private duration:number = 1000;
 	
-	
-	constructor( asset:any) {
+	/* create a new asset. */
+	constructor(asset:any, shaOverride?:sha1) {
 		
 		this.timeline = asset.timeline;
 		this.track = asset.track;
@@ -60,7 +60,7 @@ class Asset {
 		this.mode = asset.mode;
 		
 		/* setting the number of cues for the playehad. */
-		this.cueCount = asset.timeline.length-1;
+		this.cueCount = asset.timeline.length;
 		
 		/* set the nexts cue mode. */
 		/* if no next cue the CUE_END mode is set to stop the asset. */
@@ -69,26 +69,100 @@ class Asset {
 		/* loading the first cues length into the playhead. */
 		this.duration = parseInt(asset.timeline[0].timing);
 		
-		
-		
+		/* advances the total count of assets ceated. */
 		Asset.count++;
 		
 		/* set the key. */
 		this.generateShaKey();
 		
+		/* override the SHA key if needed. */
+		if(typeof shaOverride !== "undefined") {
+			
+			
+			
+		}
+		
 		return this;
 		
 	}
 	
-	getCue() {
+	/*----------------------------------------------\
+	|	Asset Playback Control. 
+	\----------------------------------------------*/
+	
+	play() {
 		
-		return this.timeline[this.current];
 		
 	}
 	
-	// generates a key for the asset. 
-	// this only needs to be called once by the constructor.
-	// calling this function again can cause problems with asset mapping.
+	/*----------------------------------------------\
+	|	Asset Playback Functionality. 
+	\----------------------------------------------*/
+	
+	/* returns the current cue data. */
+	getCue() {
+		
+		return this.timeline[this.index];
+		
+	}
+	
+	/* returns the previous cue. */
+	/* if first cue return a default cue. */
+	getPreviousCue() {
+		
+		if(this.index <= this.cueCount
+			&& this.index > 0) {
+			
+			return this.timeline[this.index-1];
+			
+		} else {
+			
+			return {
+				red: 0,
+				green: 0,
+				blue: 0
+			}
+			
+		}
+		
+	}
+	
+	/* returns the progress of a playhead as a value between 0 and 1. */
+	getProgress() {
+		
+		let val = this.current / this.duration;
+		
+		let factor = Math.pow(10, 4);
+		
+		val = Math.round(val * factor) / factor;
+		
+		return val;
+		
+	}
+	
+	/*----------------------------------------------\
+	|	Other Stuff.
+	\----------------------------------------------*/
+	
+	exportData() {
+		
+		let data = {
+			name: this.name,
+			mode: this.mode,
+			timeinline: this.timeline,
+			track: this.track,
+			meta: this.meta
+		};
+		
+		console.log(data);
+		
+		return data;
+		
+	}
+	
+	/* generates a key for the asset. */
+	/* this only needs to be called once by the constructor. */
+	/* calling this function again can cause problems with asset mapping. */
 	private generateShaKey():sha1 {
 		
 		let shaSum = Crypto.createHash('sha1');
@@ -112,7 +186,7 @@ class Asset {
 			short: shaHex.substring(0,10)
 		};
 		
-		// update the last short key. 
+		/* update the last short key. */
 		Asset.lastShortKey = shaReturn.short;
 		
 		/* update the current assets key. */

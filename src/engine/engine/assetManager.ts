@@ -66,8 +66,14 @@ class AssetManager {
 	/* @param {any} assetDate - json object containing valid asset data structure. */
 	loadAsset(assetData: any, shaOverride?:any) {
 		
+		
 		// DEV 
-		new Asset(assetData);
+		let asset = new Asset(assetData, shaOverride);
+		if(shaOverride == "DEVELOPMENTDATADUMP") {
+			asset.exportData();
+		}
+		// DEV
+		
 		
 		let shakey:sha1;
 		

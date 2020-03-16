@@ -80,7 +80,7 @@ class AssetPlayhead {
 		// defaults state to paused.
 		let playhead = {
 			index: 0,
-			indexMax: asset.timeline.length-1,
+			indexMax: asset.timeline.length,
 			timing: parseInt(asset.timeline[0].timing),
 			current: 0,
 			last: Date.now(),
