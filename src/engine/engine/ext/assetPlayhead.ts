@@ -79,7 +79,7 @@ class AssetPlayhead {
 		// create a playhead.
 		// defaults state to paused.
 		let playhead = {
-			index: 0,
+			index: 1,
 			indexMax: asset.timeline.length,
 			timing: parseInt(asset.timeline[0].timing),
 			current: 0,
@@ -179,7 +179,7 @@ class AssetPlayhead {
 			
 			playhead.state = AssetPlayhead.STATE_PLAY;
 			
-			AssetPlayhead.log.v("PLAYED:", shakey.hex);
+			AssetPlayhead.log.v("PLAYED "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 			
 		} else {
 			

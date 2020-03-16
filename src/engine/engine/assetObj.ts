@@ -4,14 +4,22 @@
 
 // TODO: add properties checks for the asset data.
 
+import { Logger } from "../../shared/logger";
+
 import { sha1 } from "./interface/sha1";
 
 import * as Crypto from "crypto";
 
 class Asset {
 	
-	// tracks number of assets added.
-	// helps prevent SHA1 Collisions.
+	/*----------------------------------------------\
+	|	Class Static Members.
+	\----------------------------------------------*/
+	
+	static log:any = new Logger("Asset");
+	
+	/* tracks number of assets added. */
+	/* helps prevent SHA1 Collisions. */
 	static count:number = 0;
 	static lastShortKey = "b8c7dba56a";
 	
@@ -28,6 +36,10 @@ class Asset {
 	static readonly CUE_FOLLOW:string = "FOLLOW";
 	static readonly CUE_END:string = "END";
 	
+	/*----------------------------------------------\
+	|	Asset Class Private Members.
+	\----------------------------------------------*/
+	
 	/* default values for all playheads. */
 	private current:number = 0;
 	private cueCount:number = 1;
@@ -42,12 +54,15 @@ class Asset {
 	/* placeholder values for assets. */
 	private name:string = "Default";
 	private mode:string = Asset.ASSET_END;
-	private index:number = 0;
+	private index:number = 1;
 	private nextCueMode:string = "HOLD";
 	private duration:number = 1000;
 	
 	/* create a new asset. */
 	constructor(asset:any, shaOverride?:sha1) {
+		
+		Asset.log.setVerbose();
+		Asset.log.setDebug();
 		
 		this.timeline = asset.timeline;
 		this.track = asset.track;
@@ -77,10 +92,14 @@ class Asset {
 		
 		/* override the SHA key if needed. */
 		if(typeof shaOverride !== "undefined") {
-			
-			
-			
+			Asset.log.c("SHA_OVERRIDE", shaOverride);
+			this.shakey = {
+				hex: shaOverride.toString(),
+				short: shaOverride.toString().substring(0,10)
+			}
 		}
+		
+		Asset.log.d("AssetCreation", this);
 		
 		return this;
 		
@@ -154,7 +173,7 @@ class Asset {
 			meta: this.meta
 		};
 		
-		console.log(data);
+		Asset.log.d("Export", data);
 		
 		return data;
 		

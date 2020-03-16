@@ -5,14 +5,12 @@
 		{
 			"cueName": "cue01",
 			"cueMode": "FOLLOW",
-			"timing": 4000,
-			"timeMultipler": 1
+			"timing": 1000
 		},
 		{
 			"cueName": "cue02",
 			"cueMode": "FOLLOW",
-			"timing": 4000,
-			"timeMultipler": 1
+			"timing": 1000
 		}
 	],
 	"track": [

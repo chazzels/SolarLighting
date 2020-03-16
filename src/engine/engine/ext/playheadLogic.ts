@@ -48,8 +48,9 @@ class PlayheadLogic {
 	// finished.
 	modeFollow(playhead: playheadObject, shakey: sha1) {
 		
+		
 		/* determines if current playhead index is a valid number. */
-		if(playhead.index + 1 <= playhead.indexMax 
+		if(playhead.index + 1 <= playhead.indexMax
 			&& playhead.index >= 0) {
 			
 			playhead.index++;
@@ -60,7 +61,9 @@ class PlayheadLogic {
 			
 			let meta = PlayheadLogic.meta.get(shakey);
 			
-			if(playhead.index + 1 < meta.length - 1) {
+			if(playhead.index < meta.length-1) {
+				
+				PlayheadLogic.log.v("NEXT_CUE_SET");
 				
 				playhead.nextCueMode = meta[playhead.index + 1].cueMode;
 				
