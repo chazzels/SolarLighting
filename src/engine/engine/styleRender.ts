@@ -12,11 +12,7 @@ class StyleRender {
 	
 	static log:any;
 	
-	static readonly ASSETDATADUMP:string = "DEVELOPMENTDATADUMP"
-	
-	/* module flags */
-	private readonly VERBOSE: boolean = false;
-	private readonly DEBUG: boolean = false;
+	static readonly ASSETDATADUMP:string = "DEVELOPMENTDATADUMP";
 	
 	/* module variables */
 	private _stateUpdate: any;
@@ -57,9 +53,10 @@ class StyleRender {
 			prevCue = assetObj.previousCue,
 			progress = assetObj.progress;
 		
+		// console.log(playhead.index, "m"+playhead.indexMax, prevCue);
+		
 		let calcCue = this.calcCue(prevCue, cue, progress);
 		
-		// if the 
 		if(key.hex === StyleRender.ASSETDATADUMP) {
 			StyleRender.log.v("CALCDUMP", calcCue);
 		}

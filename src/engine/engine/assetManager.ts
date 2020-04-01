@@ -184,7 +184,7 @@ class AssetManager {
 		
 		if(typeof currentIndex !== null) {
 		
-			return this._store.getCue(shakey, currentIndex);
+			return this._store.getCue(shakey, currentIndex-1);
 		
 		} else {
 			
@@ -203,9 +203,9 @@ class AssetManager {
 		
 		let currentIndex = playhead.index;
 		
-		if(currentIndex <= playhead.indexMax && currentIndex > 0) {
+		if(currentIndex <= playhead.indexMax && currentIndex > 1) {
 			
-			return this._store.getCue(shakey, currentIndex-1);
+			return this._store.getCue(shakey, currentIndex-2);
 			
 		} else  {
 			

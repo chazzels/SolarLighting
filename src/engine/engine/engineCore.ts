@@ -134,29 +134,29 @@ class EngineCore {
 		
 		EngineCore._updateManifest();
 		
-		// loop through each active asset and calculate its current styles.
+		/* loop through each active asset and calculate its current styles */
 		for(let i = 0; i < EngineCore.manifestLength; i++) {
 			
-			// advance the value of the asset manifest index.
+			/* advance the value of the asset manifest index */
 			EngineCore._advanceManifestIndex();
 			
-			// update current asset key.
+			/* update current asset key */
 			EngineCore.currentAssetKey = 
 				EngineCore.manifest[EngineCore.manifestIndex];
 			
-			// get the assets data from the asset manager.
+			/* get the assets data from the asset manager. */
 			EngineCore.assetObj = 
 				EngineCore.assetManger.getState(EngineCore.currentAssetKey);
 			
 			if(EngineCore.assetObj !== null) {
 				
-				// set with new generated style from the style render.
+				/* set with new generated style from the style render. */
 				EngineCore.currentAssetState = 
 					EngineCore.styleRender.update(EngineCore.assetObj,
 						EngineCore.currentAssetKey);
 				
-				// send the generated style to the style cache.
-				// last rendered style can be fetched from here.
+				/* send the generated style to the style cache. */
+				/* last rendered style can be fetched from here. */
 				EngineCore.styleCache.write(
 					EngineCore.currentAssetKey.hex, 
 					EngineCore.currentAssetState
@@ -164,17 +164,17 @@ class EngineCore {
 				
 			} else {
 				
-				// asset not resolved console log message.
-				console.log("ENGINE::ASSET_NULL:", EngineCore.currentAssetKey.hex);
+				/* asset not resolved console log message. */
+				EngineCore.log.d("ENGINE::ASSET_NULL:", EngineCore.currentAssetKey.hex);
 				
 			}
 			
 		}
 		
-		// register a hit with the performance monitor.
+		/* register a hit with the performance monitor. */
 		EngineCore.simplePerf.hit(EngineCore.ENGINELOOP);
 		
-		// get end time of full execution for debugging.
+		/* get end time of full execution for debugging. */
 		EngineCore.tickDiff = Date.now() - EngineCore.tickStart;
 		
 	}

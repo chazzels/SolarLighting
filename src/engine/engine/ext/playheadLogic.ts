@@ -48,9 +48,12 @@ class PlayheadLogic {
 	// finished.
 	modeFollow(playhead: playheadObject, shakey: sha1) {
 		
+		let meta = PlayheadLogic.meta.get(shakey);
 		
-		/* determines if current playhead index is a valid number. */
-		if(playhead.index + 1 <= playhead.indexMax
+		console.log("s:", playhead.index, playhead.indexMax, "("+meta.length+")");
+		
+		// determines if current playhead index is a valid number.
+		if(playhead.index <= playhead.indexMax
 			&& playhead.index >= 0) {
 			
 			playhead.index++;
@@ -59,31 +62,36 @@ class PlayheadLogic {
 			
 			PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 			
-			let meta = PlayheadLogic.meta.get(shakey);
-			
-			if(playhead.index < meta.length-1) {
+			if(playhead.index <= meta.length) {
+			// if the index is less than the meta length. safety check.
 				
-				PlayheadLogic.log.v("NEXT_CUE_SET");
+				PlayheadLogic.log.v("NEXT_CUE");
 				
-				playhead.nextCueMode = meta[playhead.index + 1].cueMode;
+				// get the next cues mode.
+				playhead.nextCueMode = meta[playhead.index-1].cueMode;
 				
 			} else {
 				
 				if(playhead.assetMode === PlayheadLogic.ASSET_MODE_REPEAT) {
+				// if asset play mode is repeat. 
 					
-					playhead.index = 0;
+					// reset the index.
+					playhead.index = 1;
 					
+					// get the first cues mode. 
 					playhead.nextCueMode = meta[0].cueMode;
 					
 					PlayheadLogic.log.v("REPEAT", shakey.hex);
 					
 				} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
+				// if asset play mode is end.
 					
 					playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
 					
 					PlayheadLogic.log.v("END", shakey.hex);
 					
 				} else {
+				// if the asset play mode is unkown.
 					
 					PlayheadLogic.log.c("MODE_UNKNOWN:", playhead.assetMode);
 					
@@ -91,8 +99,8 @@ class PlayheadLogic {
 				
 			}
 			
-		/* determines if the playhead is at the end */
 		} else if(playhead.index >= playhead.indexMax) {
+		// determines if the playhead is at the end 
 			
 			playhead.index = playhead.indexMax;
 			
@@ -106,8 +114,14 @@ class PlayheadLogic {
 				
 			}
 		
+		} else {
+			
+			PlayheadLogic.log.c("INDEX_UNKNOWN", playhead.index)
+			
 		}
-	
+		
+		console.log("e:", playhead.index, playhead.indexMax, "("+meta.length+")");
+		
 	}
 	
 	// a cue hold mode will wait for a fire event before starting.
