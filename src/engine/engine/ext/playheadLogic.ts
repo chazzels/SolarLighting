@@ -50,77 +50,54 @@ class PlayheadLogic {
 		
 		let meta = PlayheadLogic.meta.get(shakey);
 		
-		console.log("s:", playhead.index, playhead.indexMax, "("+meta.length+")");
+		playhead.index++;
+		
+		playhead.current = 0;
+		
+		PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 		
 		// determines if current playhead index is a valid number.
-		if(playhead.index <= playhead.indexMax
+		if(playhead.index < playhead.indexMax
 			&& playhead.index >= 0) {
 			
-			playhead.index++;
+			PlayheadLogic.log.v("NEXT_CUE");
 			
-			playhead.current = 0;
+			// get the next cues mode.
+			playhead.nextCueMode = meta[playhead.index].cueMode;
 			
-			PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
+		// determines if the playhead is at the end 
+		} else if(playhead.index > playhead.indexMax) {
 			
-			if(playhead.index <= meta.length) {
-			// if the index is less than the meta length. safety check.
+			// if asset play mode is repeat. 
+			if(playhead.assetMode === PlayheadLogic.ASSET_MODE_REPEAT) {
 				
-				PlayheadLogic.log.v("NEXT_CUE");
+				// reset the index.
+				playhead.index = 1;
 				
-				// get the next cues mode.
-				playhead.nextCueMode = meta[playhead.index-1].cueMode;
+				// get the first cues mode. 
+				playhead.nextCueMode = meta[0].cueMode;
 				
+				PlayheadLogic.log.v("REPEAT "+playhead.index+"/"+playhead.indexMax, shakey.hex);
+				
+			// if asset play mode is end.
+			} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
+				
+				playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
+				
+				PlayheadLogic.log.v("END", shakey.hex);
+				
+			// if the asset play mode is unkown.
 			} else {
 				
-				if(playhead.assetMode === PlayheadLogic.ASSET_MODE_REPEAT) {
-				// if asset play mode is repeat. 
-					
-					// reset the index.
-					playhead.index = 1;
-					
-					// get the first cues mode. 
-					playhead.nextCueMode = meta[0].cueMode;
-					
-					PlayheadLogic.log.v("REPEAT", shakey.hex);
-					
-				} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
-				// if asset play mode is end.
-					
-					playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
-					
-					PlayheadLogic.log.v("END", shakey.hex);
-					
-				} else {
-				// if the asset play mode is unkown.
-					
-					PlayheadLogic.log.c("MODE_UNKNOWN:", playhead.assetMode);
-					
-				}
+				PlayheadLogic.log.c("MODE_UNKNOWN:", playhead.assetMode);
 				
 			}
 			
-		} else if(playhead.index >= playhead.indexMax) {
-		// determines if the playhead is at the end 
-			
-			playhead.index = playhead.indexMax;
-			
-			playhead.current = 0;
-			
-			if(playhead.state === PlayheadLogic.STATE_PLAY) {
-				
-				playhead.state = PlayheadLogic.STATUS_PAUSED;
-				
-				PlayheadLogic.log.v("END_OF_ASSET:", shakey.hex);
-				
-			}
-		
 		} else {
 			
 			PlayheadLogic.log.c("INDEX_UNKNOWN", playhead.index)
 			
 		}
-		
-		console.log("e:", playhead.index, playhead.indexMax, "("+meta.length+")");
 		
 	}
 	
