@@ -63,9 +63,11 @@ class Asset {
 		
 		Asset.log.setVerbose();
 		Asset.log.setDebug();
-		
+				
 		this.timeline = asset.timeline;
+		
 		this.track = asset.track;
+		
 		this.meta = asset.meta;
 		
 		/* set the assets name. */
@@ -115,7 +117,7 @@ class Asset {
 	}
 	
 	/*----------------------------------------------\
-	|	Asset Playback Functionality. 
+	|	Asset Data / Status.
 	\----------------------------------------------*/
 	
 	/* returns the current cue data. */
@@ -214,6 +216,58 @@ class Asset {
 		return shaReturn;
 		
 	}
+	
+	private validateAsset(asset:any):boolean {
+		
+		let valid = true;
+		
+		if(typeof asset !== "undefined") {
+			
+			if(!asset.hasOwnProperty("name")) {
+				
+				valid = false;
+				
+				Asset.log.d("NAME_INVALID");
+				
+			}
+			
+			if(!asset.hasOwnProperty("timeline")) {
+				
+				valid = false;
+				
+				Asset.log.d("TIMELINE_INVALID");
+				
+			}
+			
+			if(!asset.hasOwnProperty("track")) {
+				
+				valid = false;
+				
+				Asset.log.d("TRACK_INVALID");
+				
+			}
+			
+			if(!asset.hasOwnProperty("meta")) {
+				
+				valid = false;
+				
+				Asset.log.d("META_INVALID");
+				
+			}
+			
+		} else {
+			
+			valid = false;
+			
+			Asset.log.d("ASSET_EMPTY");
+			
+		}
+		
+		return valid;
+		
+	}
+	
+	
 	
 }
 
