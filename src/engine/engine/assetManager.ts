@@ -201,11 +201,13 @@ class AssetManager {
 		
 		let playhead = this._playhead.getPlayhead(shakey);
 		
-		let currentIndex = playhead.index;
+		// adjust for non-zero index
+		let currentIndex = playhead.index-1;
 		
-		if(currentIndex <= playhead.indexMax && currentIndex > 1) {
+		// check the range of the index is valud.
+		if(currentIndex <= playhead.indexMax && currentIndex > 0) {
 			
-			return this._store.getCue(shakey, currentIndex-2);
+			return this._store.getCue(shakey, currentIndex-1);
 			
 		} else  {
 			

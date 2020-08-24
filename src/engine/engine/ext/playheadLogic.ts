@@ -50,20 +50,33 @@ class PlayheadLogic {
 		
 		let meta = PlayheadLogic.meta.get(shakey);
 		
+		// advance the current index.
 		playhead.index++;
 		
+		// reset the time tracker.
 		playhead.current = 0;
 		
 		PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 		
 		// determines if current playhead index is a valid number.
-		if(playhead.index < playhead.indexMax
+		if(playhead.index <= playhead.indexMax
 			&& playhead.index >= 0) {
 			
 			PlayheadLogic.log.v("NEXT_CUE");
 			
 			// get the next cues mode.
-			playhead.nextCueMode = meta[playhead.index].cueMode;
+			// do not do this for the last cue.
+			if(playhead.index < playhead.indexMax) {
+				playhead.nextCueMode = meta[playhead.index].cueMode;
+			} else {
+				// do nothing.
+			}
+			
+		// do nothing if you are on the last cue. 
+		// things will be reset once the 
+		} else if(playhead.index == playhead.indexMax) {
+			
+			PlayheadLogic.log.v("LAST_CUE");
 			
 		// determines if the playhead is at the end 
 		} else if(playhead.index > playhead.indexMax) {
@@ -107,6 +120,7 @@ class PlayheadLogic {
 		// advance the index.
 		playhead.index++;
 		
+		// reset the current playhead 
 		playhead.current = 0;
 		
 		if(playhead.state === PlayheadLogic.STATE_PLAY) {

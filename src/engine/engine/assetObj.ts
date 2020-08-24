@@ -132,7 +132,7 @@ class Asset {
 	getPreviousCue() {
 		
 		if(this.index <= this.cueCount
-			&& this.index > 0) {
+			&& this.index > 1) {
 			
 			return this.timeline[this.index-1];
 			
@@ -217,6 +217,7 @@ class Asset {
 		
 	}
 	
+	// WIP
 	private validateAsset(asset:any):boolean {
 		
 		let valid = true;

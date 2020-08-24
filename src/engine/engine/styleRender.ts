@@ -101,9 +101,14 @@ class StyleRender {
 			
 			result = startVal - result;
 			
+		} else {
+			
+			result = startVal + result;
+			
 		}
 		
 		result = Math.floor(result);
+		
 		
 		return result;
 		
