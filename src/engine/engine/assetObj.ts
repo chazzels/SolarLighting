@@ -42,7 +42,7 @@ class Asset {
 	
 	/* default values for all playheads. */
 	private current:number = 0;
-	private cueCount:number = 1;
+	private cueCount:number = 0;
 	private last:number = Date.now();
 	
 	/* properties must be set in the constructor first. */
@@ -62,7 +62,7 @@ class Asset {
 	constructor(asset:any, shaOverride?:sha1) {
 		
 		Asset.log.setVerbose();
-		Asset.log.setDebug();
+		//Asset.log.setDebug();
 				
 		this.timeline = asset.timeline;
 		

@@ -29,7 +29,7 @@ class StyleRender {
 		
 		StyleRender.log = new Logger("RENDER");
 		StyleRender.log.c("STARTING");
-		StyleRender.log.setVerbose();
+		//StyleRender.log.setVerbose();
 		
 		/* performance parameters declarations */
 		this.perf = perf;

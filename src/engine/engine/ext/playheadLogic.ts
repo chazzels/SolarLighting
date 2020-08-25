@@ -59,10 +59,10 @@ class PlayheadLogic {
 		PlayheadLogic.log.v("ADVANCING "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 		
 		// determines if current playhead index is a valid number.
-		if(playhead.index <= playhead.indexMax
+		if(playhead.index < playhead.indexMax
 			&& playhead.index >= 0) {
 			
-			PlayheadLogic.log.v("NEXT_CUE");
+			PlayheadLogic.log.v("NEXT_CUE", shakey.hex);
 			
 			// get the next cues mode.
 			// do not do this for the last cue.
@@ -76,7 +76,9 @@ class PlayheadLogic {
 		// things will be reset once the 
 		} else if(playhead.index == playhead.indexMax) {
 			
-			PlayheadLogic.log.v("LAST_CUE");
+			playhead.index = playhead.indexMax;
+			
+			PlayheadLogic.log.v("LAST_CUE", shakey.hex);
 			
 		// determines if the playhead is at the end 
 		} else if(playhead.index > playhead.indexMax) {
@@ -90,19 +92,21 @@ class PlayheadLogic {
 				// get the first cues mode. 
 				playhead.nextCueMode = meta[0].cueMode;
 				
-				PlayheadLogic.log.v("REPEAT "+playhead.index+"/"+playhead.indexMax, shakey.hex);
+				PlayheadLogic.log.v("CUE_REPEAT "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 				
 			// if asset play mode is end.
 			} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
 				
+				playhead.index = playhead.indexMax;
+				
 				playhead.nextCueMode = PlayheadLogic.CUE_MODE_END;
 				
-				PlayheadLogic.log.v("END", shakey.hex);
+				PlayheadLogic.log.v("CUE_END", shakey.hex);
 				
 			// if the asset play mode is unkown.
 			} else {
 				
-				PlayheadLogic.log.c("MODE_UNKNOWN:", playhead.assetMode);
+				PlayheadLogic.log.c("CUE_MODE_UNKNOWN", playhead.assetMode);
 				
 			}
 			
@@ -127,7 +131,7 @@ class PlayheadLogic {
 			
 			playhead.state = PlayheadLogic.STATUS_PAUSED;
 			
-			PlayheadLogic.log.v("HELD:", shakey.hex);
+			PlayheadLogic.log.v("CUELIST_HELD", shakey.hex);
 			
 		}
 	
@@ -154,7 +158,7 @@ class PlayheadLogic {
 			
 		}
 		
-		PlayheadLogic.log.v("END:", shakey.hex);
+		PlayheadLogic.log.v("CUELIST_END", shakey.hex);
 		
 	}
 
