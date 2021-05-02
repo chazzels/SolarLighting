@@ -1,12 +1,13 @@
 # SolarEngine
-This project is a personal effort to build from the ground up a light control system/software. The entire stack at this time is written in NodeJS. Due to limitations of NodeJS functionality of the system has been broken into multiple services/applications. 
+This project is a personal effort to build from the ground up a light control system/software. The entire stack at this time is written in NodeJS. Due to limitations of NodeJS execution it has been broken into multiple services/applications to run together. 
 
 As for now this code repository is changing rapidly and breaking changes may happen.
-Please comeback for the full release.
+Please comeback for the full release if you are interested.
 
 ## Planned Functionality
+- Cuelist creation and playback.
 - Show control from real world data/sensors.
-- Pattern/design generation with Canvas API.
+- Pattern/design generation with Canvas API in  a headless.
 
 ## Directories
 __bin__ -
@@ -35,4 +36,3 @@ should all be able to be loaded into the engine.
 ## Compiling for use
 First, ensure that all the dependancies for the npm project are installed.  
 ` $ tsc `
-##### * must have typescript installed. 
