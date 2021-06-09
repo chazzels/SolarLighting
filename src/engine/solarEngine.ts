@@ -38,11 +38,11 @@ class SolarEngine {
 		
 		console.log("------------------------------");
 		
-		this.engine = new EngineCore(options);
-		
 		this.server = new ControllerCom(options.server);
 		
 		this.client = new ClientCom(options.client);
+		
+		this.engine = new EngineCore(options);
 		
 		console.log("------------------------------");
 		

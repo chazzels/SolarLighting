@@ -57,6 +57,7 @@ class Asset {
 	private index:number = 1;
 	private nextCueMode:string = "HOLD";
 	private duration:number = 1000;
+	private lastStyles:any;
 	
 	/* create a new asset. */
 	constructor(asset:any, shaOverride?:sha1) {
@@ -183,37 +184,47 @@ class Asset {
 	
 	/* generates a key for the asset. */
 	/* this only needs to be called once by the constructor. */
-	/* calling this function again can cause problems with asset mapping. */
 	private generateShaKey():sha1 {
 		
-		let shaSum = Crypto.createHash('sha1');
-		
-		/* create the input string for the SHA1 creation.*/
-		let shaIn = this.name + '=='
-			+ this.timeline.length.toString() + 'xx'
-			+ this.track.length.toString() + '::'
-			+ Asset.count.toString() + '@@'
-			+ Date.now().toString() + '##'
-			+ Asset.lastShortKey;
+		// check a key has not already been generated for the asset.
+		if(typeof this.shakey == "undefined") {
 			
-		/* generate sha1 from input string */
-		shaSum.update(shaIn);
+			let shaSum = Crypto.createHash('sha1');
+			
+			/* create the input string for the SHA1 creation.*/
+			let shaIn = this.name + '=='
+				+ this.timeline.length.toString() + 'xx'
+				+ this.track.length.toString() + '::'
+				+ Asset.count.toString() + '@@'
+				+ Date.now().toString() + '##'
+				+ Asset.lastShortKey;
+				
+			/* generate sha1 from input string */
+			shaSum.update(shaIn);
+			
+			/* save a hex value of the sha1 */
+			let shaHex = shaSum.digest('hex');
+			
+			let shaReturn = {
+				hex: shaHex,
+				short: shaHex.substring(0,10)
+			};
+			
+			/* update the last short key. */
+			Asset.lastShortKey = shaReturn.short;
+			
+			/* update the current assets key. */
+			this.shakey = shaReturn;
+			
+			return shaReturn;
+			
+		} else {
+			
+			Asset.log.c("Key already Generated. Skipping.");
+			
+		}
 		
-		/* save a hex value of the sha1 */
-		let shaHex = shaSum.digest('hex');
-		
-		let shaReturn = {
-			hex: shaHex,
-			short: shaHex.substring(0,10)
-		};
-		
-		/* update the last short key. */
-		Asset.lastShortKey = shaReturn.short;
-		
-		/* update the current assets key. */
-		this.shakey = shaReturn;
-		
-		return shaReturn;
+		return;
 		
 	}
 	

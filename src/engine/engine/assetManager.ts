@@ -204,12 +204,20 @@ class AssetManager {
 		// adjust for non-zero index
 		let currentIndex = playhead.index-1;
 		
+		// tracking previous cue it being loaded. 
+		console.log("prev", currentIndex, "/", playhead.indexMax, playhead.nextCueMode);;
+		
 		// check the range of the index is valud.
 		if(currentIndex <= playhead.indexMax && currentIndex > 0) {
 			
 			return this._store.getCue(shakey, currentIndex-1);
 			
-		} else  {
+		} else if(currentIndex == 0) {
+			
+			//TODO get the current state or return empty styles.
+			return this._store.getCue(shakey, 1); 
+			
+		} else{
 			
 			return {
 				red: 0,

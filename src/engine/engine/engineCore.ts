@@ -46,6 +46,7 @@ class EngineCore {
 	static currentAssetKey: sha1;		// current asset key being updated.
 	static assetObj: any;				// object holding assets data.
 	static currentAssetState: any;		// contains the update asset data.
+	static assetLastState:any;
 	
 	/* performance variables */
 	static readonly ENGINELOOP: string = "EngineLoop";
@@ -70,7 +71,6 @@ class EngineCore {
 		EngineCore.simplePerf = new SimplePerf(options.perf);
 		EngineCore.simplePerf.registerParameter(EngineCore.ENGINELOOP);
 		EngineCore.simplePerf.autoLog(EngineCore.ENGINELOOP);
-		
 		
 		// internal modules.
 		EngineCore.assetManger = 
@@ -147,6 +147,12 @@ class EngineCore {
 			/* get the assets data from the asset manager. */
 			EngineCore.assetObj = 
 				EngineCore.assetManger.getState(EngineCore.currentAssetKey);
+			
+			/* DEV - testing store of last value. */
+			/* note: might work better in the asset object. */
+			EngineCore.assetLastState = EngineCore.styleCache.read(
+					EngineCore.currentAssetKey.hex);
+			console.log("last", EngineCore.assetLastState);
 			
 			if(EngineCore.assetObj !== null) {
 				

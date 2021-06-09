@@ -94,6 +94,8 @@ class PlayheadLogic {
 				
 				PlayheadLogic.log.v("CUE_REPEAT "+playhead.index+"/"+playhead.indexMax, shakey.hex);
 				
+				// TODO: load in last style values. 
+				
 			// if asset play mode is end.
 			} else if(playhead.assetMode === PlayheadLogic.ASSET_MODE_END) {
 				
