@@ -16,7 +16,7 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "ws": "^4.1.0"
   }
 }
