@@ -14,9 +14,15 @@ import { AssetStore } from "./ext/assetStore";
 import { AssetPlayhead } from "./ext/assetPlayhead";
 import { AssetRank } from "./ext/assetRank";
 
+import { Asset } from "./assetObj";
+
+import { Logger } from "../../shared/logger";
+
 import * as Crypto from "crypto";
 
 class AssetManager {
+	
+	static log:any;
 	
 	activeManifest: any = [];
 	
@@ -30,8 +36,8 @@ class AssetManager {
 	
 	constructor(options: any, perf: any) {
 		
-		console.log('MANAGER::STARTING');
-		console.group();
+		AssetManager.log = new Logger("ASSET_MGMT");
+		AssetManager.log.c("STARTING");
 		
 		this._store = new AssetStore(options.store, perf);
 		
@@ -39,7 +45,6 @@ class AssetManager {
 		
 		this._rank = new AssetRank(options.rank, perf);
 		
-		console.groupEnd();
 	}
 	
 	/*----------------------------------------------\
@@ -59,18 +64,35 @@ class AssetManager {
 	/* advance internal asset count by one. store data in modules. */
 	/* return the new sha1 key */
 	/* @param {any} assetDate - json object containing valid asset data structure. */
-	loadAsset(assetData: any) {
+	loadAsset(assetData: any, shaOverride?:any) {
 		
-		let shakey: sha1;
+		
+		// DEV 
+		let asset = new Asset(assetData, shaOverride);
+		if(shaOverride == "DEVELOPMENTDATADUMP") {
+			asset.exportData();
+		}
+		// DEV
+		
+		
+		let shakey:sha1;
 		
 		// generate unique sha1 key to reference data fragments.
 		shakey = this.generateAssetSHA1(assetData);
+		
+		if(typeof shaOverride !== "undefined") {
+			AssetManager.log.c("SHA_OVERRIDE", shaOverride);
+			shakey = {
+				hex: shaOverride,
+				short: shaOverride.substring(0,10)
+			}
+		}
 		
 		// advance the count of assets loaded.
 		this._assetCount++;	
 		
 		// pair the sha1 key to the assets name in a map.
-		this._assetNames.set(shakey, assetData.assetName);
+		this._assetNames.set(shakey, assetData.name);
 		
 		// add the sha1 key the arry of sha1 keys
 		this._assetKeys.push(shakey);
@@ -82,7 +104,7 @@ class AssetManager {
 		this._playhead.loadTimeline(shakey, assetData);
 		
 		// DEV: do a sample query based on the load asset targets.
-		this.queryTarget(assetData.cueTrackMeta.trackTarget);
+		this.queryTarget(assetData.meta.trackTarget);
 		
 		// return the sha1 key object as a refence to the asset.
 		return shakey;
@@ -162,7 +184,7 @@ class AssetManager {
 		
 		if(typeof currentIndex !== null) {
 		
-			return this._store.getCue(shakey, currentIndex);
+			return this._store.getCue(shakey, currentIndex-1);
 		
 		} else {
 			
@@ -179,13 +201,23 @@ class AssetManager {
 		
 		let playhead = this._playhead.getPlayhead(shakey);
 		
-		let currentIndex = playhead.index;
+		// adjust for non-zero index
+		let currentIndex = playhead.index-1;
 		
+		// tracking previous cue it being loaded. 
+		console.log("prev", currentIndex, "/", playhead.indexMax, playhead.nextCueMode);;
+		
+		// check the range of the index is valud.
 		if(currentIndex <= playhead.indexMax && currentIndex > 0) {
 			
 			return this._store.getCue(shakey, currentIndex-1);
 			
-		} else  {
+		} else if(currentIndex == 0) {
+			
+			//TODO get the current state or return empty styles.
+			return this._store.getCue(shakey, 1); 
+			
+		} else{
 			
 			return {
 				red: 0,
@@ -250,19 +282,17 @@ class AssetManager {
 		
 		let shaSum = Crypto.createHash('sha1');
 		
-		let shaReturn = '0';
-		
-		let shaIn = assetData.assetName.toString() 
-			+ '==' + assetData.cueTimeline.length.toString()
-			+ 'x' + assetData.cueTrack.length.toString()
-			+ ':' + assetData.cueTrackMeta.toString()
+		let shaIn = assetData.name.toString() 
+			+ '==' + assetData.timeline.length.toString()
+			+ 'x' + assetData.track.length.toString()
+			+ ':' + assetData.meta.toString()
 			+ '@' + this._assetCount.toString();
 		
 		/* generate sha1 from input string */
 		shaSum.update(shaIn);
 		
 		/* save a hex value of the sha1 */
-		shaReturn = shaSum.digest('hex');
+		let shaReturn = shaSum.digest('hex');
 		
 		return {
 			hex: shaReturn,

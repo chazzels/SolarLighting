@@ -1,6 +1,6 @@
 {
 	"assetName": "sampleCuelist",
-	"cueTimeline": [
+	"timeline": [
 		{
 			"cueName": "cue01",
 			"cueMode": "HOLD",
@@ -14,7 +14,7 @@
 			"timeMultipler": 1
 		}
 	],
-	"cueTrack": [
+	"track": [
 		[
 			{
 				"red": 1024,
@@ -40,7 +40,7 @@
 			}
 		]
 	],
-	"cueTrackMeta": [
+	"meta": [
 		{
 			"trackName": "master",
 			"trackTarget": ".center-wash"

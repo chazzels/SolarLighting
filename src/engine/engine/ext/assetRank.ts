@@ -1,23 +1,22 @@
 /*
 *	module to parse target query strings to objects.
+*	this could be better. 
 */
 
 import { sha1 } from "../interface/sha1";
 import { fixtureTarget } from "../interface/fixtureTarget";
 
+import { Logger } from "../../../shared/logger";
+
 class AssetRank {
 	
-	/* module options flags */
-	private readonly VERBOSE: boolean = false;
-	private readonly VERBOSE_BOOT: boolean = true;
+	static log:any;
 	
 	constructor(options: any, perf: any) {
 		
-		if(this.VERBOSE_BOOT) {
-			
-			console.log("RANK::STARTING");
-			
-		}
+		AssetRank.log = new Logger("ASSET_RANK");
+		AssetRank.log.c("STARTING");
+		
 		
 	}
 	
@@ -34,6 +33,7 @@ class AssetRank {
 	private _parseTargetQuery(qryStr:string) {
 		
 		// create object with some parameters to guide parsing.
+		// performas checks to check the composition of the query string.
 		let qryInfo = {
 			sourceQuery: qryStr,
 			query: qryStr.trim().split(" ")[0],
@@ -72,7 +72,7 @@ class AssetRank {
 			
 		} else {
 			
-			console.log('MANAGER::TARGET_QUERY: query failed to be validated.');
+			AssetRank.log.c('MANAGER::TARGET_QUERY: query failed to be validated.');
 			
 		}
 		

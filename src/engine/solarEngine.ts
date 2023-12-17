@@ -38,11 +38,11 @@ class SolarEngine {
 		
 		console.log("------------------------------");
 		
-		this.engine = new EngineCore(options);
-		
 		this.server = new ControllerCom(options.server);
 		
 		this.client = new ClientCom(options.client);
+		
+		this.engine = new EngineCore(options);
 		
 		console.log("------------------------------");
 		
@@ -69,11 +69,11 @@ class SolarEngine {
 	|	EngineCore Functionality.
 	\----------------------------------------------*/
 	
-	loadAsset(assetData: assetData) {
+	loadAsset(assetData: assetData, shaOverride:string) {
 		
 		let assetKey = null;
 		
-		assetKey = this.engine.loadAsset(assetData);
+		assetKey = this.engine.loadAsset(assetData, shaOverride);
 		
 		this.assetKeys.push(assetKey)
 		

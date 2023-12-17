@@ -6,11 +6,13 @@
 
 import { sha1 } from "./interface/sha1";
 
+import { Logger } from "../../shared/logger";
+
 class StyleRender {
 	
-	/* module flags */
-	private readonly VERBOSE: boolean = false;
-	private readonly DEBUG: boolean = false;
+	static log:any;
+	
+	static readonly ASSETDATADUMP:string = "DEVELOPMENTDATADUMP";
 	
 	/* module variables */
 	private _stateUpdate: any;
@@ -25,34 +27,39 @@ class StyleRender {
 	
 	constructor(options: any, perf: any) {
 		
-		console.log("RENDER::STARTING");
-		console.group();
+		StyleRender.log = new Logger("RENDER");
+		StyleRender.log.c("STARTING");
+		StyleRender.log.setVerbose();
 		
 		/* performance parameters declarations */
 		this.perf = perf;
 		perf.registerParameter(this.ASSETCALC);
 		
-		console.groupEnd();
-		
 	}
 	
 	/* update the assetObj passed in. */
 	/* return the updated cue value form the passed in asset data. */
-	update(assetObj: any) {
+	update(assetObj: any, key?:any) {
 		
-		return this.updateAsset(assetObj);
+		return this.updateAsset(assetObj, key);
 		
 	}
 	
 	/* using asset data passed in current state will be calculated. */
-	private updateAsset(assetObj: any) {
+	private updateAsset(assetObj:any, key?:any) {
 		
 		let playhead = assetObj.playhead,
 			cue = assetObj.cue,
 			prevCue = assetObj.previousCue,
 			progress = assetObj.progress;
 		
+		// console.log(playhead.index, "m"+playhead.indexMax, prevCue);
+		
 		let calcCue = this.calcCue(prevCue, cue, progress);
+		
+		if(key.hex === StyleRender.ASSETDATADUMP) {
+			StyleRender.log.v("CALCDUMP", calcCue);
+		}
 		
 		return calcCue;
 		
@@ -94,9 +101,14 @@ class StyleRender {
 			
 			result = startVal - result;
 			
+		} else {
+			
+			result = startVal + result;
+			
 		}
 		
 		result = Math.floor(result);
+		
 		
 		return result;
 		

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>canvas testing</title>
+		<meta charset="UTF-8">
+		<style>
+			* {
+				webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				margin: 0;
+			}
+			body {
+				overflow: hidden;
+				height: 100vh;
+				background-color: #444;
+			}
+			.contentCenter {
+				width: 250px;
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+			
+			.simpleFlow {
+				display: block;
+			}
+			.browserDriver {
+				//min-height: 250px;
+				width: 100%;
+				margin-top: 10px;
+				background-color: #333;
+			}
+		</style>
+	</head>
+	
+	<body translate="no">
+		
+		<div class="contentCenter">
+			
+			<canvas class="simpleFlow" id="canvas" width="250" height="250" style="width: 725px; height: 619px;"></canvas>
+			
+			<canvas class="browserDriver" id="canvas2" width="250" height="250"></canvas>
+			
+		</div>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<!-- IMPORT THE RENDER AND EFFECTS. -->
+		<script src="/_static/SolarLighting/src/canvas/core.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/sampler.js"></script>
+		
+		<script src="/_static/SolarLighting/src/canvas/frameworkEffect.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/solid.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/starfield.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/circleTunnel.js"></script>
+		<script src="/_static/SolarLighting/src/canvas/effect/grid.js"></script>
+		
+		<script id="rendered-js">
+			var samplingCtx, drawCtx;
+			
+			//testing sampling code.
+			$(document).ready(function sampleReady() {
+				
+				let canvas = jQuery('#canvas2');
+				canvas.width(250);
+				canvas.attr('width', 250);
+				canvas.height(250);
+				canvas.attr('height', 250);
+				
+				let ctx = canvas[0].getContext('2d');
+				let engine = new CanvasCore(ctx);
+				
+				samplingCtx = ctx;
+				
+				let solid = new Solid(ctx, "#000");
+				
+				engine.addLayer(solid.renderAPI());
+				
+				engine.startRender(ctx);
+				
+			});
+			
+			
+			$(document).ready(function devPageReady() {
+				
+				// scene prep.
+				// configure the html layer for the canvas element
+				let canvas = jQuery('#canvas');
+				canvas.width(250);
+				canvas.attr('width', 250);
+				canvas.height(250);
+				canvas.attr('height', 250);
+				
+				let ctx = canvas[0].getContext('2d');
+				let engine = new CanvasCore(ctx);
+				
+				// create the effects. 
+				// let solid = new Solid(ctx, "#090010");
+				let solid = new Solid(ctx, "#000");
+				let stars4 = new StarField(ctx);
+				let stars5 = new StarField(ctx);
+				let stars6 = new StarField(ctx);
+				let circle1 = new CircleTunnel(ctx);
+				
+				stars4.updateParameter('rotation', -20)
+					.resetColors(['#78a5a3', '#444c5c', '#fab696'])
+					.updateParameter('rate', 0.6)
+					.updateParameter('radius', 10)
+					.updateParameter('sizeMin', 18)
+					.updateParameter('sizeMax', 28);
+				
+				stars5.updateParameter('rotation', -20)
+					.resetColors(['#fab696', '#fbe3b9', '#2d334a'])
+					.updateParameter('rate', 0.5)
+					.updateParameter('radius', 10)
+					.updateParameter('density', 14)
+					.updateParameter('sizeMin', 12)
+					.updateParameter('sizeMax', 28);
+				
+				stars6.updateParameter('rotation', -20)
+					.resetColors(['#2d334a', '#0c9463', '#78a5a3'])
+					.updateParameter('rate', 0.8)
+					.updateParameter('count', 500)
+					.updateParameter('radius', 10)
+					.updateParameter('sizeMin', 15)
+					.updateParameter('sizeMax', 28);
+				
+				circle1.updateParameter('count', 10)
+					.updateParameter('count', 14)
+					.updateParameter('rate', 0.4)
+					.resetColors(['#000', '#111', '#222']);
+					// .resetColors(['#1d4d4f' ,'#357376', '#6ba8a9'])
+					// .resetColors(['#f6d365', '#e15249', '#c83660', '#3a1f5d', '#913', '#606'])
+					// .resetColors(['#2d334a', '#0c9463', '#78a5a3']);
+				
+				// add the effects in layer order.
+				engine.addLayer(solid.renderAPI());
+				engine.addLayer(circle1.renderAPI());
+				engine.addLayer(stars4.renderAPI());
+				engine.addLayer(stars5.renderAPI());
+				engine.addLayer(stars6.renderAPI());
+				
+				engine.sampler.createSampleGrid(ctx, 10, 10);
+				
+				engine.startRender(ctx);
+				
+			});
+		</script>
+	</body>
+</html>

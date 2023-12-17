@@ -5,7 +5,11 @@
 import { sha1 } from "../interface/sha1";
 import { assetData } from "../interface/assetData";
 
+import { Logger } from "../../../shared/logger";
+
 class AssetStore {
+	
+	static log:any;
 	
 	/* module options flags */
 	private readonly VERBOSE: boolean = false;
@@ -24,22 +28,13 @@ class AssetStore {
 	
 	constructor(options: any, perf: any) {
 		
+		AssetStore.log = new Logger("ASSET_STORE");
+		AssetStore.log.c("STARTING");
+		
 		if(options && options.hasOwnProperty("verbose")) {
-			
-			this.VERBOSE = options.verbose;
-			
-		}
-		
-		if(options && options.hasOwnProperty("verboseBoot")) {
-			
-			this.VERBOSE_BOOT = options.verboseBoot;
-			
-		}
-		
-		if(this.VERBOSE_BOOT) {
-			
-			console.log("STORE::STARTING");
-			
+			if(options.vebose) {
+				AssetStore.log.setVerbose();
+			}
 		}
 		
 		this.perf = perf;
@@ -51,11 +46,11 @@ class AssetStore {
 	/* @param {any} assetData - an assets cue style data. */
 	loadTrack(shakey: sha1, assetData: assetData) {
 		
-		this._tracks.set(shakey, assetData.cueTrack);
+		this._tracks.set(shakey, assetData.track);
 		
-		this._totalTracks + assetData.cueTrack.length;
+		this._totalTracks + assetData.track.length;
 		
-		this._tracksMeta.set(shakey, assetData.cueTrackMeta);
+		this._tracksMeta.set(shakey, assetData.meta);
 		
 		this.perf.hit(this.STOREWRITE);
 		

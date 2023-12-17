@@ -1,7 +1,7 @@
 export interface assetData {
-	assetName: string;
-	assetMode: string;
-	cueTimeline: any[];
-	cueTrack: any[];
-	cueTrackMeta: any;
+	name: string;
+	mode: string;
+	timeline: any[];
+	track: any[];
+	meta: any;
 }

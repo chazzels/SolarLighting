@@ -1,21 +1,29 @@
 {	
-	"assetName": "sampleCuelist",
-	"assetMode": "REPEAT",
-	"cueTimeline": [
+	"name": "sampleCuelist",
+	"mode": "REPEAT",
+	"timeline": [
 		{
 			"cueName": "cue01",
 			"cueMode": "FOLLOW",
-			"timing": 4000,
-			"timeMultipler": 1
+			"timing": 200
 		},
 		{
 			"cueName": "cue02",
 			"cueMode": "FOLLOW",
-			"timing": 4000,
-			"timeMultipler": 1
+			"timing": 200
+		},
+		{
+			"cueName": "cue03",
+			"cueMode": "FOLLOW",
+			"timing": 200
+		},
+		{
+			"cueName": "cue04",
+			"cueMode": "FOLLOW",
+			"timing": 200
 		}
 	],
-	"cueTrack": [
+	"track": [
 		{
 			"red": 1024,
 			"green": 1024,
@@ -25,9 +33,19 @@
 			"red": 0,
 			"green": 0,
 			"blue": 0
+		},
+		{
+			"red": 512,
+			"green": 1024,
+			"blue": 512
+		},
+		{
+			"red": 1024,
+			"green": 0,
+			"blue": 1024
 		}
 	],
-	"cueTrackMeta": {
+	"meta": {
 		"trackName": "master",
 		"trackTarget": ".center.wash"
 	}
